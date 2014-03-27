@@ -5,16 +5,18 @@ import (
 	"regexp"
 )
 
+type RouteHandler func(http.ResponseWriter, *http.Request, []string)
+
 type route struct {
 	re      *regexp.Regexp
-	handler func(http.ResponseWriter, *http.Request, []string)
+	handler RouteHandler
 }
 
 type ReHandler struct {
 	routes []*route
 }
 
-func (h *ReHandler) AddRoute(re string, handler func(http.ResponseWriter, *http.Request, []string)) {
+func (h *ReHandler) AddRoute(re string, handler RouteHandler) {
 	r := &route{regexp.MustCompile(re), handler}
 	h.routes = append(h.routes, r)
 }
