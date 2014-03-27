@@ -3,6 +3,7 @@ package golb
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"time"
 )
@@ -52,4 +53,13 @@ func (d *Data) Write() error {
 		return err
 	}
 	return ioutil.WriteFile(d.Name, data, 0644)
+}
+
+func (d *Data) FindArticle(slug string) (Article, error) {
+	for _, a := range d.Articles {
+		if a.Slug == slug {
+			return a, nil
+		}
+	}
+	return Article{}, errors.New("not found")
 }
