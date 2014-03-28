@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type Comments []Comment
+type Comments []*Comment
 
 type Comment struct {
 	Date    time.Time
@@ -21,7 +21,7 @@ type Comment struct {
 	Enabled bool
 }
 
-type Articles []Article
+type Articles []*Article
 
 type Article struct {
 	Date     time.Time
@@ -65,30 +65,37 @@ func (d *Data) Write() error {
 	return ioutil.WriteFile(d.Name, data, 0644)
 }
 
-func (d *Data) FindArticle(slug string) (Article, error) {
+func (d *Data) FindArticle(slug string) (*Article, error) {
 	for _, a := range d.Articles {
 		if a.Slug == slug {
 			return a, nil
 		}
 	}
-	return Article{}, errors.New("not found")
+	return &Article{}, errors.New("not found")
 }
 
-func (a Article) MakeSlug() {
+func (a *Article) MakeSlug() {
 	r := strings.NewReplacer(" ", "-")
 	a.Slug = strings.ToLower(r.Replace(a.Title))
 }
 
-func (a Article) AddComment(c Comment) {
+func (d *Data) AddArticle(a *Article) {
+	a.Date = time.Now()
+	a.MakeSlug()
+	d.Articles = append(d.Articles, a)
+}
+
+func (a *Article) AddComment(c *Comment) {
+	c.Date = time.Now()
 	a.Comments = append(a.Comments, c)
 }
 
-func (a Article) Enable() {
+func (a *Article) Enable() {
 	a.Date = time.Now()
 	a.Enabled = true
 }
 
-func (a Article) Disable() {
+func (a *Article) Disable() {
 	a.Enabled = false
 }
 
@@ -104,11 +111,11 @@ func (a Articles) Less(i, j int) bool {
 	return a[i].Date.After(a[j].Date)
 }
 
-func (c Comment) Enable() {
+func (c *Comment) Enable() {
 	c.Enabled = true
 }
 
-func (c Comment) Disable() {
+func (c *Comment) Disable() {
 	c.Enabled = false
 }
 
