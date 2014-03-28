@@ -101,7 +101,7 @@ func (a Articles) Swap(i, j int) {
 }
 
 func (a Articles) Less(i, j int) bool {
-	return a[i].Date.Before(a[j].Date)
+	return a[i].Date.After(a[j].Date)
 }
 
 func (c Comment) Enable() {
@@ -121,5 +121,5 @@ func (c Comments) Swap(i, j int) {
 }
 
 func (c Comments) Less(i, j int) bool {
-	return c[i].Date.Before(c[j].Date)
+	return c[i].Date.After(c[j].Date)
 }
