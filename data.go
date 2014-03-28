@@ -56,3 +56,13 @@ func (d *Data) Add(a *Article) {
 	}
 	d.Articles = append(d.Articles, a)
 }
+
+func (d *Data) CountTags() map[string]int {
+	tags := make(map[string]int)
+	for _, a := range d.Articles {
+		for _, t := range a.Tags {
+			tags[t]++
+		}
+	}
+	return tags
+}
