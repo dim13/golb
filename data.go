@@ -3,10 +3,8 @@ package golb
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"sort"
-	"time"
 )
 
 type Data struct {
@@ -38,23 +36,6 @@ func (d *Data) Write() error {
 		return err
 	}
 	return ioutil.WriteFile(d.fileName, data, 0644)
-}
-
-func (d *Data) Find(slug string) (*Article, error) {
-	for _, a := range d.Articles {
-		if a.Slug == slug {
-			return a, nil
-		}
-	}
-	return &Article{}, errors.New("not found")
-}
-
-func (d *Data) Add(a *Article) {
-	a.Date = time.Now()
-	if a.Slug == "" {
-		a.makeSlug()
-	}
-	d.Articles = append(d.Articles, a)
 }
 
 func (d *Data) CountTags() map[string]int {

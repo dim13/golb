@@ -2,6 +2,7 @@
 package golb
 
 import (
+	"errors"
 	"strings"
 	"time"
 )
@@ -22,11 +23,6 @@ type Article struct {
 func (a *Article) makeSlug() {
 	r := strings.NewReplacer(" ", "-")
 	a.Slug = strings.ToLower(r.Replace(a.Title))
-}
-
-func (a *Article) Add(c *Comment) {
-	c.Date = time.Now()
-	a.Comments = append(a.Comments, c)
 }
 
 func (a *Article) Publish() {
@@ -50,10 +46,19 @@ func (a Articles) Less(i, j int) bool {
 	return a[i].Date.Before(a[j].Date)
 }
 
-func (ap Articles) Add(a *Article) Articles {
-	a.Date = time.Now()
-	if a.Slug == "" {
-		a.makeSlug()
+func (a *Articles) Add(article *Article) {
+	article.Date = time.Now()
+	if article.Slug == "" {
+		article.makeSlug()
 	}
-	return append(ap, a)
+	*a = append(*a, article)
+}
+
+func (a Articles) Find(slug string) (*Article, error) {
+	for _, article := range a {
+		if article.Slug == slug {
+			return article, nil
+		}
+	}
+	return &Article{}, errors.New("not found")
 }

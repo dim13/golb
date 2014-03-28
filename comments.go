@@ -36,7 +36,7 @@ func (c Comments) Less(i, j int) bool {
 	return c[i].Date.Before(c[j].Date)
 }
 
-func (cp Comments) Add(c *Comment) Comments {
-	c.Date = time.Now()
-	return append(cp, c)
+func (c *Comments) Add(comment *Comment) {
+	comment.Date = time.Now()
+	*c = append(*c, comment)
 }

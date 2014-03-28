@@ -23,7 +23,7 @@ func main() {
 		Tags: []string{"no", "tags", "at all"},
 		Author: "me@example.com",
 	}
-	d.Articles = d.Articles.Add(a)
+	d.Articles.Add(a)
 	a.Publish()
 
 	c := &golb.Comment{
@@ -32,7 +32,7 @@ func main() {
 		URL: "http://example.com",
 		Comment: "empty",
 	}
-	a.Comments = a.Comments.Add(c)
+	a.Comments.Add(c)
 	c.Publish()
 
 	if err := d.Write(); err != nil {
