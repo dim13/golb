@@ -24,7 +24,6 @@ func main() {
 		Author: "me@example.com",
 	}
 	d.Articles.Add(a)
-	a.Publish()
 
 	c := &golb.Comment{
 		Name: "anonymous coward",
@@ -34,6 +33,11 @@ func main() {
 	}
 	a.Comments.Add(c)
 	c.Publish()
+
+	z, err := d.Articles.Find("test-title")
+	if err == nil {
+		z.Publish()
+	}
 
 	if err := d.Write(); err != nil {
 		log.Fatal(err)
