@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -52,6 +54,10 @@ func (d *Data) Read() error {
 }
 
 func (d *Data) Write() error {
+	sort.Sort(d.Articles)
+	for i, _ := range d.Articles {
+		sort.Sort(d.Articles[i].Comments)
+	}
 	data, err := json.MarshalIndent(d.Articles, "", "\t")
 	if err != nil {
 		return err
@@ -66,6 +72,11 @@ func (d *Data) FindArticle(slug string) (Article, error) {
 		}
 	}
 	return Article{}, errors.New("not found")
+}
+
+func (a Article) MakeSlug() {
+	r := strings.NewReplacer(" ", "-")
+	a.Slug = strings.ToLower(r.Replace(a.Title))
 }
 
 func (a Article) AddComment(c Comment) {
