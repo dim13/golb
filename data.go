@@ -74,14 +74,16 @@ func (d *Data) FindArticle(slug string) (*Article, error) {
 	return &Article{}, errors.New("not found")
 }
 
-func (a *Article) MakeSlug() {
+func (a *Article) makeSlug() {
 	r := strings.NewReplacer(" ", "-")
 	a.Slug = strings.ToLower(r.Replace(a.Title))
 }
 
 func (d *Data) AddArticle(a *Article) {
 	a.Date = time.Now()
-	a.MakeSlug()
+	if a.Slug == "" {
+		a.makeSlug()
+	}
 	d.Articles = append(d.Articles, a)
 }
 
