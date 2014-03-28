@@ -65,7 +65,7 @@ func (d *Data) Write() error {
 	return ioutil.WriteFile(d.Name, data, 0644)
 }
 
-func (d *Data) FindArticle(slug string) (*Article, error) {
+func (d *Data) Find(slug string) (*Article, error) {
 	for _, a := range d.Articles {
 		if a.Slug == slug {
 			return a, nil
@@ -79,7 +79,7 @@ func (a *Article) makeSlug() {
 	a.Slug = strings.ToLower(r.Replace(a.Title))
 }
 
-func (d *Data) AddArticle(a *Article) {
+func (d *Data) Add(a *Article) {
 	a.Date = time.Now()
 	if a.Slug == "" {
 		a.makeSlug()
@@ -87,7 +87,7 @@ func (d *Data) AddArticle(a *Article) {
 	d.Articles = append(d.Articles, a)
 }
 
-func (a *Article) AddComment(c *Comment) {
+func (a *Article) Add(c *Comment) {
 	c.Date = time.Now()
 	a.Comments = append(a.Comments, c)
 }
