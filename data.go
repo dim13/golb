@@ -37,13 +37,3 @@ func (d *Data) Write() error {
 	}
 	return ioutil.WriteFile(d.fileName, data, 0644)
 }
-
-func (d *Data) CountTags() map[string]int {
-	tags := make(map[string]int)
-	for _, a := range d.Articles {
-		for _, t := range a.Tags {
-			tags[t]++
-		}
-	}
-	return tags
-}

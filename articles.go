@@ -55,10 +55,20 @@ func (a *Articles) Add(article *Article) {
 }
 
 func (a Articles) Find(slug string) (*Article, error) {
-	for _, article := range a {
-		if article.Slug == slug {
-			return article, nil
+	for i, _ := range a {
+		if a[i].Slug == slug {
+			return a[i], nil
 		}
 	}
 	return &Article{}, errors.New("not found")
+}
+
+func (a Articles) CountTags() map[string]int {
+	tags := make(map[string]int)
+	for _, article := range a {
+		for _, tag := range article.Tags {
+			tags[tag]++
+		}
+	}
+	return tags
 }
