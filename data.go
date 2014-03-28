@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+type Comments []Comment
+
 type Comment struct {
 	Date    time.Time
 	Name    string
@@ -17,6 +19,8 @@ type Comment struct {
 	Enabled bool
 }
 
+type Articles []Article
+
 type Article struct {
 	Date     time.Time
 	Title    string
@@ -25,11 +29,11 @@ type Article struct {
 	Tags     []string
 	Enabled  bool
 	Author   string
-	Comments []Comment
+	Comments Comments
 }
 
 type Data struct {
-	Articles []Article
+	Articles Articles
 	Name     string
 }
 
@@ -62,4 +66,49 @@ func (d *Data) FindArticle(slug string) (Article, error) {
 		}
 	}
 	return Article{}, errors.New("not found")
+}
+
+func (a Article) AddComment(c Comment) {
+	a.Comments = append(a.Comments, c)
+}
+
+func (a Article) Enable() {
+	a.Date = time.Now()
+	a.Enabled = true
+}
+
+func (a Article) Disable() {
+	a.Enabled = false
+}
+
+func (a Articles) Len() int {
+	return len(a)
+}
+
+func (a Articles) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a Articles) Less(i, j int) bool {
+	return a[i].Date.Before(a[j].Date)
+}
+
+func (c Comment) Enable() {
+	c.Enabled = true
+}
+
+func (c Comment) Disable() {
+	c.Enabled = false
+}
+
+func (c Comments) Len() int {
+	return len(c)
+}
+
+func (c Comments) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
+}
+
+func (c Comments) Less(i, j int) bool {
+	return c[i].Date.Before(c[j].Date)
 }
