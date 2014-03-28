@@ -55,5 +55,5 @@ func (ap Articles) Add(a *Article) Articles {
 	if a.Slug == "" {
 		a.makeSlug()
 	}
-	return append(*ap, a)
+	return append(ap, a)
 }
