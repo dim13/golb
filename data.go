@@ -11,17 +11,17 @@ import (
 
 type Data struct {
 	Articles Articles
-	Name     string
+	fileName     string
 }
 
 func Open(name string) *Data {
 	d := new(Data)
-	d.Name = name
+	d.fileName = name
 	return d
 }
 
 func (d *Data) Read() error {
-	data, err := ioutil.ReadFile(d.Name)
+	data, err := ioutil.ReadFile(d.fileName)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (d *Data) Write() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(d.Name, data, 0644)
+	return ioutil.WriteFile(d.fileName, data, 0644)
 }
 
 func (d *Data) Find(slug string) (*Article, error) {
