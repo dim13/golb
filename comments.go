@@ -35,3 +35,8 @@ func (c Comments) Swap(i, j int) {
 func (c Comments) Less(i, j int) bool {
 	return c[i].Date.After(c[j].Date)
 }
+
+func (cp Comments) Add(c *Comment) Comments {
+	c.Date = time.Now()
+	return append(cp, c)
+}

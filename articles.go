@@ -49,3 +49,11 @@ func (a Articles) Swap(i, j int) {
 func (a Articles) Less(i, j int) bool {
 	return a[i].Date.After(a[j].Date)
 }
+
+func (ap Articles) Add(a *Article) Articles {
+	a.Date = time.Now()
+	if a.Slug == "" {
+		a.makeSlug()
+	}
+	return append(ap, a)
+}
