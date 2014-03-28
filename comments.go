@@ -33,7 +33,7 @@ func (c Comments) Swap(i, j int) {
 }
 
 func (c Comments) Less(i, j int) bool {
-	return c[i].Date.After(c[j].Date)
+	return c[i].Date.Before(c[j].Date)
 }
 
 func (cp Comments) Add(c *Comment) Comments {

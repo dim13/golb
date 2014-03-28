@@ -47,7 +47,7 @@ func (a Articles) Swap(i, j int) {
 }
 
 func (a Articles) Less(i, j int) bool {
-	return a[i].Date.After(a[j].Date)
+	return a[i].Date.Before(a[j].Date)
 }
 
 func (ap Articles) Add(a *Article) Articles {
@@ -55,5 +55,5 @@ func (ap Articles) Add(a *Article) Articles {
 	if a.Slug == "" {
 		a.makeSlug()
 	}
-	return append(ap, a)
+	return append(*ap, a)
 }
