@@ -6,33 +6,8 @@ import (
 	"errors"
 	"io/ioutil"
 	"sort"
-	"strings"
 	"time"
 )
-
-type Comments []*Comment
-
-type Comment struct {
-	Date    time.Time
-	Name    string
-	Email   string
-	URL     string
-	Comment string
-	Enabled bool
-}
-
-type Articles []*Article
-
-type Article struct {
-	Date     time.Time
-	Title    string
-	Slug     string
-	Body     string
-	Tags     []string
-	Enabled  bool
-	Author   string
-	Comments Comments
-}
 
 type Data struct {
 	Articles Articles
@@ -74,61 +49,10 @@ func (d *Data) Find(slug string) (*Article, error) {
 	return &Article{}, errors.New("not found")
 }
 
-func (a *Article) makeSlug() {
-	r := strings.NewReplacer(" ", "-")
-	a.Slug = strings.ToLower(r.Replace(a.Title))
-}
-
 func (d *Data) Add(a *Article) {
 	a.Date = time.Now()
 	if a.Slug == "" {
 		a.makeSlug()
 	}
 	d.Articles = append(d.Articles, a)
-}
-
-func (a *Article) Add(c *Comment) {
-	c.Date = time.Now()
-	a.Comments = append(a.Comments, c)
-}
-
-func (a *Article) Enable() {
-	a.Date = time.Now()
-	a.Enabled = true
-}
-
-func (a *Article) Disable() {
-	a.Enabled = false
-}
-
-func (a Articles) Len() int {
-	return len(a)
-}
-
-func (a Articles) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
-func (a Articles) Less(i, j int) bool {
-	return a[i].Date.After(a[j].Date)
-}
-
-func (c *Comment) Enable() {
-	c.Enabled = true
-}
-
-func (c *Comment) Disable() {
-	c.Enabled = false
-}
-
-func (c Comments) Len() int {
-	return len(c)
-}
-
-func (c Comments) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
-func (c Comments) Less(i, j int) bool {
-	return c[i].Date.After(c[j].Date)
 }
