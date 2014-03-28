@@ -48,7 +48,7 @@ func (d *Data) Read() error {
 }
 
 func (d *Data) Write() error {
-	data, err := json.MarshalIndent(d.Articles, "", "	")
+	data, err := json.MarshalIndent(d.Articles, "", "\t")
 	if err != nil {
 		return err
 	}
