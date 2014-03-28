@@ -1,4 +1,4 @@
-// JSON Data Storage
+// Comments
 package golb
 
 import (

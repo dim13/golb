@@ -1,4 +1,4 @@
-// JSON Data Storage
+// Articles
 package golb
 
 import (
