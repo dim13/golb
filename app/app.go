@@ -24,7 +24,7 @@ func main() {
 		Author: "me@example.com",
 	}
 	d.Add(a)
-	a.Enable()
+	a.Publish()
 
 	c := &golb.Comment{
 		Name: "anonymous coward",
@@ -33,7 +33,7 @@ func main() {
 		Comment: "empty",
 	}
 	a.Add(c)
-	c.Enable()
+	c.Publish()
 
 	if err := d.Write(); err != nil {
 		log.Fatal(err)

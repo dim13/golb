@@ -29,12 +29,12 @@ func (a *Article) Add(c *Comment) {
 	a.Comments = append(a.Comments, c)
 }
 
-func (a *Article) Enable() {
+func (a *Article) Publish() {
 	a.Date = time.Now()
 	a.Enabled = true
 }
 
-func (a *Article) Disable() {
+func (a *Article) Suppress() {
 	a.Enabled = false
 }
 

@@ -16,11 +16,11 @@ type Comment struct {
 	Enabled bool
 }
 
-func (c *Comment) Enable() {
+func (c *Comment) Publish() {
 	c.Enabled = true
 }
 
-func (c *Comment) Disable() {
+func (c *Comment) Suppress() {
 	c.Enabled = false
 }
 
