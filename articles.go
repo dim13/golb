@@ -72,3 +72,12 @@ func (a Articles) CountTags() map[string]int {
 	}
 	return tags
 }
+
+func (a Article) HasTag(tag string) bool {
+	for _, t := range a.Tags {
+		if t == tag {
+			return true
+		}
+	}
+	return false
+}
