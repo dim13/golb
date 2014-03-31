@@ -63,5 +63,5 @@ func (a Articles) Find(slug string) (*Article, error) {
 }
 
 func (a Articles) Page(page, base int) Articles {
-	return a[page*base : page*base + base]
+	return a[page*base : page*base+base]
 }
