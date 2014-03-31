@@ -1,4 +1,3 @@
-// Comments
 package golb
 
 import (

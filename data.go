@@ -1,4 +1,3 @@
-// JSON Data Storage
 package golb
 
 import (
@@ -9,7 +8,9 @@ import (
 
 type Data struct {
 	Articles Articles
-	fileName     string
+	fileName string
+	TagMap   TagMap
+	Tags     Tags
 }
 
 func Open(name string) *Data {
@@ -36,4 +37,11 @@ func (d *Data) Write() error {
 		return err
 	}
 	return ioutil.WriteFile(d.fileName, data, 0644)
+}
+
+func (d *Data) Add(a *Article) {
+	d.Articles.Add(a)
+	d.Tags = d.Articles.CountTags()
+	d.TagMap = d.Articles.TagMap()
+	d.Write()
 }
