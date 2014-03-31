@@ -61,3 +61,7 @@ func (a Articles) Find(slug string) (*Article, error) {
 	}
 	return &Article{}, errors.New("not found")
 }
+
+func (a Articles) Page(page, base int) Articles {
+	return a[page*base : page*base + base]
+}
