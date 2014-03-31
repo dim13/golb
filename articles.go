@@ -8,6 +8,8 @@ import (
 )
 
 type Articles []*Article
+type TagMap map[string]Articles
+type Tags map[string]int
 
 type Article struct {
 	Date     time.Time
@@ -63,8 +65,8 @@ func (a Articles) Find(slug string) (*Article, error) {
 	return &Article{}, errors.New("not found")
 }
 
-func (a Articles) CountTags() map[string]int {
-	tags := make(map[string]int)
+func (a Articles) CountTags() Tags {
+	tags := make(Tags)
 	for _, article := range a {
 		for _, tag := range article.Tags {
 			tags[tag]++
@@ -80,4 +82,16 @@ func (a Article) HasTag(tag string) bool {
 		}
 	}
 	return false
+}
+
+func (a *Articles) TagMap() TagMap {
+	tm := make(TagMap)
+	for tag, _ := range a.CountTags() {
+		for _, article := range *a {
+			if article.HasTag(tag) {
+				tm[tag] = append(tm[tag], article)
+			}
+		}
+	}
+	return tm
 }
