@@ -13,20 +13,23 @@ Internal
 URL schema
 ----------
 
-URI				| Description
----				| -----------
-/admin				| admin interface
-/admin/add			| add new article
-/admin/{slug}			| edit article
-/admin/{slug}/publish		| enable article
-/admin/{slug}/suppress		| disable article
-/admin/{slug}/commtens		| show articles comments
-/admin/{slug}/commtent/publish	| publish comment
-/admin/{slug}/commtent/suppress	| delete comment
-/{slug}				| show single article
-/{year}/{month}/{slug}		| show single article
-/{year}/{month}			| show all articles of month
-/{year}				| show all artilces of year
-/tag/{tag}			| show all articles with tag
-/page/{number}			| show page number
-/				| show main page
+URI			| Description			| Request
+---			| -----------			| -------
+/admin			| admin interface		| GET
+/admin/add		| add article form		| GET
+/admin/add		| add article			| POST
+/admin/{slug}		| edit article form		| GET
+/admin/{slug}		| enable article		| POST publish
+/admin/{slug}		| disable article		| POST suppress
+/admin/commtents	| show comments			| GET
+/admin/commtents	| publish comment		| POST publish
+/admin/commtents	| delete comment		| POST suppress
+/{slug}			| show single article		| GET
+/{slug}			| show single article		| POST comment
+/{year}/{month}/{slug}	| show single article		| GET
+/{year}/{month}/{slug}	| show single article		| POST comment
+/{year}/{month}		| show all articles of month	| GET
+/{year}			| show all artilces of year	| GET
+/tag/{tag}		| show all articles with tag	| GET
+/page/{number}		| show page number		| GET
+/			| show main page		| GET
