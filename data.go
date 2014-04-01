@@ -39,7 +39,7 @@ func (d *Data) Write() error {
 	return ioutil.WriteFile(d.fileName, data, 0644)
 }
 
-func (d *Data) Add(a *Article) {
+func (d *Data) AddArticle(a *Article) {
 	d.Articles.Add(a)
 	d.Tags = d.Articles.CountTags()
 	d.TagMap = d.Articles.TagMap()

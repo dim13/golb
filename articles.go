@@ -33,6 +33,10 @@ func (a *Article) Suppress() {
 	a.Enabled = false
 }
 
+func (a *Article) AddComment(c *Comment) {
+	a.Comments.Add(c)
+}
+
 func (a Articles) Len() int {
 	return len(a)
 }
