@@ -16,6 +16,9 @@ func root(w http.ResponseWriter, r *http.Request, s []string) {
 
 func main() {
 	d := golb.Open("test.json")
+	if err := d.Read(); err != nil {
+		log.Fatal(err)
+	}
 
 	a := &golb.Article{
 		Title: "Test title",
@@ -23,7 +26,10 @@ func main() {
 		Tags: []string{"no", "tags", "at all"},
 		Author: "me@example.com",
 	}
-	d.Articles.Add(a)
+	err := d.Articles.Add(a)
+	if err != nil {
+		log.Println(err)
+	}
 
 	c := &golb.Comment{
 		Name: "anonymous coward",
@@ -40,9 +46,6 @@ func main() {
 	}
 
 	if err := d.Write(); err != nil {
-		log.Fatal(err)
-	}
-	if err := d.Read(); err != nil {
 		log.Fatal(err)
 	}
 

@@ -45,12 +45,17 @@ func (a Articles) Less(i, j int) bool {
 	return a[i].Date.Before(a[j].Date)
 }
 
-func (a *Articles) Add(article *Article) {
+func (a *Articles) Add(article *Article) error {
 	article.Date = time.Now()
 	if article.Slug == "" {
 		article.makeSlug()
 	}
+	_, err := a.Find(article.Slug)
+	if err == nil {
+		return errors.New("duplicate slug " + article.Slug)
+	}
 	*a = append(*a, article)
+	return nil
 }
 
 func (a Articles) Find(slug string) (*Article, error) {
