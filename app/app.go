@@ -45,7 +45,7 @@ func main() {
 		z.Publish()
 	}
 
-	conf, err := golb.ReadConf("config.json")
+	conf, err := golb.ReadConf("config.ini")
 	if err != nil {
 		log.Fatal(err)
 	}
