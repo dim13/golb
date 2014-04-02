@@ -45,6 +45,12 @@ func main() {
 		z.Publish()
 	}
 
+	conf, err := golb.ReadConf("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(conf)
+
 	if err := d.Write(); err != nil {
 		log.Fatal(err)
 	}
