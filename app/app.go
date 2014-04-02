@@ -17,7 +17,7 @@ func root(w http.ResponseWriter, r *http.Request, s []string) {
 func main() {
 	d := golb.Open("test.json")
 	if err := d.Read(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	a := &golb.Article{

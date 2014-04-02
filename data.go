@@ -1,9 +1,8 @@
 package golb
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"sort"
+	"github.com/dim13/jsondb"
 )
 
 type Data struct {
@@ -20,11 +19,7 @@ func Open(name string) *Data {
 }
 
 func (d *Data) Read() error {
-	data, err := ioutil.ReadFile(d.fileName)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(data, &d.Articles)
+	return jsondb.Read(d.fileName, &d.Articles)
 }
 
 func (d *Data) Write() error {
@@ -32,11 +27,7 @@ func (d *Data) Write() error {
 	for i, _ := range d.Articles {
 		sort.Sort(d.Articles[i].Comments)
 	}
-	data, err := json.MarshalIndent(d.Articles, "", "\t")
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(d.fileName, data, 0644)
+	return jsondb.Write(d.fileName, &d.Articles)
 }
 
 func (d *Data) AddArticle(a *Article) {
