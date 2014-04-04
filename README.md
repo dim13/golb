@@ -1,7 +1,5 @@
-Gold
-====
-
 gold | blog -- Blogs revert
+===========================
 
 Inspired by [Blogsum](https://github.com/obfuscurity/blogsum)
 
