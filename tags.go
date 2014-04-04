@@ -1,4 +1,4 @@
-package golb
+package gold
 
 type TagMap map[string]Articles
 

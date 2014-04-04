@@ -3,7 +3,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/dim13/golb"
+	"github.com/dim13/gold"
 	"log"
 	"net/http"
 )
@@ -15,12 +15,12 @@ func root(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func main() {
-	d := golb.Open("test.json")
+	d := gold.Open("test.json")
 	if err := d.Read(); err != nil {
 		log.Println(err)
 	}
 
-	a := &golb.Article{
+	a := &gold.Article{
 		Title: "Test title",
 		Body: "empty body",
 		Tags: []string{"no", "tags", "at all"},
@@ -31,7 +31,7 @@ func main() {
 		log.Println(err)
 	}
 
-	c := &golb.Comment{
+	c := &gold.Comment{
 		Name: "anonymous coward",
 		Email: "none@example.com",
 		URL: "http://example.com",
@@ -45,7 +45,7 @@ func main() {
 		z.Publish()
 	}
 
-	conf, err := golb.ReadConf("config.ini")
+	conf, err := gold.ReadConf("config.ini")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,7 +56,7 @@ func main() {
 	}
 
 	/*
-	re := new(golb.ReHandler)
+	re := new(gold.ReHandler)
 	re.AddRoute("^/(\\d+)/(.*)$", root)
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)

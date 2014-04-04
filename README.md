@@ -1,11 +1,11 @@
-Golb
+Gold
 ====
 
-Blogs revert
+gold | blog -- Blogs revert
 
 Inspired by [Blogsum](https://github.com/obfuscurity/blogsum)
 
-[Documentation](https://godoc.org/github.com/dim13/golb)
+[Documentation](https://godoc.org/github.com/dim13/gold)
 
 Internal
 ========

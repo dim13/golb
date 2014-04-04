@@ -1,4 +1,4 @@
-package golb
+package gold
 
 import (
 	"code.google.com/p/gcfg"
