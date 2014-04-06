@@ -6,26 +6,26 @@ import (
 
 type settings struct {
 	ArticlesPerPage int
-	TagsInCloud int
-	Db string
+	TagsInCloud     int
+	DataBase        string
 }
 
 type blog struct {
-	Title string
+	Title    string
 	Subtitle string
-	Url string
-	Theme string
-	Owner string
-	Rights string
+	Url      string
+	Theme    string
+	Owner    string
+	Rights   string
 }
 
 type captcha struct {
-	Public string
+	Public  string
 	Private string
 }
 
 type comments struct {
-	Maxlen int
+	Maxlen  int
 	Allowed bool
 }
 
@@ -41,11 +41,11 @@ type google struct {
 
 type Config struct {
 	Settings settings
-	Blog blog
-	Captcha captcha
+	Blog     blog
+	Captcha  captcha
 	Comments comments
-	Smtp smtp
-	Google google
+	Smtp     smtp
+	Google   google
 }
 
 func ReadConf(fname string) (*Config, error) {

@@ -1,0 +1,28 @@
+[settings]
+articlesperpage = 10
+tagsincloud = 20
+database = data/site.json
+
+[blog]
+title = example.com
+subtitle = My new Blog
+url =  http://www.example.com
+theme = default
+owner = user@example.com
+rights = Copyright 2014 Example User
+
+[captcha]
+public =
+private =
+
+[comments]
+maxlen = 1024
+allowed = false
+
+[smtp]
+server = localhost:smtp
+sender = gold@example.com
+
+[google]
+analyticsid =
+webmasterid =
