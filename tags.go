@@ -18,25 +18,25 @@ func (a Articles) CountTags() TagCount {
 	return tags
 }
 
-func (a Article) hasTag(tag string) bool {
-	for _, t := range a.Tags {
-		if t == tag {
-			return true
-		}
-	}
-	return false
-}
-
 func (a *Articles) TagMap() TagMap {
 	tm := make(TagMap)
 	for tag, _ := range a.CountTags() {
 		for _, article := range *a {
-			if article.hasTag(tag) {
+			if article.Tags.Has(tag) {
 				tm[tag] = append(tm[tag], article)
 			}
 		}
 	}
 	return tm
+}
+
+func (ts Tags) Has(tag string) bool {
+	for _, t := range ts {
+		if t == tag {
+			return true
+		}
+	}
+	return false
 }
 
 func (t Tags) String() string {
