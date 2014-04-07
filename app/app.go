@@ -71,8 +71,8 @@ func main() {
 
 	re := new(gold.ReHandler)
 	re.AddRoute("^/admin/(.*)$", admin)
+	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", root)
 	re.AddRoute("^/(\\d+)/(.*)$", root)
-	re.AddRoute("^/(\\d+)/(\\d+)(.*)$", root)
 	re.AddRoute("^/(.*)$", root)
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
