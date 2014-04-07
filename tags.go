@@ -1,7 +1,11 @@
 package gold
 
-type TagMap map[string]Articles
+import (
+	"strings"
+)
 
+type Tags []string
+type TagMap map[string]Articles
 type TagCount map[string]int
 
 func (a Articles) CountTags() TagCount {
@@ -33,4 +37,12 @@ func (a *Articles) TagMap() TagMap {
 		}
 	}
 	return tm
+}
+
+func (t Tags) String() string {
+	return strings.Join(t, ",")
+}
+
+func ReadTags(s string) Tags {
+	return strings.Split(s, ",")
 }

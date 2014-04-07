@@ -7,7 +7,6 @@ import (
 )
 
 type Articles []*Article
-type Tags []string
 
 type Article struct {
 	Date     time.Time
@@ -74,8 +73,4 @@ func (a Articles) Find(slug string) (*Article, error) {
 
 func (a Articles) Page(page, base int) Articles {
 	return a[page*base : page*base+base]
-}
-
-func (t Tags) String() string {
-	return strings.Join(t, ",")
 }
