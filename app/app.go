@@ -4,9 +4,9 @@ package main
 import (
 	"fmt"
 	"github.com/dim13/gold"
+	"html/template"
 	"log"
 	"net/http"
-	"html/template"
 )
 
 const listen = ":8000"
@@ -18,24 +18,36 @@ var (
 )
 
 type Admin struct {
-	Title string
+	Title    string
 	Articles gold.Articles
+	Article  *gold.Article
+	Error    error
 }
 
 func admin(w http.ResponseWriter, r *http.Request, s []string) {
-	p := &Admin {
-		Title: "Admin interface",
-		Articles: data.Articles,
+	log.Println(s)
+	var p Admin
+	if len(s) == 2 {
+		a, err := data.Articles.Find(s[1])
+		if err != nil {
+			p = Admin{Error: err}
+		} else {
+			p = Admin{
+				Title:   a.Title,
+				Article: a,
+			}
+		}
+	} else {
+		p = Admin{
+			Title:    "Admin interface",
+			Articles: data.Articles,
+		}
 	}
-	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-}
-
-func adminAdd(w http.ResponseWriter, r *http.Request, s []string) {
-	fmt.Fprint(w, s)
-}
-
-func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
-	fmt.Fprint(w, s)
+	log.Println(p.Article)
+	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func root(w http.ResponseWriter, r *http.Request, s []string) {
@@ -55,43 +67,13 @@ func main() {
 		log.Println(err)
 	}
 
-	tmpl = template.Must(template.ParseFiles("admin.tmpl"))
-
-	a := &gold.Article{
-		Title: "Test title",
-		Body: "empty body",
-		Tags: []string{"no", "tags", "at all"},
-		Author: "me@example.com",
-	}
-	err = data.Articles.Add(a)
-	if err != nil {
-		log.Println(err)
-	}
-
-	c := &gold.Comment{
-		Name: "anonymous coward",
-		Email: "none@example.com",
-		URL: "http://example.com",
-		Comment: "empty",
-	}
-	a.Comments.Add(c)
-	c.Publish()
-
-	z, err := data.Articles.Find("test-title")
-	if err == nil {
-		z.Publish()
-	}
-
-	if err := data.Write(); err != nil {
-		log.Fatal(err)
-	}
-
+	tmpl = template.Must(template.ParseFiles("admin.tmpl", "edit.tmpl"))
 
 	re := new(gold.ReHandler)
-	re.AddRoute("^/admin/?$", admin)
-	re.AddRoute("^/admin/add$", adminAdd)
-	re.AddRoute("^/admin/(.*)$", adminSlug)
+	re.AddRoute("^/admin/(.*)$", admin)
 	re.AddRoute("^/(\\d+)/(.*)$", root)
+	re.AddRoute("^/(\\d+)/(\\d+)(.*)$", root)
+	re.AddRoute("^/(.*)$", root)
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
 	}

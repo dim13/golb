@@ -2,10 +2,10 @@ package gold
 
 type TagMap map[string]Articles
 
-type Tags map[string]int
+type TagCount map[string]int
 
-func (a Articles) CountTags() Tags {
-	tags := make(Tags)
+func (a Articles) CountTags() TagCount {
+	tags := make(TagCount)
 	for _, article := range a {
 		for _, tag := range article.Tags {
 			tags[tag]++

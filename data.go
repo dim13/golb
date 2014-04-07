@@ -1,15 +1,15 @@
 package gold
 
 import (
-	"sort"
 	"github.com/dim13/jsondb"
+	"sort"
 )
 
 type Data struct {
 	Articles Articles
 	fileName string
 	TagMap   TagMap
-	Tags     Tags
+	Tags     TagCount
 }
 
 func Open(name string) *Data {
