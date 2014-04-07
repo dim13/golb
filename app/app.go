@@ -57,7 +57,7 @@ func root(w http.ResponseWriter, r *http.Request, s []string) {
 func main() {
 	var err error
 
-	conf, err = gold.ReadConf("config.ini")
+	conf, err = gold.ReadConf("config/config.ini")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +67,7 @@ func main() {
 		log.Println(err)
 	}
 
-	tmpl = template.Must(template.ParseFiles("admin.tmpl", "edit.tmpl"))
+	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(gold.ReHandler)
 	re.AddRoute("^/admin/(.*)$", admin)
