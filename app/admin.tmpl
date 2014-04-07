@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{.Title}}</title>
+</head>
+<body>
+<ul>
+{{range .Articles}}
+	<li><a href="/admin/{{.Slug}}">{{.Title}}</a></li>
+{{end}}
+</ul>
+{{with .Error}}
+	<p>{{.}}</p>
+{{end}}
+{{with .Article}}
+{{template "edit.tmpl" .}}
+{{end}}
+</html>
