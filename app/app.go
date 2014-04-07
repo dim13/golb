@@ -27,7 +27,7 @@ func admin(w http.ResponseWriter, r *http.Request, s []string) {
 		Title: "Admin interface",
 		Articles: data.Articles,
 	}
-	tmpl.Execute(w, p)
+	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 }
 
 func adminAdd(w http.ResponseWriter, r *http.Request, s []string) {
