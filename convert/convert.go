@@ -139,9 +139,7 @@ func main() {
 				Enabled: enabled,
 			}
 
-			if c.Enabled {
-				C = append(C, c)
-			}
+			C = append(C, c)
 		}
 
 		a := Article{
@@ -155,9 +153,7 @@ func main() {
 			Comments: C,
 		}
 
-		if a.Enabled {
-			A = append(A, a)
-		}
+		A = append(A, a)
 	}
 
 	data, err := json.MarshalIndent(A, "", "\t")
