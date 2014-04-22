@@ -1,8 +1,18 @@
+<h2>Preview</h2>
+<div>
+{{.Body}}
+</div>
+
+<h2>Edit</h2>
+<div>
 <form id="edit" action="" methon="POST">
 	<p><input size="80" name="title" value="{{.Title}}"> title</p>
 	<p><input size="80" name="slug" value="{{.Slug}}"> slug</p>
 	<p><input size="80" name="tags" value="{{.Tags}}"> tags (e.g. <em>foo,bar,baz</em>)</p>
 	<p><textarea rows="15" cols="80" name="body">{{.Body}}</textarea></p>
 	<p><input type="submit" name="preview" value="preview">
-	   <input type="submit" name="save" value="save"></p>
+	   <input type="submit" name="save" value="save">
+	   <input type="checkbox" name="enabled" value="{{.Enabled}}" {{if .Enabled}}checked{{end}}> enabled
+	</p>
 </form>
+</div>

@@ -4,7 +4,7 @@ package main
 import (
 	"fmt"
 	"github.com/dim13/gold"
-	"html/template"
+	"text/template"
 	"log"
 	"net/http"
 )
@@ -24,30 +24,28 @@ type Admin struct {
 	Error    error
 }
 
-func admin(w http.ResponseWriter, r *http.Request, s []string) {
-	log.Println(s)
+func adminList(w http.ResponseWriter, r *http.Request, s []string) {
+	p := Admin{
+		Title:    "Admin interface",
+		Articles: data.Articles,
+	}
+	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+}
+
+func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 	var p Admin
-	if len(s) == 2 {
-		a, err := data.Articles.Find(s[1])
-		if err != nil {
-			p = Admin{Error: err}
-		} else {
-			p = Admin{
-				Title:   a.Title,
-				Article: a,
-			}
-		}
+
+	a, err := data.Articles.Find(s[0])
+	if err != nil {
+		p = Admin{Error: err}
 	} else {
 		p = Admin{
-			Title:    "Admin interface",
-			Articles: data.Articles,
+			Title:   a.Title,
+			Article: a,
 		}
 	}
-	log.Println(p.Article)
-	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-	if err != nil {
-		log.Println(err)
-	}
+
+	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 }
 
 func root(w http.ResponseWriter, r *http.Request, s []string) {
@@ -70,10 +68,12 @@ func main() {
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(gold.ReHandler)
-	re.AddRoute("^/admin/(.*)$", admin)
+	re.AddRoute("^/admin/(.+)$", adminSlug)
+	re.AddRoute("^/admin/?$", adminList)
 	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", root)
 	re.AddRoute("^/(\\d+)/(.*)$", root)
 	re.AddRoute("^/(.*)$", root)
+
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
 	}

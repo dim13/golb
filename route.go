@@ -25,7 +25,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, route := range h.routes {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
-			route.handler(w, r, matches)
+			route.handler(w, r, matches[1:])
 			return
 		}
 	}
