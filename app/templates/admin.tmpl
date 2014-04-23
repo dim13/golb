@@ -6,7 +6,7 @@
 <body>
 <ul>
 {{range .Articles}}
-	<li><a href="/admin/{{.Slug}}">{{.Title}}</a></li>
+	<li>{{.PostDate}} {{.Enabled}} <a href="/admin/{{.Slug}}">{{.Title}}</a> {{.Tags}}</li>
 {{end}}
 </ul>
 {{with .Error}}

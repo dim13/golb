@@ -39,3 +39,7 @@ func (c *Comments) Add(comment *Comment) {
 	comment.Date = time.Now()
 	*c = append(*c, comment)
 }
+
+func (c *Comment) PostDate() string {
+	return c.Date.Format(TimeFormat)	// defined in articles.go
+}

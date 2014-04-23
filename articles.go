@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var TimeFormat = "2006-01-02 15:04"
+
 type Articles []*Article
 
 type Article struct {
@@ -21,7 +23,7 @@ type Article struct {
 
 func (a *Article) makeSlug() {
 	r := strings.NewReplacer(" ", "-")
-	a.Slug = strings.ToLower(r.Replace(a.Title))
+	a.Slug = r.Replace(strings.TrimSpace(a.Title))
 }
 
 func (a *Article) Publish() {
@@ -73,4 +75,8 @@ func (a Articles) Find(slug string) (*Article, error) {
 
 func (a Articles) Page(page, base int) Articles {
 	return a[page*base : page*base+base]
+}
+
+func (a *Article) PostDate() string {
+	return a.Date.Format(TimeFormat)
 }
