@@ -7,6 +7,7 @@ import (
 	"text/template"
 	"log"
 	"net/http"
+	"sort"
 )
 
 const listen = ":8000"
@@ -64,6 +65,7 @@ func main() {
 	if err := data.Read(); err != nil {
 		log.Println(err)
 	}
+	sort.Sort(sort.Reverse(data.Articles))
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 

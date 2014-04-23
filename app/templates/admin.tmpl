@@ -6,7 +6,20 @@
 <body>
 <ul>
 {{range .Articles}}
-	<li>{{.PostDate}} {{.Enabled}} <a href="/admin/{{.Slug}}">{{.Title}}</a> {{.Tags}}</li>
+	<li>
+		{{if .Enabled}}{{else}}<s>{{end}}
+		{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a> {{.Tags}}
+		{{if .Enabled}}{{else}}</s>{{end}}
+		<ul>
+		{{range .Comments}}
+			<li>
+			{{if .Enabled}}{{else}}<s>{{end}}
+			{{.PostDate}} {{.Name}}
+			{{if .Enabled}}{{else}}</s>{{end}}
+			</li>
+		{{end}}
+		</ul>
+	</li>
 {{end}}
 </ul>
 {{with .Error}}
