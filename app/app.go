@@ -24,10 +24,13 @@ type Page struct {
 	Articles gold.Articles
 	Article  *gold.Article
 	Error    error
+	PrevPage int
+	NextPage int
 }
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 	p := Page{
+		Config:   conf,
 		Title:    "Admin interface",
 		Articles: data.Articles,
 	}
@@ -42,9 +45,13 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 
 	a, err := data.Articles.Find(s[0])
 	if err != nil {
-		p = Page{Error: err}
+		p = Page{
+			Config: conf,
+			Error:  err,
+		}
 	} else {
 		p = Page{
+			Config:  conf,
 			Title:   a.Title,
 			Article: a,
 		}
@@ -57,11 +64,16 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func index(w http.ResponseWriter, r *http.Request, s []string) {
-	page(w, r, []string{"0"})
+	page(w, r, []string{"1"})
 }
 
 func page(w http.ResponseWriter, r *http.Request, s []string) {
-	var a gold.Articles
+	var (
+		a    gold.Articles
+		prev int
+		next int
+	)
+
 	n := conf.Blog.ArticlesPerPage
 
 	pg, err := strconv.Atoi(s[0])
@@ -75,16 +87,37 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 	}
 
-	first := (pg * n) % len(a)
-	last := first + n
+	/* sanitize lower bound */
+	if pg < 1 {
+		pg = 1
+	}
+
+	/* sanitize upper bound */
+	m := len(a)/n + 1
+	if pg > m {
+		pg = m
+	}
+
+	first := (pg - 1) * n
+	last := first + n - 1
 	if last > len(a) {
 		last = len(a)
+	}
+
+	if pg > 1 {
+		prev = pg - 1
+	}
+
+	if pg < m {
+		next = pg + 1
 	}
 
 	p := Page{
 		Config:   conf,
 		Title:    conf.Blog.Title,
-		Articles: a[first : last],
+		Articles: a[first:last],
+		NextPage: next,
+		PrevPage: prev,
 	}
 
 	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
@@ -101,13 +134,18 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 	}
 	p := Page{
-		Title:    s[0],
+		Config:   conf,
+		Title:    "Tag " + s[0],
 		Articles: a,
 	}
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func assets(w http.ResponseWriter, r *http.Request, s []string) {
+	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
 func main() {
@@ -127,6 +165,8 @@ func main() {
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(gold.ReHandler)
+	re.AddRoute("^/assets/", assets)
+	re.AddRoute("^/images/", assets)
 	re.AddRoute("^/admin/(.+)$", adminSlug)
 	re.AddRoute("^/admin/?$", adminList)
 	re.AddRoute("^/tags?/(.+)$", tags)

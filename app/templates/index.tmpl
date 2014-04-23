@@ -4,17 +4,32 @@
 
 <body>
 
-<article>
 {{range .Articles}}
-	{{.ReadMore}}
-	<p>Published {{.Date}}</p>
-
-	<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
+	<article>
+		<header>
+			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
+		</header>
+		{{.ReadMore}}
+		{{if .HasMore}}
+			<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a>&hellip;</p>
+		{{end}}
+		<footer>
+		<p>Published: {{.PostDate}}</p>
+		<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
+		</footer>
+	</article>
 {{end}}
-</article>
 
-{{with .Error}}
+	{{with .Error}}
 	<p>{{.}}</p>
-{{end}}
+	{{end}}
+
+	{{with .PrevPage}}
+	<a href="/page/{{.}}">&larr; Newer Articles</a>
+	{{end}}
+
+	{{with .NextPage}}
+	<a href="/page/{{.}}">Older Articles &rarr;</a>
+	{{end}}
 
 </html>

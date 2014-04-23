@@ -6,7 +6,10 @@ import (
 	"time"
 )
 
-var TimeFormat = "2006-01-02 15:04"
+var (
+	TimeFormat = "January 2, 2006"
+	readMore = "<!--readmore-->"
+)
 
 type Articles []*Article
 
@@ -82,8 +85,12 @@ func (a *Article) PostDate() string {
 }
 
 func (a *Article) ReadMore() string {
-	if i := strings.Index(a.Body, "<!--readmore-->"); i > 0 {
+	if i := strings.Index(a.Body, readMore); i > 0 {
 		return a.Body[:i]
 	}
 	return a.Body
+}
+
+func (a *Article) HasMore() bool {
+	return strings.Contains(a.Body, readMore)
 }
