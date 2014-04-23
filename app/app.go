@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strconv"
 	"text/template"
 )
 
@@ -56,18 +57,37 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func index(w http.ResponseWriter, r *http.Request, s []string) {
+	page(w, r, []string{"0"})
+}
+
+func page(w http.ResponseWriter, r *http.Request, s []string) {
 	var a gold.Articles
+	n := conf.Blog.ArticlesPerPage
+
+	pg, err := strconv.Atoi(s[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	for _, v := range data.Articles {
 		if v.Enabled {
 			a = append(a, v)
 		}
 	}
+
+	first := (pg * n) % len(a)
+	last := first + n
+	if last > len(a) {
+		last = len(a)
+	}
+
 	p := Page{
 		Config:   conf,
 		Title:    conf.Blog.Title,
-		Articles: a[:conf.Blog.ArticlesPerPage],
+		Articles: a[first : last],
 	}
-	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
+
+	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,7 +129,8 @@ func main() {
 	re := new(gold.ReHandler)
 	re.AddRoute("^/admin/(.+)$", adminSlug)
 	re.AddRoute("^/admin/?$", adminList)
-	re.AddRoute("^/tags?/(.*)$", tags)
+	re.AddRoute("^/tags?/(.+)$", tags)
+	re.AddRoute("^/page/(\\d+)$", page)
 	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(.*)$", index)

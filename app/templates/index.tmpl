@@ -6,7 +6,7 @@
 
 <article>
 {{range .Articles}}
-	{{.Body}}
+	{{.CutOff}}
 	<p>Published {{.Date}}</p>
 
 	<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
