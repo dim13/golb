@@ -81,9 +81,8 @@ func (a *Article) PostDate() string {
 	return a.Date.Format(TimeFormat)
 }
 
-func (a *Article) CutOff() string {
-	i := strings.Index(a.Body, "<!--readmore-->")
-	if i != -1 {
+func (a *Article) ReadMore() string {
+	if i := strings.Index(a.Body, "<!--readmore-->"); i > 0 {
 		return a.Body[:i]
 	}
 	return a.Body
