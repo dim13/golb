@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{.Title}}</title>
+</head>
+<body>
+
+<article>
+{{range .Articles}}
+	{{.Body}}
+	<p>Published {{.Date}}</p>
+
+	<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
+{{end}}
+</article>
+
+{{with .Error}}
+	<p>{{.}}</p>
+{{end}}
+
+</html>

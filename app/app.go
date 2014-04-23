@@ -2,12 +2,11 @@
 package main
 
 import (
-	"fmt"
 	"github.com/dim13/gold"
-	"text/template"
 	"log"
 	"net/http"
 	"sort"
+	"text/template"
 )
 
 const listen = ":8000"
@@ -18,7 +17,7 @@ var (
 	tmpl *template.Template
 )
 
-type Admin struct {
+type Page struct {
 	Title    string
 	Articles gold.Articles
 	Article  *gold.Article
@@ -26,7 +25,7 @@ type Admin struct {
 }
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
-	p := Admin{
+	p := Page{
 		Title:    "Admin interface",
 		Articles: data.Articles,
 	}
@@ -34,13 +33,13 @@ func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
-	var p Admin
+	var p Page
 
 	a, err := data.Articles.Find(s[0])
 	if err != nil {
-		p = Admin{Error: err}
+		p = Page{Error: err}
 	} else {
-		p = Admin{
+		p = Page{
 			Title:   a.Title,
 			Article: a,
 		}
@@ -49,8 +48,32 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 }
 
-func root(w http.ResponseWriter, r *http.Request, s []string) {
-	fmt.Fprint(w, s)
+func index(w http.ResponseWriter, r *http.Request, s []string) {
+	var a gold.Articles
+	for _, v := range data.Articles {
+		if v.Enabled {
+			a = append(a, v)
+		}
+	}
+	p := Page{
+		Title:    conf.Blog.Title,
+		Articles: a,
+	}
+	tmpl.ExecuteTemplate(w, "index.tmpl", p)
+}
+
+func tags(w http.ResponseWriter, r *http.Request, s []string) {
+	var a gold.Articles
+	for _, v := range data.Articles {
+		if v.Tags.Has(s[0]) {
+			a = append(a, v)
+		}
+	}
+	p := Page{
+		Title:    s[0],
+		Articles: a,
+	}
+	tmpl.ExecuteTemplate(w, "index.tmpl", p)
 }
 
 func main() {
@@ -72,9 +95,10 @@ func main() {
 	re := new(gold.ReHandler)
 	re.AddRoute("^/admin/(.+)$", adminSlug)
 	re.AddRoute("^/admin/?$", adminList)
-	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", root)
-	re.AddRoute("^/(\\d+)/(.*)$", root)
-	re.AddRoute("^/(.*)$", root)
+	re.AddRoute("^/tags?/(.*)$", tags)
+	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
+	re.AddRoute("^/(\\d+)/(.*)$", index)
+	re.AddRoute("^/(.*)$", index)
 
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
