@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 {{template "header.tmpl" .}}
+{{$expand := .Expand}}
 
 <body>
 
@@ -9,9 +10,13 @@
 		<header>
 			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
 		</header>
+		{{if $expand}}
+		{{.Body}}
+		{{else}}
 		{{.ReadMore}}
 		{{if .HasMore}}
 			<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a>&hellip;</p>
+		{{end}}
 		{{end}}
 		<footer>
 		<p>Published: {{.PostDate}}</p>

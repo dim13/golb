@@ -26,6 +26,7 @@ type Page struct {
 	Error    error
 	PrevPage int
 	NextPage int
+	Expand   bool
 }
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
@@ -64,7 +65,23 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func index(w http.ResponseWriter, r *http.Request, s []string) {
-	page(w, r, []string{"1"})
+	var p Page
+
+	a, err := data.Articles.Find(s[0])
+	if err == nil {
+		p = Page{
+			Config:   conf,
+			Title:    a.Title,
+			Articles: gold.Articles{a},
+			Expand:   true,
+		}
+		err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		page(w, r, []string{"1"})
+	}
 }
 
 func page(w http.ResponseWriter, r *http.Request, s []string) {
