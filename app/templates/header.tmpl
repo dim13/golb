@@ -1,0 +1,43 @@
+<head>
+	<meta charset="UTF-8">
+	<title>{{.Title}}</title>
+	<meta name="generator" content="gold|blog">
+
+	<link rel="stylesheet" type="text/css" href="/assets/style.css" title="Default">
+	<link rel="alternate" type="application/rss+xml" href="/rss.xml" title="{{.Title}}">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	
+	{{with .Config.Google.WebmasterID}}
+	<meta name="google-site-verification" content="{{.}}">
+	{{end}}
+	
+	{{with .Config.Google.AnalyticsID}}
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', '{{.}}']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = '//' + ('https:' == document.location.protocol ? 'ssl' : 'www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+	{{end}}
+
+	<!--[if lt IE 9]>
+	<script>
+	(function(){
+		var f=document.createElement;
+		f('section');
+		f('article');
+		f('aside');
+		f('footer');
+		f('header');
+		f('nav');
+		f('hgroup');
+		f('time');
+	})()
+	</script>
+	<![endif]-->
+</head>

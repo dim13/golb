@@ -18,6 +18,7 @@ var (
 )
 
 type Page struct {
+	Config   *gold.Config
 	Title    string
 	Articles gold.Articles
 	Article  *gold.Article
@@ -29,7 +30,10 @@ func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 		Title:    "Admin interface",
 		Articles: data.Articles,
 	}
-	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
@@ -45,7 +49,10 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 	}
 
-	tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	err = tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func index(w http.ResponseWriter, r *http.Request, s []string) {
@@ -56,10 +63,14 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 	}
 	p := Page{
+		Config:   conf,
 		Title:    conf.Blog.Title,
-		Articles: a,
+		Articles: a[:conf.Blog.ArticlesPerPage],
 	}
-	tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func tags(w http.ResponseWriter, r *http.Request, s []string) {
@@ -73,7 +84,10 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 		Title:    s[0],
 		Articles: a,
 	}
-	tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -84,7 +98,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	data = gold.Open(conf.Settings.DataBase)
+	data = gold.Open(conf.Blog.DataBase)
 	if err := data.Read(); err != nil {
 		log.Println(err)
 	}

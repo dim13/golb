@@ -4,12 +4,6 @@ import (
 	"code.google.com/p/gcfg"
 )
 
-type settings struct {
-	ArticlesPerPage int
-	TagsInCloud     int
-	DataBase        string
-}
-
 type blog struct {
 	Title    string
 	Subtitle string
@@ -17,6 +11,9 @@ type blog struct {
 	Theme    string
 	Owner    string
 	Rights   string
+	ArticlesPerPage int
+	TagsInCloud     int
+	DataBase        string
 }
 
 type captcha struct {
@@ -40,7 +37,6 @@ type google struct {
 }
 
 type Config struct {
-	Settings settings
 	Blog     blog
 	Captcha  captcha
 	Comments comments
