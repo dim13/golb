@@ -152,7 +152,7 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 	p := Page{
 		Config:   conf,
-		Title:    "Tag " + s[0],
+		Title:    conf.Blog.Title + " - " + s[0],
 		Articles: a,
 	}
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
