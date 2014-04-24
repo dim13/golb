@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+{{$url := .Config.Blog.Url}}
+{{$owner := .Config.Blog.Owner}}
+<channel>
+	<title>{{.Config.Blog.Title}}</title>
+	<link>{{$url}}</link>
+	<description>{{.Config.Blog.Subtitle}}</description>
+	{{range .Articles}}
+	<item>
+		<title>{{.Title}}</title>
+		<link>{{$url}}/{{.Slug}}</link>
+		<description>{{.ReadMore}}</description>
+		{{range .Tags}}
+		<category>{{.}}</category>
+		{{end}}
+		<comments>{{$url}}/{{.Slug}}#comments</comments>
+		<pubDate>{{.Date}}</pubDate>
+	</item>
+	{{end}}
+</channel>
+</rss>

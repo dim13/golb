@@ -165,6 +165,26 @@ func assets(w http.ResponseWriter, r *http.Request, s []string) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
+func rss(w http.ResponseWriter, r *http.Request, s []string) {
+	var a gold.Articles
+	for i, v := range data.Articles {
+		if v.Enabled {
+			a = append(a, v)
+		}
+		if i > conf.Blog.ArticlesPerPage {
+			break
+		}
+	}
+	p := Page{
+		Config: conf,
+		Articles: a,
+	}
+	err := tmpl.ExecuteTemplate(w, "rss.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 	var err error
 
@@ -188,6 +208,7 @@ func main() {
 	re.AddRoute("^/admin/?$", adminList)
 	re.AddRoute("^/tags?/(.+)$", tags)
 	re.AddRoute("^/page/(\\d+)$", page)
+	re.AddRoute("^/rss\\.xml$", rss)
 	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(.*)$", index)
