@@ -81,11 +81,11 @@ func (a Articles) Page(page, base int) Articles {
 }
 
 func (a *Article) PostDate() string {
-	return a.Date.Format(TimeFormat)
+	return a.Date.Local().Format(TimeFormat)
 }
 
 func (a *Article) RssDate() string {
-	return a.Date.Format(time.RFC1123)
+	return a.Date.Local().Format(time.RFC1123Z)
 }
 
 func (a *Article) ReadMore() string {

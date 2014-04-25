@@ -41,5 +41,5 @@ func (c *Comments) Add(comment *Comment) {
 }
 
 func (c *Comment) PostDate() string {
-	return c.Date.Format(TimeFormat)	// defined in articles.go
+	return c.Date.Local().Format(TimeFormat)	// defined in articles.go
 }
