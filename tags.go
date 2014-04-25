@@ -76,7 +76,7 @@ func (a Articles) TagCloud(n int) TagCloud {
 	bottom := tc[len(tc)-1].Wight
 	for i, _ := range tc {
 		tc[i].Wight -= bottom - 1
-		tc[i].Wight = 5 - 5 / tc[i].Wight
+		tc[i].Wight = 5 / tc[i].Wight
 	}
 	sort.Sort(ByName(tc))
 	return tc

@@ -1,0 +1,283 @@
+@import url(//fonts.googleapis.com/css?family=Play|Inconsolata&subset=latin,cyrillic);
+
+@font-face {
+	font-family: 'EntypoSocial';
+	font-style: normal;
+	font-weight: normal;
+	src: url(/themes/dim13-html5/fonts/entypo-social.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Entypo';
+	font-style: normal;
+	font-weight: normal;
+	src: url(/themes/dim13-html5/fonts/entypo.woff) format('woff');
+}
+
+.social { font-family: 'EntypoSocial'; font-size: 18pt; }
+.entypo { font-family: 'Entypo'; font-size: 18pt; }
+
+pre, code, kbd {
+	font-family: 'Inconsolata', monospace;
+}
+
+body, input, textarea {
+	font-family: 'Play', sans-serif;
+}
+
+body, html {
+	color: #2e3436;
+	background-color: #ffffff;
+}
+
+blockquote, pre {
+	padding: 1ex 2ex;
+	font-size: smaller;
+}
+
+blockquote {
+	color: #555753;
+	margin: 0pt 1em;
+	border-left: thick solid #d3d7cf;
+}
+
+body {
+	margin: 3% 8% 2% 12%;
+}
+
+* {
+	font-weight: normal;
+}
+
+pre {
+	background-color: #ffffea;
+	overflow: auto;
+}
+
+video {
+	max-width: 100%;
+}
+img {
+	max-width: calc(100% - 2ex);
+	padding: 1ex;
+}
+img, pre {
+	border-radius: 1ex;
+}
+textarea, input, pre, img {
+	border: thin solid #d3d7cf;
+}
+#logo {
+	float: right;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #cd5c00;
+}
+a:hover {
+	text-decoration: underline;
+	/* text-shadow: #555753 0.1ex 0.1ex 0.1ex, #555753 0ex 0ex 0.5ex; */
+}
+
+#blog_title {
+	font-size: 2.2em;
+	text-shadow: #555753 1px 1px 1px;
+}
+#blog_title a {
+	color: #000000;
+}
+#blog_subtitle {
+	margin-left: 0.1em;
+	font-size: 1.1em;
+}
+
+h1 a {
+	color: inherit;
+}
+
+header {
+	margin-bottom: 2em;
+}
+header p {
+	margin: 0;
+	color: #888a85;
+	font-size: smaller;
+}
+header p a {
+	color: #3465a4;
+}
+ 
+header ul {
+	color: #888a85;
+	font-size: smaller;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+header li a {
+	color: #3465a4;
+}
+header li.author {
+/*	float: left; */
+/*	display: inline; */
+	text-align: left;
+}
+header li.social {
+	float: right;
+	text-align: right;
+	margin-top: -1ex;
+}
+
+/* IE lt 9 hack */
+section, article, aside, footer, header, nav, hgroup {
+	display:block;
+}
+
+div {
+	width: 70%;
+	float: left;
+}
+
+article {
+	margin-bottom: 2em;
+}
+
+aside {
+	float: right;
+	width: 25%;
+	margin-bottom: 2em;
+	color: #555753;
+}
+aside h3 {
+	border-bottom: thin solid #d3d7cf;
+	text-shadow: #555753 1px 1px 1px;
+}
+aside section {
+	margin-bottom: 10%;
+}
+aside ul {
+	list-style: none;
+	padding: 0;
+}
+aside ul ul {
+	list-style: none;
+	margin-left: 2em;
+}
+
+article h1 {
+	border-bottom: thin solid #d3d7cf;
+	text-shadow: #555753 1px 1px 1px;
+}
+article footer {
+	border: none;
+}
+article footer a {
+	margin-left: 0.5ex;
+}
+
+footer {
+	clear: both;
+	text-align: center;
+	font-size: smaller;
+	color: #888a85;
+	border-top: thin solid #d3d7cf;
+	padding: 1em 0pt;
+	margin-top: 2em;
+}
+footer p {
+	text-align: left;
+}
+footer a {
+	color: #3465a4;
+}
+footer ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+footer li.comments_count {
+	float: left;
+	text-align: left;
+}
+footer li.tags {
+	text-align: right;
+}
+footer li.lastpage {
+	float: left;
+	text-align: left;
+}
+footer li.nextpage {
+	float: right;
+	text-align: right;
+}
+#archive a {
+	margin-right: 1em;
+}
+#tagcloud a {
+	color: #3465a4;
+}
+#tagcloud li {
+	display: inline;
+	margin-right: 0.5ex;
+}
+li.tagcloud_0 {
+	font-size: 1.20em;
+}
+li.tagcloud_1 {
+	font-size: 1.00em;
+}
+li.tagcloud_2 {
+	font-size: 0.90em;
+}
+li.tagcloud_3 {
+	font-size: 0.80em;
+}
+li.tagcloud_4 {
+	font-size: 0.70em;
+}
+li.tagcloud_5 {
+	font-size: 0.60em;
+}
+
+#error {
+	color: #a40000;
+	font-size: larger;
+}
+#error img {
+	margin-top: 5ex;
+	border: none;
+}
+#message {
+	color: #4e9a06;
+	font-size: larger;
+}
+
+#moderate {
+	color: #a40000;
+}
+#preview {
+	padding: 3% 5%;
+	margin: 0 35% 10% 0;
+	border: thin dotted #d3d7cf;
+}
+section.tiles {
+	background-color: #eeeeee;
+	border: thin dotted #d3d7cf;
+	border-radius: 1ex;
+	float: left;
+	margin-right: 1em;
+	margin-bottom: 1em;
+	padding: 1em;
+}
+section.tiles footer {
+	border: none;
+	padding: 0;
+}
+
+span[title] {
+	border-bottom: dashed thin;
+}
