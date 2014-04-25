@@ -27,6 +27,7 @@ type Page struct {
 	PrevPage int
 	NextPage int
 	Expand   bool
+	TagCloud gold.TagCloud
 }
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
@@ -91,6 +92,7 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 		next int
 	)
 
+	tc := data.Articles.TagCloud(conf.Blog.TagsInCloud)
 	n := conf.Blog.ArticlesPerPage
 
 	pg, err := strconv.Atoi(s[0])
@@ -135,6 +137,7 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 		Articles: a[first:last],
 		NextPage: next,
 		PrevPage: prev,
+		TagCloud: tc,
 	}
 
 	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)

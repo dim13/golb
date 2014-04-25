@@ -5,6 +5,7 @@
 
 <body>
 
+<div>
 {{range .Articles}}
 	<article>
 		<header>
@@ -24,11 +25,23 @@
 		</footer>
 	</article>
 {{end}}
+</div>
+
+<aside>
+	<section id="tagcloud">
+	<h3>Tag Cloud</h3>
+	<ul>
+	{{range .TagCloud}}
+	<li class="tagcloud_{{.Wight}}"><a href="/tag/{{.Tag}}">{{.Tag}}</a></li>
+	{{end}}
+	</section>
+</aside>
 
 	{{with .Error}}
 	<p>{{.}}</p>
 	{{end}}
 
+<footer>
 	{{with .PrevPage}}
 	<a href="/page/{{.}}">&larr; Newer Articles</a>
 	{{end}}
@@ -36,5 +49,6 @@
 	{{with .NextPage}}
 	<a href="/page/{{.}}">Older Articles &rarr;</a>
 	{{end}}
+</footer>
 
 </html>
