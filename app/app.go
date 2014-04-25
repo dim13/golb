@@ -32,7 +32,6 @@ type Page struct {
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 	p := Page{
-		Config:   conf,
 		Title:    "Admin interface",
 		Articles: data.Articles,
 	}
@@ -48,12 +47,10 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 	a, err := data.Articles.Find(s[0])
 	if err != nil {
 		p = Page{
-			Config: conf,
 			Error:  err,
 		}
 	} else {
 		p = Page{
-			Config:  conf,
 			Title:   a.Title,
 			Article: a,
 		}
@@ -71,15 +68,11 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 	a, err := data.Articles.Find(s[0])
 	if err == nil {
 		p = Page{
-			Config:   conf,
 			Title:    a.Title,
 			Articles: gold.Articles{a},
 			Expand:   true,
 		}
-		err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
-		if err != nil {
-			log.Fatal(err)
-		}
+		genpage(w, p)
 	} else {
 		page(w, r, []string{"1"})
 	}
@@ -87,12 +80,11 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 
 func page(w http.ResponseWriter, r *http.Request, s []string) {
 	var (
-		a    gold.Articles
 		prev int
 		next int
 	)
 
-	tc := data.Articles.TagCloud(conf.Blog.TagsInCloud)
+	a := data.Articles.Enabled()
 	n := conf.Blog.ArticlesPerPage
 
 	pg, err := strconv.Atoi(s[0])
@@ -100,11 +92,6 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 		log.Fatal(err)
 	}
 
-	for _, v := range data.Articles {
-		if v.Enabled {
-			a = append(a, v)
-		}
-	}
 
 	/* sanitize lower bound */
 	if pg < 1 {
@@ -132,18 +119,13 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 
 	p := Page{
-		Config:   conf,
 		Title:    conf.Blog.Title,
 		Articles: a[first:last],
 		NextPage: next,
 		PrevPage: prev,
-		TagCloud: tc,
 	}
 
-	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
+	genpage(w, p)
 }
 
 func tags(w http.ResponseWriter, r *http.Request, s []string) {
@@ -154,14 +136,10 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 	}
 	p := Page{
-		Config:   conf,
 		Title:    conf.Blog.Title + " - " + s[0],
 		Articles: a,
 	}
-	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
+	genpage(w, p)
 }
 
 func assets(w http.ResponseWriter, r *http.Request, s []string) {
@@ -169,19 +147,14 @@ func assets(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func rss(w http.ResponseWriter, r *http.Request, s []string) {
-	var a gold.Articles
-	for i, v := range data.Articles {
-		if v.Enabled {
-			a = append(a, v)
-		}
-		if i > conf.Blog.ArticlesPerPage {
-			break
-		}
-	}
+	a := data.Articles.Enabled()
+	app := conf.Blog.ArticlesPerPage
+
 	p := Page{
 		Config: conf,
-		Articles: a,
+		Articles: a[:app],
 	}
+
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", p)
 	if err != nil {
 		log.Fatal(err)
@@ -195,11 +168,17 @@ func year(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 	a := data.Articles.Year(y)
 	p := Page{
-		Config:   conf,
 		Title:    conf.Blog.Title + " - " + s[0],
 		Articles: a,
 	}
-	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	genpage(w, p)
+}
+
+func genpage(w http.ResponseWriter, p Page) {
+	p.TagCloud = data.Articles.TagCloud(conf.Blog.TagsInCloud)
+	p.Config = conf
+
+	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Fatal(err)
 	}

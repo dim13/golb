@@ -92,21 +92,30 @@ func (a Article) HasMore() bool {
 }
 
 func (a Articles) Year(year int) (A Articles) {
-	for i, _ := range a {
-		if a[i].Date.Year() == year &&
-			a[i].Enabled {
-			A = append(A, a[i])
+	for _, v := range a {
+		if v.Date.Year() == year &&
+			v.Enabled {
+			A = append(A, v)
 		}
 	}
 	return A
 }
 
 func (a Articles) YearMonth(year, month int) (A Articles) {
-	for i, _ := range a {
-		if a[i].Date.Year() == year &&
-			a[i].Date.Month() == time.Month(month) &&
-			a[i].Enabled {
-			A = append(A, a[i])
+	for _, v := range a {
+		if v.Date.Year() == year &&
+			v.Date.Month() == time.Month(month) &&
+			v.Enabled {
+			A = append(A, v)
+		}
+	}
+	return A
+}
+
+func (a Articles) Enabled() (A Articles) {
+	for _, v := range a {
+		if v.Enabled {
+			A = append(A, v)
 		}
 	}
 	return A
