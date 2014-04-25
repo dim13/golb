@@ -68,8 +68,30 @@ func (a Articles) Find(slug string) (*Article, error) {
 	return &Article{}, errors.New("not found")
 }
 
-func (a Articles) Page(page, base int) Articles {
-	return a[page*base : page*base+base]
+func (a Articles) Page(page, app int) (Articles, int, int) {
+	var next, prev int
+
+	lastpage := len(a)/app + 1
+
+	if page <= 1 {
+		page = 1
+	} else {
+		prev = page - 1
+	}
+
+	if page >= lastpage {
+		page = lastpage
+	} else {
+		next = page + 1
+	}
+
+	from := (page - 1) * app
+	to := from + app - 1
+	if to > len(a) {
+		to = len(a)
+	}
+
+	return a[from:to], next, prev
 }
 
 func (a Article) PostDate() string {

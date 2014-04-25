@@ -79,48 +79,18 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func page(w http.ResponseWriter, r *http.Request, s []string) {
-	var (
-		prev int
-		next int
-	)
-
-	a := data.Articles.Enabled()
-	n := conf.Blog.ArticlesPerPage
-
 	pg, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)
 	}
+	app := conf.Blog.ArticlesPerPage
 
-
-	/* sanitize lower bound */
-	if pg < 1 {
-		pg = 1
-	}
-
-	/* sanitize upper bound */
-	m := len(a)/n + 1
-	if pg > m {
-		pg = m
-	}
-
-	first := (pg - 1) * n
-	last := first + n - 1
-	if last > len(a) {
-		last = len(a)
-	}
-
-	if pg > 1 {
-		prev = pg - 1
-	}
-
-	if pg < m {
-		next = pg + 1
-	}
+	a, next, prev := data.Articles.Enabled().Page(pg, app)
+	log.Println(a, next, prev)
 
 	p := Page{
 		Title:    conf.Blog.Title,
-		Articles: a[first:last],
+		Articles: a,
 		NextPage: next,
 		PrevPage: prev,
 	}
