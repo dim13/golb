@@ -188,6 +188,23 @@ func rss(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 }
 
+func year(w http.ResponseWriter, r *http.Request, s []string) {
+	y, err := strconv.Atoi(s[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	a := data.Articles.Year(y)
+	p := Page{
+		Config:   conf,
+		Title:    conf.Blog.Title + " - " + s[0],
+		Articles: a,
+	}
+	err = tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
 	var err error
 
@@ -212,8 +229,8 @@ func main() {
 	re.AddRoute("^/tags?/(.+)$", tags)
 	re.AddRoute("^/page/(\\d+)$", page)
 	re.AddRoute("^/rss\\.xml$", rss)
+	re.AddRoute("^/(\\d+)/$", year)
 	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
-	re.AddRoute("^/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(.*)$", index)
 
 	if err := http.ListenAndServe(listen, re); err != nil {

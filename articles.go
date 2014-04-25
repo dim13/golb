@@ -8,7 +8,7 @@ import (
 
 var (
 	TimeFormat = "January 2, 2006"
-	readMore = "<!--readmore-->"
+	readMore   = "<!--readmore-->"
 )
 
 type Articles []*Article
@@ -42,17 +42,9 @@ func (a *Article) AddComment(c *Comment) {
 	a.Comments.Add(c)
 }
 
-func (a Articles) Len() int {
-	return len(a)
-}
-
-func (a Articles) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
-func (a Articles) Less(i, j int) bool {
-	return a[i].Date.Before(a[j].Date)
-}
+func (a Articles) Len() int           { return len(a) }
+func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 
 func (a *Articles) Add(article *Article) error {
 	article.Date = time.Now()
@@ -80,21 +72,42 @@ func (a Articles) Page(page, base int) Articles {
 	return a[page*base : page*base+base]
 }
 
-func (a *Article) PostDate() string {
+func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
 }
 
-func (a *Article) RssDate() string {
+func (a Article) RssDate() string {
 	return a.Date.Local().Format(time.RFC1123Z)
 }
 
-func (a *Article) ReadMore() string {
+func (a Article) ReadMore() string {
 	if i := strings.Index(a.Body, readMore); i > 0 {
 		return a.Body[:i]
 	}
 	return a.Body
 }
 
-func (a *Article) HasMore() bool {
+func (a Article) HasMore() bool {
 	return strings.Contains(a.Body, readMore)
+}
+
+func (a Articles) Year(year int) (A Articles) {
+	for i, _ := range a {
+		if a[i].Date.Year() == year &&
+			a[i].Enabled {
+			A = append(A, a[i])
+		}
+	}
+	return A
+}
+
+func (a Articles) YearMonth(year, month int) (A Articles) {
+	for i, _ := range a {
+		if a[i].Date.Year() == year &&
+			a[i].Date.Month() == time.Month(month) &&
+			a[i].Enabled {
+			A = append(A, a[i])
+		}
+	}
+	return A
 }
