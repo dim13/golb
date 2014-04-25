@@ -1,10 +1,12 @@
-<h2>Preview</h2>
-<div>
-{{.Body}}
-</div>
+<section id="preview">
+	<header>
+	<h1>{{.Title}}</h1>
+	<p>{{.PostDate}}</p>
+	</header>
+	{{.Body}}
+</section>
 
-<h2>Edit</h2>
-<div>
+<section id="edit">
 <form id="edit" action="" methon="POST">
 	<p><input size="80" name="title" value="{{.Title}}"> title</p>
 	<p><input size="80" name="slug" value="{{.Slug}}"> slug</p>
@@ -15,4 +17,4 @@
 	   <input type="checkbox" name="enabled" value="{{.Enabled}}" {{if .Enabled}}checked{{end}}> enabled
 	</p>
 </form>
-</div>
+</section>
