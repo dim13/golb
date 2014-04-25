@@ -86,7 +86,6 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 	app := conf.Blog.ArticlesPerPage
 
 	a, next, prev := data.Articles.Enabled().Page(pg, app)
-	log.Println(a, next, prev)
 
 	p := Page{
 		Title:    conf.Blog.Title,

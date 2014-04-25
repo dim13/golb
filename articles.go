@@ -12,7 +12,6 @@ var (
 )
 
 type Articles []*Article
-
 type Article struct {
 	Date     time.Time
 	Title    string
@@ -23,6 +22,9 @@ type Article struct {
 	Author   string
 	Comments Comments
 }
+
+type YearMap map[int]Articles
+type MonthMap map[int]Articles
 
 func (a *Article) makeSlug() {
 	r := strings.NewReplacer(" ", "-")
@@ -142,3 +144,22 @@ func (a Articles) Enabled() (A Articles) {
 	}
 	return A
 }
+
+func (a Articles) YearMap() YearMap {
+	ym := make(YearMap)
+	for _, v := range a.Enabled() {
+		y := v.Date.Year()
+		ym[y] = append(ym[y], v)
+	}
+	return ym
+}
+
+func (a Articles) MonthMap() MonthMap {
+	mm := make(MonthMap)
+	for _, v := range a.Enabled() {
+		m := int(v.Date.Month())
+		mm[m] = append(mm[m], v)
+	}
+	return mm
+}
+
