@@ -84,6 +84,10 @@ func (a *Article) PostDate() string {
 	return a.Date.Format(TimeFormat)
 }
 
+func (a *Article) RssDate() string {
+	return a.Date.Format(time.RFC1123)
+}
+
 func (a *Article) ReadMore() string {
 	if i := strings.Index(a.Body, readMore); i > 0 {
 		return a.Body[:i]

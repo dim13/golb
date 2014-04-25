@@ -10,12 +10,12 @@
 	<item>
 		<title>{{.Title}}</title>
 		<link>{{$url}}/{{.Slug}}</link>
-		<description>{{.ReadMore}}</description>
+		<description>{{html .ReadMore}}</description>
 		{{range .Tags}}
 		<category>{{.}}</category>
 		{{end}}
 		<comments>{{$url}}/{{.Slug}}#comments</comments>
-		<pubDate>{{.Date}}</pubDate>
+		<pubDate>{{.RssDate}}</pubDate>
 	</item>
 	{{end}}
 </channel>
