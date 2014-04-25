@@ -5,9 +5,9 @@
 <ul>
 {{range .Articles}}
 	<li>
-		{{if .Enabled}}{{else}}<s>{{end}}
+		{{if not .Enabled}}<s>{{end}}
 		{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a> {{.Tags}}
-		{{if .Enabled}}{{else}}</s>{{end}}
+		{{if not .Enabled}}</s>{{end}}
 		<ul>
 		{{range .Comments}}
 			<li>
