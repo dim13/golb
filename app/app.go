@@ -32,6 +32,7 @@ type Page struct {
 
 func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 	p := Page{
+		Config:   conf,
 		Title:    "Admin interface",
 		Articles: data.Articles,
 	}
@@ -47,10 +48,12 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 	a, err := data.Articles.Find(s[0])
 	if err != nil {
 		p = Page{
+			Config: conf,
 			Error:  err,
 		}
 	} else {
 		p = Page{
+			Config:  conf,
 			Title:   a.Title,
 			Article: a,
 		}
@@ -120,7 +123,7 @@ func rss(w http.ResponseWriter, r *http.Request, s []string) {
 	app := conf.Blog.ArticlesPerPage
 
 	p := Page{
-		Config: conf,
+		Config:   conf,
 		Articles: a[:app],
 	}
 
