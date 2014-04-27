@@ -49,6 +49,16 @@ func (a Articles) TagMap() TagMap {
 	return tm
 }
 
+func (a Articles) Tag(tag string) Articles {
+	var A Articles
+	for _, v := range a {
+		if v.Tags.Has(tag) {
+			A = append(A, v)
+		}
+	}
+	return A
+}
+
 func (ts Tags) Has(tag string) bool {
 	for _, t := range ts {
 		if t == tag {
