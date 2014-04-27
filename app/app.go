@@ -16,6 +16,10 @@ var (
 	tmpl *template.Template
 )
 
+func redir(w http.ResponseWriter, r *http.Request, s []string) {
+	http.Redirect(w, r, "/" + s[0], http.StatusFound)
+}
+
 func main() {
 	var err error
 
@@ -41,8 +45,9 @@ func main() {
 	re.AddRoute("^/page/(\\d+)$", page)
 	re.AddRoute("^/rss\\.xml$", rss)
 	re.AddRoute("^/sitemap\\.xml$", sitemap)
-	re.AddRoute("^/(\\d+)/$", year)
-	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
+	re.AddRoute("^/(\\d+)/?$", year)
+	re.AddRoute("^/(\\d+)/(\\d+)/?$", month)
+	re.AddRoute("^/\\d+/\\d+/(.*)$", redir)
 	re.AddRoute("^/(.*)$", index)
 
 	if err := http.ListenAndServe(listen, re); err != nil {
