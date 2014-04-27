@@ -1,4 +1,3 @@
-// Test APP
 package main
 
 import (
