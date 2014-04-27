@@ -2,9 +2,7 @@
 <html>
 {{template "header.tmpl" .}}
 {{$expand := .Expand}}
-
 <body>
-
 <div>
 {{range .Articles}}
 	<article>
@@ -51,5 +49,4 @@
 	<a href="/page/{{.}}">Older Articles &rarr;</a>
 	{{end}}
 </footer>
-
 </html>

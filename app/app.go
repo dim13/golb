@@ -132,8 +132,7 @@ func year(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func genpage(w http.ResponseWriter, p Page) {
-	tic := conf.Blog.TagsInCloud
-	p.TagCloud = data.Articles.TagCloud()[:tic]
+	p.TagCloud = data.Articles.TagCloud()
 	p.Config = conf
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
