@@ -72,7 +72,9 @@ func (a Articles) TagCloud(n int) TagCloud {
 		tc = append(tc, tagCloud{Tag: k, Wight: v})
 	}
 	sort.Sort(sort.Reverse(ByWight(tc)))
-	tc = tc[:n]
+	if n != 0 {
+		tc = tc[:n]
+	}
 	bottom := tc[len(tc)-1].Wight
 	for i, _ := range tc {
 		tc[i].Wight -= bottom - 1

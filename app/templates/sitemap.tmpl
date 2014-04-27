@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{{range .Sitemap}}
+{{range .}}
 <url>
 	<loc>{{.Loc}}</loc>
-	{{with .LastMod}}<lastmod>{{.}}</lastmod>{{end}
-	{{with .ChangeFreq}}<changefreq>{{.}}</changefreq>{{end}
-	{{with .Priority}}<priority>{{.}}</priority>{{end}}
+	{{with .LastMod}}<lastmod>{{.}}</lastmod>{{end}}
+	{{with .ChangeFreq}}<changefreq>{{.}}</changefreq>{{end}}
+	{{with .Priority}}<priority>{{printf "%.2f" .}}</priority>{{end}}
 </url>
 {{end}}
 </urlset>
