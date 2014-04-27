@@ -3,6 +3,10 @@
 {{template "header.tmpl" .}}
 {{$expand := .Expand}}
 <body>
+	<header>
+	<p id="blog_title"><a href="/">{{.Config.Blog.Title}}</a></p>
+	<p id="blog_subtitle">{{.Config.Blog.Subtitle}}</p>
+	</header>
 <div>
 {{range .Articles}}
 	<article>
@@ -26,6 +30,25 @@
 </div>
 
 <aside>
+	<section id="archive">
+	<h3>Archive</h3>
+	<ul>
+	{{range .Archive}}
+	<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
+	<ul>
+	{{range .Month}}
+	<li><a href="/{{.Year}}/{{.Month}}/">{{.Month}}</a> ({{.Count}})</li>	
+	<ul>
+	{{range .Slugs}}
+	<li><a href="/{{.Slug}}">{{.Title}}</a></li>
+	{{end}}
+	</ul>
+	{{end}}
+	</ul>
+	{{end}}
+	</ul>
+	</section>
+
 	<section id="tagcloud">
 	<h3>Tag Cloud</h3>
 	<ul>
