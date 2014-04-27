@@ -159,7 +159,7 @@ func sitemap(w http.ResponseWriter, r *http.Request, s []string) {
 			ChangeFreq: "monthly",
 		})
 	}
-	for _, t := range data.Articles.TagCloud(0) {
+	for _, t := range data.Articles.TagCloud() {
 		sm = append(sm, Sitemap{
 			Loc:      conf.Blog.Url + "/tag/" + t.Tag,
 			Priority: 0.6 - float64(t.Wight)/10,
@@ -185,7 +185,8 @@ func year(w http.ResponseWriter, r *http.Request, s []string) {
 }
 
 func genpage(w http.ResponseWriter, p Page) {
-	p.TagCloud = data.Articles.TagCloud(conf.Blog.TagsInCloud)
+	tic := conf.Blog.TagsInCloud
+	p.TagCloud = data.Articles.TagCloud()[:tic]
 	p.Config = conf
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)

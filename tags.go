@@ -66,18 +66,13 @@ func ReadTags(s string) Tags {
 	return strings.Split(s, ",")
 }
 
-func (a Articles) TagCloud(n int) TagCloud {
+func (a Articles) TagCloud() TagCloud {
 	var tc TagCloud
 	for k, v := range a.CountTags() {
 		tc = append(tc, tagCloud{Tag: k, Wight: v})
 	}
 	sort.Sort(sort.Reverse(ByWight(tc)))
-	if n != 0 {
-		tc = tc[:n]
-	}
-	bottom := tc[len(tc)-1].Wight
 	for i, _ := range tc {
-		tc[i].Wight -= bottom - 1
 		tc[i].Wight = 5 / tc[i].Wight
 	}
 	sort.Sort(ByName(tc))
