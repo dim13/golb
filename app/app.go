@@ -133,6 +133,9 @@ func rss(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 }
 
+func sitemap(w http.ResponseWriter, r *http.Request, s []string) {
+}
+
 func year(w http.ResponseWriter, r *http.Request, s []string) {
 	y, err := strconv.Atoi(s[0])
 	if err != nil {
@@ -180,6 +183,7 @@ func main() {
 	re.AddRoute("^/tags?/(.+)$", tags)
 	re.AddRoute("^/page/(\\d+)$", page)
 	re.AddRoute("^/rss\\.xml$", rss)
+	re.AddRoute("^/sitemap\\.xml$", sitemap)
 	re.AddRoute("^/(\\d+)/$", year)
 	re.AddRoute("^/(\\d+)/(\\d+)/(.*)$", index)
 	re.AddRoute("^/(.*)$", index)
