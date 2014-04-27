@@ -7,7 +7,9 @@ import (
 )
 
 type Rss struct {
-	Config   *gold.Config
+	Url      string
+	Title    string
+	Subtitle string
 	Articles gold.Articles
 }
 
@@ -16,7 +18,9 @@ func rss(w http.ResponseWriter, r *http.Request, s []string) {
 	app := conf.Blog.ArticlesPerPage
 
 	p := Rss{
-		Config:   conf,
+		Url:      conf.Blog.Url,
+		Title:    conf.Blog.Title,
+		Subtitle: conf.Blog.Subtitle,
 		Articles: a[:app],
 	}
 

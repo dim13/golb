@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
-{{$url := .Config.Blog.Url}}
-{{$owner := .Config.Blog.Owner}}
+{{$url := .Url}}
 <channel>
-	<title>{{.Config.Blog.Title}}</title>
+	<title>{{.Title}}</title>
 	<link>{{$url}}</link>
-	<description>{{.Config.Blog.Subtitle}}</description>
+	<description>{{.Subtitle}}</description>
 	{{range .Articles}}
 	<item>
 		<title>{{.Title}}</title>
