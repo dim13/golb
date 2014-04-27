@@ -8,7 +8,6 @@ import (
 	"sort"
 	"strconv"
 	"text/template"
-	"time"
 )
 
 const listen = ":8000"
@@ -117,58 +116,6 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 
 func assets(w http.ResponseWriter, r *http.Request, s []string) {
 	http.ServeFile(w, r, r.URL.Path[1:])
-}
-
-func rss(w http.ResponseWriter, r *http.Request, s []string) {
-	a := data.Articles.Enabled()
-	app := conf.Blog.ArticlesPerPage
-
-	p := Page{
-		Config:   conf,
-		Articles: a[:app],
-	}
-
-	err := tmpl.ExecuteTemplate(w, "rss.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-type Sitemap struct {
-	Loc        string
-	Date       time.Time
-	ChangeFreq string
-	Priority   float64
-}
-
-func (s Sitemap) LastMod() string {
-	return s.Date.Local().Format("2006-02-01")
-}
-
-func sitemap(w http.ResponseWriter, r *http.Request, s []string) {
-	var sm []Sitemap
-	sm = append(sm, Sitemap{
-		Loc:      conf.Blog.Url,
-		Priority: 1.0,
-	})
-	for _, a := range data.Articles.Enabled() {
-		sm = append(sm, Sitemap{
-			Loc:        conf.Blog.Url + "/" + a.Slug,
-			Priority:   0.8,
-			Date:       a.Date,
-			ChangeFreq: "monthly",
-		})
-	}
-	for _, t := range data.Articles.TagCloud() {
-		sm = append(sm, Sitemap{
-			Loc:      conf.Blog.Url + "/tag/" + t.Tag,
-			Priority: 0.6 - float64(t.Wight)/10,
-		})
-	}
-	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
-	if err != nil {
-		log.Fatal(err)
-	}
 }
 
 func year(w http.ResponseWriter, r *http.Request, s []string) {
