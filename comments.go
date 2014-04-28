@@ -23,17 +23,9 @@ func (c *Comment) Suppress() {
 	c.Enabled = false
 }
 
-func (c Comments) Len() int {
-	return len(c)
-}
-
-func (c Comments) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
-func (c Comments) Less(i, j int) bool {
-	return c[i].Date.Before(c[j].Date)
-}
+func (c Comments) Len() int           { return len(c) }
+func (c Comments) Swap(i, j int)      { c[i], c[j] = c[j], c[i] }
+func (c Comments) Less(i, j int) bool { return c[i].Date.Before(c[j].Date) }
 
 func (c *Comments) Add(comment *Comment) {
 	comment.Date = time.Now()
@@ -41,7 +33,7 @@ func (c *Comments) Add(comment *Comment) {
 }
 
 func (c *Comment) PostDate() string {
-	return c.Date.Local().Format(TimeFormat)	// defined in articles.go
+	return c.Date.Local().Format(TimeFormat) // defined in articles.go
 }
 
 func (c Comments) Enabled() Comments {
