@@ -8,7 +8,7 @@
 	<p id="blog_subtitle">{{.Config.Blog.Subtitle}}</p>
 	</header>
 <div>
-{{range .Articles}}
+{{range .Articles.Enabled}}
 	<article>
 		<header>
 			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
@@ -22,10 +22,24 @@
 		{{end}}
 		{{end}}
 		<footer>
-		<p>Published: {{.PostDate}}</p>
+		<p>Published: <time>{{.PostDate}}</time></p>
+		<p>Comments: <a href="/{{.Slug}}#comments">{{len .Comments.Enabled}}</a></p>
 		<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
 		</footer>
 	</article>
+	{{if $expand}}
+	<article id="comments">
+		<h4>Comments</h4>
+		{{range .Comments.Enabled}}
+		<article>
+		<header>
+		<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
+		</header>
+		<blockquote>{{.Comment}}</blockquote>
+		</article>
+		{{end}}
+	</article>
+	{{end}}
 {{end}}
 </div>
 
