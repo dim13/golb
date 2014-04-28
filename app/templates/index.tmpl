@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
 {{template "header.tmpl" .}}
-{{$expand := .Expand}}
 <body>
 	<header>
 	<p id="blog_title"><a href="/">{{.Config.Blog.Title}}</a></p>
 	<p id="blog_subtitle">{{.Config.Blog.Subtitle}}</p>
 	</header>
 <div>
+{{$expand := .Expand}}
 {{range .Articles.Enabled}}
 	<article>
 		<header>
 			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
 		</header>
+		{{$comments := .Comments.Enabled}}
 		{{if $expand}}
 			{{.Body}}
-			{{if len .Comments.Enabled}}
+			{{with $comments}}
 			<article id="comments">
-				<h4>Comments</h4>
-				{{range .Comments.Enabled}}
+			<h4>Comments</h4>
+				{{range .}}
 				<article>
 				<header>
 				<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
@@ -31,13 +32,13 @@
 		{{else}}
 			{{.ReadMore}}
 			{{if .HasMore}}
-				<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a>&hellip;</p>
+				<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a> &hellip;</p>
 			{{end}}
 
 			<footer>
 			<p>Published: <time>{{.PostDate}}</time></p>
-			{{if len .Comments.Enabled}}
-			<p>Comments: <a href="/{{.Slug}}#comments">{{len .Comments.Enabled}}</a></p>
+			{{if $comments}}
+			<p>Comments: <a href="/{{.Slug}}#comments">{{len $comments}}</a></p>
 			{{end}}
 			{{with .Tags}}
 			<p>Tagged: {{range .}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
