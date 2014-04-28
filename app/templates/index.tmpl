@@ -14,32 +14,38 @@
 			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
 		</header>
 		{{if $expand}}
-		{{.Body}}
+			{{.Body}}
+			{{if len .Comments.Enabled}}
+			<article id="comments">
+				<h4>Comments</h4>
+				{{range .Comments.Enabled}}
+				<article>
+				<header>
+				<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
+				</header>
+				<blockquote>{{.Comment}}</blockquote>
+				</article>
+				{{end}}
+			</article>
+			{{end}}
 		{{else}}
-		{{.ReadMore}}
-		{{if .HasMore}}
-			<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a>&hellip;</p>
-		{{end}}
-		{{end}}
-		<footer>
-		<p>Published: <time>{{.PostDate}}</time></p>
-		<p>Comments: <a href="/{{.Slug}}#comments">{{len .Comments.Enabled}}</a></p>
-		<p>Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
-		</footer>
-	</article>
-	{{if $expand}}
-	<article id="comments">
-		<h4>Comments</h4>
-		{{range .Comments.Enabled}}
-		<article>
-		<header>
-		<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
-		</header>
-		<blockquote>{{.Comment}}</blockquote>
-		</article>
+			{{.ReadMore}}
+			{{if .HasMore}}
+				<p>Continue reading <a href="/{{.Slug}}">{{.Title}}</a>&hellip;</p>
+			{{end}}
+
+			<footer>
+			<p>Published: <time>{{.PostDate}}</time></p>
+			{{if len .Comments.Enabled}}
+			<p>Comments: <a href="/{{.Slug}}#comments">{{len .Comments.Enabled}}</a></p>
+			{{end}}
+			{{with .Tags}}
+			<p>Tagged: {{range .}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
+			{{end}}
+			</footer>
 		{{end}}
 	</article>
-	{{end}}
+
 {{end}}
 </div>
 
