@@ -7,14 +7,14 @@
 	<p id="blog_subtitle">{{.Config.Blog.Subtitle}}</p>
 	</header>
 <div>
-{{$expand := .Expand}}
+{{$nar := len .Articles.Enabled}}
 {{range .Articles.Enabled}}
 	<article>
 		<header>
 			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
 		</header>
 		{{$comments := .Comments.Enabled}}
-		{{if $expand}}
+		{{if eq $nar 1}}
 			{{.Body}}
 			{{with $comments}}
 			<article id="comments">

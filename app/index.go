@@ -17,7 +17,6 @@ type Page struct {
 	Error    error
 	PrevPage int
 	NextPage int
-	Expand   bool
 	TagCloud gold.TagCloud
 }
 
@@ -29,7 +28,6 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 		p = Page{
 			Title:    a.Title,
 			Articles: gold.Articles{a},
-			Expand:   true,
 		}
 		genpage(w, p)
 	} else {
