@@ -20,7 +20,7 @@ type Page struct {
 	TagCloud gold.TagCloud
 }
 
-func index(w http.ResponseWriter, r *http.Request, s []string) {
+func indexHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	var p Page
 
 	a, err := data.Articles.Find(s[0])
@@ -31,11 +31,11 @@ func index(w http.ResponseWriter, r *http.Request, s []string) {
 		}
 		genpage(w, p)
 	} else {
-		page(w, r, []string{"1"})
+		pageHandler(w, r, []string{"1"})
 	}
 }
 
-func page(w http.ResponseWriter, r *http.Request, s []string) {
+func pageHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	pg, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)
@@ -54,7 +54,7 @@ func page(w http.ResponseWriter, r *http.Request, s []string) {
 	genpage(w, p)
 }
 
-func tags(w http.ResponseWriter, r *http.Request, s []string) {
+func tagsHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	p := Page{
 		Title:    fmt.Sprint(conf.Blog.Title, " - ", s[0]),
 		Articles: data.Articles.Tag(s[0]),
@@ -62,11 +62,11 @@ func tags(w http.ResponseWriter, r *http.Request, s []string) {
 	genpage(w, p)
 }
 
-func assets(w http.ResponseWriter, r *http.Request, s []string) {
+func assetsHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
-func year(w http.ResponseWriter, r *http.Request, s []string) {
+func yearHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	y, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +79,7 @@ func year(w http.ResponseWriter, r *http.Request, s []string) {
 	genpage(w, p)
 }
 
-func month(w http.ResponseWriter, r *http.Request, s []string) {
+func monthHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	y, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)

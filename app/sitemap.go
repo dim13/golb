@@ -17,7 +17,7 @@ func (s Sitemap) LastMod() string {
 	return s.Date.Local().Format("2006-02-01")
 }
 
-func sitemap(w http.ResponseWriter, r *http.Request, s []string) {
+func sitemapHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	var sm []Sitemap
 	sm = append(sm, Sitemap{
 		Loc:      conf.Blog.Url,

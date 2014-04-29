@@ -16,7 +16,7 @@ var (
 	tmpl *template.Template
 )
 
-func redir(w http.ResponseWriter, r *http.Request, s []string) {
+func redirHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	http.Redirect(w, r, "/" + s[0], http.StatusFound)
 }
 
@@ -37,18 +37,18 @@ func main() {
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(gold.ReHandler)
-	re.AddRoute("^/assets/", assets)
-	re.AddRoute("^/images/", assets)
-	re.AddRoute("^/admin/(.+)$", adminSlug)
-	re.AddRoute("^/admin/?$", adminList)
-	re.AddRoute("^/tags?/(.+)$", tags)
-	re.AddRoute("^/page/(\\d+)$", page)
-	re.AddRoute("^/rss\\.xml$", rss)
-	re.AddRoute("^/sitemap\\.xml$", sitemap)
-	re.AddRoute("^/(\\d+)/?$", year)
-	re.AddRoute("^/(\\d+)/(\\d+)/?$", month)
-	re.AddRoute("^/\\d+/\\d+/(.*)$", redir)
-	re.AddRoute("^/(.*)$", index)
+	re.AddRoute("^/assets/", assetsHandler)
+	re.AddRoute("^/images/", assetsHandler)
+	re.AddRoute("^/admin/(.+)$", adminSlugHandler)
+	re.AddRoute("^/admin/?$", adminListHandler)
+	re.AddRoute("^/tags?/(.+)$", tagsHandler)
+	re.AddRoute("^/page/(\\d+)$", pageHandler)
+	re.AddRoute("^/rss\\.xml$", rssHandler)
+	re.AddRoute("^/sitemap\\.xml$", sitemapHandler)
+	re.AddRoute("^/(\\d+)/?$", yearHandler)
+	re.AddRoute("^/(\\d+)/(\\d+)/?$", monthHandler)
+	re.AddRoute("^/\\d+/\\d+/(.*)$", redirHandler)
+	re.AddRoute("^/(.*)$", indexHandler)
 
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
