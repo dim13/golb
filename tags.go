@@ -18,15 +18,15 @@ type tagCloud struct {
 func (t TagCloud) Len() int      { return len(t) }
 func (t TagCloud) Swap(i, j int) { t[i], t[j] = t[j], t[i] }
 
-type ByWight struct{ TagCloud }
+type byWight struct{ TagCloud }
 
-func (t ByWight) Less(i, j int) bool {
+func (t byWight) Less(i, j int) bool {
 	return t.TagCloud[i].Wight < t.TagCloud[j].Wight
 }
 
-type ByName struct{ TagCloud }
+type byName struct{ TagCloud }
 
-func (t ByName) Less(i, j int) bool {
+func (t byName) Less(i, j int) bool {
 	return t.TagCloud[i].Tag < t.TagCloud[j].Tag
 }
 
@@ -84,6 +84,6 @@ func (a Articles) TagCloud() TagCloud {
 	for k, v := range a.CountTags() {
 		tc = append(tc, tagCloud{Tag: k, Wight: 5 / v})
 	}
-	sort.Sort(ByName{tc})
+	sort.Sort(byName{tc})
 	return tc
 }
