@@ -14,6 +14,8 @@ var (
 	conf *gold.Config
 	data *gold.Data
 	tmpl *template.Template
+	rss Rss
+	sitemap Sitemap
 )
 
 func main() {
@@ -29,6 +31,7 @@ func main() {
 		log.Println(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
+	rss = NewRss()
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
@@ -38,7 +41,7 @@ func main() {
 	http.HandleFunc("^/admin/(.+)$", adminSlug)
 	http.HandleFunc("^/admin/?$", adminList)
 	 */
-	http.HandleFunc("/rss.xml", rssHandler)
+	http.Handle("/rss.xml", rss)
 	http.HandleFunc("/sitemap.xml", sitemapHandler)
 	/*
 	http.HandleFunc("^/(\\d+)/?$", year)

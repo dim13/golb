@@ -13,18 +13,19 @@ type Rss struct {
 	Articles gold.Articles
 }
 
-func rssHandler(w http.ResponseWriter, r *http.Request) {
+func NewRss() Rss {
 	a := data.Articles.Enabled()
 	app := conf.Blog.ArticlesPerPage
 
-	p := Rss{
+	return Rss{
 		Url:      conf.Blog.Url,
 		Title:    conf.Blog.Title,
 		Subtitle: conf.Blog.Subtitle,
 		Articles: a[:app],
 	}
-
-	err := tmpl.ExecuteTemplate(w, "rss.tmpl", p)
+}
+func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
 	if err != nil {
 		log.Fatal(err)
 	}
