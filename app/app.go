@@ -17,7 +17,7 @@ var (
 )
 
 func redir(w http.ResponseWriter, r *http.Request, s []string) {
-	http.Redirect(w, r, "/" + s[0], http.StatusFound)
+	http.Redirect(w, r, "/"+s[0], http.StatusFound)
 }
 
 func main() {
@@ -36,21 +36,22 @@ func main() {
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
-	re := new(gold.ReHandler)
-	re.AddRoute("^/assets/", assets)
-	re.AddRoute("^/images/", assets)
-	re.AddRoute("^/admin/(.+)$", adminSlug)
-	re.AddRoute("^/admin/?$", adminList)
-	re.AddRoute("^/tags?/(.+)$", tags)
-	re.AddRoute("^/page/(\\d+)$", page)
-	re.AddRoute("^/rss\\.xml$", rss)
-	re.AddRoute("^/sitemap\\.xml$", sitemap)
-	re.AddRoute("^/(\\d+)/?$", year)
-	re.AddRoute("^/(\\d+)/(\\d+)/?$", month)
-	re.AddRoute("^/\\d+/\\d+/(.*)$", redir)
-	re.AddRoute("^/(.*)$", index)
+	http.HandleFunc("/assets/", assetHandler)
+	http.HandleFunc("/images/", assetHandler)
+	/*
+	http.HandleFunc("^/admin/(.+)$", adminSlug)
+	http.HandleFunc("^/admin/?$", adminList)
+	 */
+	http.HandleFunc("/rss.xml", rssHandler)
+	http.HandleFunc("/sitemap.xml", sitemapHandler)
+	/*
+	http.HandleFunc("^/(\\d+)/?$", year)
+	http.HandleFunc("^/(\\d+)/(\\d+)/?$", month)
+	http.HandleFunc("^/\\d+/\\d+/(.*)$", redir)
+	 */
+	http.HandleFunc("/", indexHandler)
 
-	if err := http.ListenAndServe(listen, re); err != nil {
+	if err := http.ListenAndServe(listen, nil); err != nil {
 		log.Fatal(err)
 	}
 }

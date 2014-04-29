@@ -88,11 +88,11 @@
 
 <footer>
 	{{with .PrevPage}}
-	<a href="/page/{{.}}">&larr; Newer Articles</a>
+	<a href="?page={{.}}">&larr; Newer Articles</a>
 	{{end}}
 
 	{{with .NextPage}}
-	<a href="/page/{{.}}">Older Articles &rarr;</a>
+	<a href="?page={{.}}">Older Articles &rarr;</a>
 	{{end}}
 </footer>
 </html>

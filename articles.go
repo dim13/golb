@@ -67,7 +67,7 @@ func (a Articles) Find(slug string) (*Article, error) {
 			return a[i], nil
 		}
 	}
-	return &Article{}, errors.New("not found")
+	return nil, errors.New("not found")
 }
 
 func (a Articles) Page(page, app int) (Articles, int, int) {

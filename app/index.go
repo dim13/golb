@@ -1,12 +1,16 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/dim13/gold"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
-	"time"
+	"strings"
+	"regexp"
+	//"time"
 )
 
 type Page struct {
@@ -20,53 +24,59 @@ type Page struct {
 	TagCloud gold.TagCloud
 }
 
-func index(w http.ResponseWriter, r *http.Request, s []string) {
-	var p Page
-
-	a, err := data.Articles.Find(s[0])
-	if err == nil {
-		p = Page{
-			Title:    a.Title,
-			Articles: gold.Articles{a},
+func parsePage(u url.URL) int {
+	if page, ok := u.Query()["page"]; ok {
+		if pg, err := strconv.Atoi(page[0]); err == nil {
+			return pg
 		}
-		genpage(w, p)
-	} else {
-		page(w, r, []string{"1"})
 	}
+	return 1
 }
 
-func page(w http.ResponseWriter, r *http.Request, s []string) {
-	pg, err := strconv.Atoi(s[0])
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	var p Page
+	var a gold.Articles
+
+	pg := parsePage(*r.URL)
+	app := conf.Blog.ArticlesPerPage
+
+	switch {
+	case strings.HasPrefix(r.URL.Path, "/tag/"):
+		s := r.URL.Path[len("/tag/"):]
+		a = data.Articles.Tag(s)
+		p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+	case r.URL.Path == "/":
+		a = data.Articles.Enabled()
+		p.Title = conf.Blog.Title
+	default:
+		ar, err := data.Articles.Find(r.URL.Path[1:])
+		if err == nil {
+			p.Title = ar.Title
+			a = gold.Articles{ar}
+		}
+	}
+
+	if a == nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	p.Articles, p.NextPage, p.PrevPage = a.Page(pg, app)
+	p.TagCloud = data.Articles.TagCloud()
+	p.Config = conf
+
+	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := conf.Blog.ArticlesPerPage
-
-	a, next, prev := data.Articles.Enabled().Page(pg, app)
-
-	p := Page{
-		Title:    conf.Blog.Title,
-		Articles: a,
-		NextPage: next,
-		PrevPage: prev,
-	}
-
-	genpage(w, p)
 }
 
-func tags(w http.ResponseWriter, r *http.Request, s []string) {
-	p := Page{
-		Title:    fmt.Sprint(conf.Blog.Title, " - ", s[0]),
-		Articles: data.Articles.Tag(s[0]),
-	}
-	genpage(w, p)
-}
-
-func assets(w http.ResponseWriter, r *http.Request, s []string) {
+func assetHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
-func year(w http.ResponseWriter, r *http.Request, s []string) {
+/*
+func year(w http.ResponseWriter, r *http.Request) {
 	y, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +89,7 @@ func year(w http.ResponseWriter, r *http.Request, s []string) {
 	genpage(w, p)
 }
 
-func month(w http.ResponseWriter, r *http.Request, s []string) {
+func month(w http.ResponseWriter, r *http.Request) {
 	y, err := strconv.Atoi(s[0])
 	if err != nil {
 		log.Fatal(err)
@@ -96,13 +106,4 @@ func month(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 	genpage(w, p)
 }
-
-func genpage(w http.ResponseWriter, p Page) {
-	p.TagCloud = data.Articles.TagCloud()
-	p.Config = conf
-
-	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+*/

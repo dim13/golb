@@ -1,5 +1,6 @@
 package main
 
+/*
 import (
 	"log"
 	"net/http"
@@ -39,3 +40,4 @@ func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
 		log.Fatal(err)
 	}
 }
+ */

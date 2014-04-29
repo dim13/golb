@@ -13,7 +13,7 @@ type Rss struct {
 	Articles gold.Articles
 }
 
-func rss(w http.ResponseWriter, r *http.Request, s []string) {
+func rssHandler(w http.ResponseWriter, r *http.Request) {
 	a := data.Articles.Enabled()
 	app := conf.Blog.ArticlesPerPage
 
