@@ -16,10 +16,6 @@ var (
 	tmpl *template.Template
 )
 
-func redir(w http.ResponseWriter, r *http.Request, s []string) {
-	http.Redirect(w, r, "/"+s[0], http.StatusFound)
-}
-
 func main() {
 	var err error
 
@@ -47,7 +43,6 @@ func main() {
 	/*
 	http.HandleFunc("^/(\\d+)/?$", year)
 	http.HandleFunc("^/(\\d+)/(\\d+)/?$", month)
-	http.HandleFunc("^/\\d+/\\d+/(.*)$", redir)
 	 */
 	http.HandleFunc("/", indexHandler)
 

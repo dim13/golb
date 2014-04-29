@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/dim13/gold"
 	"log"
@@ -9,8 +8,6 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-	"regexp"
-	//"time"
 )
 
 type Page struct {

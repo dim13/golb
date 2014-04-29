@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func adminList(w http.ResponseWriter, r *http.Request, s []string) {
+func adminListHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	p := Page{
 		Config:   conf,
 		Title:    "Admin interface",
@@ -18,7 +18,7 @@ func adminList(w http.ResponseWriter, r *http.Request, s []string) {
 	}
 }
 
-func adminSlug(w http.ResponseWriter, r *http.Request, s []string) {
+func adminSlugHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	var p Page
 
 	a, err := data.Articles.Find(s[0])
