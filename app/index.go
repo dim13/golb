@@ -62,7 +62,7 @@ func tagsHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	genpage(w, p)
 }
 
-func assetsHandler(w http.ResponseWriter, r *http.Request, s []string) {
+func assetHandler(w http.ResponseWriter, r *http.Request, s []string) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
 

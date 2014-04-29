@@ -37,8 +37,8 @@ func main() {
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(gold.ReHandler)
-	re.AddRoute("^/assets/", assetsHandler)
-	re.AddRoute("^/images/", assetsHandler)
+	re.AddRoute("^/assets/", assetHandler)
+	re.AddRoute("^/images/", assetHandler)
 	re.AddRoute("^/admin/(.+)$", adminSlugHandler)
 	re.AddRoute("^/admin/?$", adminListHandler)
 	re.AddRoute("^/tags?/(.+)$", tagsHandler)
