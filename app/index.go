@@ -21,6 +21,19 @@ type Page struct {
 	TagCloud gold.TagCloud
 }
 
+func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	pg := parsePage(*r.URL)
+	app := conf.Blog.ArticlesPerPage
+	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
+	p.TagCloud = data.Articles.TagCloud()
+	p.Config = conf
+
+	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func parsePage(u url.URL) int {
 	if page, ok := u.Query()["page"]; ok {
 		if pg, err := strconv.Atoi(page[0]); err == nil {
@@ -33,9 +46,6 @@ func parsePage(u url.URL) int {
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var p Page
 	var a gold.Articles
-
-	pg := parsePage(*r.URL)
-	app := conf.Blog.ArticlesPerPage
 
 	switch {
 	case strings.HasPrefix(r.URL.Path, "/tag/"):
@@ -58,14 +68,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.Articles, p.NextPage, p.PrevPage = a.Page(pg, app)
-	p.TagCloud = data.Articles.TagCloud()
-	p.Config = conf
-
-	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
+	p.Articles = a
+	p.ServeHTTP(w, r)
 }
 
 func assetHandler(w http.ResponseWriter, r *http.Request) {
