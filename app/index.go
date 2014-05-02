@@ -51,35 +51,21 @@ func parsePage(u url.URL) int {
 	return 1
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	var p Page
-	var a gold.Articles
-
-	switch {
-		/*
-	case strings.HasPrefix(r.URL.Path, "/tag/"):
-		s := r.URL.Path[len("/tag/"):]
-		a = data.Articles.Tag(s)
-		p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
-		 */
-	case r.URL.Path == "/":
-		a = data.Articles.Enabled()
-		p.Title = conf.Blog.Title
-	default:
-		ar, err := data.Articles.Find(r.URL.Path[1:])
-		if err == nil {
-			p.Title = ar.Title
-			a = gold.Articles{ar}
+type IndexPage struct { Page }
+func (i IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/" {
+		i.Page.Articles = data.Articles.Enabled()
+		i.Page.Title = conf.Blog.Title
+	} else {
+		a, err := data.Articles.Find(r.URL.Path[1:])
+		if err != nil {
+			http.NotFound(w, r)
+			return
 		}
+		i.Page.Title = a.Title
+		i.Page.Articles = gold.Articles{a}
 	}
-
-	if a == nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	p.Articles = a
-	p.ServeHTTP(w, r)
+	i.Page.ServeHTTP(w, r)
 }
 
 /*

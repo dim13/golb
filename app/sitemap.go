@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+type SiteMap []Sitemap
 type Sitemap struct {
 	Loc        string
 	Date       time.Time
@@ -17,7 +18,7 @@ func (s Sitemap) LastMod() string {
 	return s.Date.Local().Format("2006-02-01")
 }
 
-func sitemapHandler(w http.ResponseWriter, r *http.Request) {
+func NewSitemap() SiteMap {
 	var sm []Sitemap
 	sm = append(sm, Sitemap{
 		Loc:      conf.Blog.Url,
@@ -37,7 +38,11 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 			Priority: 0.6 - float64(t.Wight)/10,
 		})
 	}
-	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
+	return sm
+}
+
+func (s SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", s)
 	if err != nil {
 		log.Fatal(err)
 	}

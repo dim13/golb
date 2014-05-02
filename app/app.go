@@ -14,8 +14,10 @@ var (
 	conf *gold.Config
 	data *gold.Data
 	tmpl *template.Template
+	/*
 	rss Rss
 	sitemap Sitemap
+	 */
 )
 
 func assetHandler(w http.ResponseWriter, r *http.Request) {
@@ -51,12 +53,12 @@ func main() {
 	http.HandleFunc("^/admin/?$", adminList)
 	 */
 	http.Handle("/rss.xml", NewRss())
-	http.HandleFunc("/sitemap.xml", sitemapHandler)
+	http.Handle("/sitemap.xml", NewSitemap())
 	/*
 	http.HandleFunc("^/(\\d+)/?$", year)
 	http.HandleFunc("^/(\\d+)/(\\d+)/?$", month)
 	 */
-	http.HandleFunc("/", indexHandler)
+	http.Handle("/", IndexPage{})
 
 	if err := http.ListenAndServe(listen, nil); err != nil {
 		log.Fatal(err)
