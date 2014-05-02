@@ -7,24 +7,24 @@ import (
 
 type HandlerFunc http.HandlerFunc
 
-type HandlerMatch interface {
+type SelectHandler interface {
 	http.Handler
-	Selector([]string)
+	Select([]string)
 }
 
 type route struct {
 	re      *regexp.Regexp
-	handler HandlerMatch
+	handler SelectHandler
 }
 
 type ReHandler struct {
 	routes []*route
 }
 
-func (f HandlerFunc) Selector(s []string)                              {}
+func (f HandlerFunc) Select(s []string)                              {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
-func (h *ReHandler) Handle(re string, handler HandlerMatch) {
+func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	r := &route{regexp.MustCompile(re), handler}
 	h.routes = append(h.routes, r)
 }
@@ -41,7 +41,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, route := range h.routes {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
-			route.handler.Selector(matches[1:])
+			route.handler.Select(matches[1:])
 			route.handler.ServeHTTP(w, r)
 			return
 		}

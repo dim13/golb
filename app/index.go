@@ -114,7 +114,7 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type TagPage struct{ Page }
 
-func (p *TagPage) Selector(match []string) {
+func (p *TagPage) Select(match []string) {
 	s := match[0]
 	p.Articles = data.Articles.Tag(s)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
@@ -122,14 +122,14 @@ func (p *TagPage) Selector(match []string) {
 
 type IndexPage struct{ Page }
 
-func (p *IndexPage) Selector(match []string) {
+func (p *IndexPage) Select(match []string) {
 	p.Articles = data.Articles.Enabled()
 	p.Title = conf.Blog.Title
 }
 
 type SlugPage struct{ Page }
 
-func (p *SlugPage) Selector(match []string) {
+func (p *SlugPage) Select(match []string) {
 	a, err := data.Articles.Find(match[0])
 	if err == nil {
 		p.Title = a.Title
@@ -143,7 +143,7 @@ func (p *SlugPage) Selector(match []string) {
 
 type YearPage struct{ Page }
 
-func (p *YearPage) Selector(match []string) {
+func (p *YearPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Articles = data.Articles.Year(p.Year)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
@@ -151,7 +151,7 @@ func (p *YearPage) Selector(match []string) {
 
 type MonthPage struct{ Page }
 
-func (p *MonthPage) Selector(match []string) {
+func (p *MonthPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = data.Articles.Year(p.Year).Month(p.Month)

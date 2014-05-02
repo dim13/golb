@@ -48,4 +48,4 @@ func (s SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (sm SiteMap) Selector(match []string) {}
+func (sm SiteMap) Select(match []string) {}
