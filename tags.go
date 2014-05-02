@@ -32,7 +32,7 @@ func (t byName) Less(i, j int) bool {
 
 func (a Articles) CountTags() TagCount {
 	tags := make(TagCount)
-	for _, article := range a {
+	for _, article := range a.Enabled() {
 		for _, tag := range article.Tags {
 			tags[tag]++
 		}
@@ -43,7 +43,7 @@ func (a Articles) CountTags() TagCount {
 func (a Articles) TagMap() TagMap {
 	tm := make(TagMap)
 	for tag, _ := range a.CountTags() {
-		for _, article := range a {
+		for _, article := range a.Enabled() {
 			if article.Tags.Has(tag) {
 				tm[tag] = append(tm[tag], article)
 			}
