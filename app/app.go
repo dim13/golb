@@ -14,10 +14,8 @@ var (
 	conf *gold.Config
 	data *gold.Data
 	tmpl *template.Template
-	/*
 	rss Rss
-	sitemap Sitemap
-	 */
+	sitemap SiteMap
 )
 
 func assetHandler(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +42,8 @@ func main() {
 	sort.Sort(sort.Reverse(data.Articles))
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
+	rss = NewRss()
+	sitemap = NewSitemap()
 
 	http.HandleFunc("/assets/", assetHandler)
 	http.HandleFunc("/images/", imgHandler)
@@ -52,8 +52,8 @@ func main() {
 	http.HandleFunc("^/admin/(.+)$", adminSlug)
 	http.HandleFunc("^/admin/?$", adminList)
 	 */
-	http.Handle("/rss.xml", NewRss())
-	http.Handle("/sitemap.xml", NewSitemap())
+	http.Handle("/rss.xml", rss)
+	http.Handle("/sitemap.xml", sitemap)
 	/*
 	http.HandleFunc("^/(\\d+)/?$", year)
 	http.HandleFunc("^/(\\d+)/(\\d+)/?$", month)
