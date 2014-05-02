@@ -45,22 +45,24 @@ func main() {
 	rss = NewRss()
 	sitemap = NewSitemap()
 
-	http.HandleFunc("/assets/", assetHandler)
-	http.HandleFunc("/images/", imgHandler)
-	http.Handle("/tag/", TagPage{})
-	/*
-	http.HandleFunc("^/admin/(.+)$", adminSlug)
-	http.HandleFunc("^/admin/?$", adminList)
-	 */
-	http.Handle("/rss.xml", rss)
-	http.Handle("/sitemap.xml", sitemap)
-	/*
-	http.HandleFunc("^/(\\d+)/?$", year)
-	http.HandleFunc("^/(\\d+)/(\\d+)/?$", month)
-	 */
-	http.Handle("/", IndexPage{})
+	re := new(gold.ReHandler)
 
-	if err := http.ListenAndServe(listen, nil); err != nil {
+	re.HandleFunc("^/assets/", assetHandler)
+	re.HandleFunc("^/images/", imgHandler)
+	re.Handle("^/tags?/(.+)", &TagPage{})
+	/*
+	re.HandleFunc("^/admin/(.+)$", adminSlug)
+	re.HandleFunc("^/admin/?$", adminList)
+	 */
+	re.Handle("^/rss.xml", rss)
+	re.Handle("^/sitemap.xml", sitemap)
+	re.Handle("^/\\d+/\\d+/(.+)", &SlugPage{})
+	re.Handle("^/(\\d+)/(\\d+)/?", &MonthPage{})
+	re.Handle("^/(\\d+)/?", &YearPage{})
+	re.Handle("^/(.+)", &SlugPage{})
+	re.Handle("^/$", &IndexPage{})
+
+	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
 	}
 }

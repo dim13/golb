@@ -47,3 +47,7 @@ func (s SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 }
+
+func (sm SiteMap) StoreMatch(s []string) {
+	/* do nothing */
+}

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-//	"strings"
+	"time"
 )
 
 type Page struct {
@@ -19,15 +19,36 @@ type Page struct {
 	PrevPage int
 	NextPage int
 	TagCloud gold.TagCloud
+	Match    []string
 }
 
-type TagPage struct { Page }
-func (t TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s := r.URL.Path[len("/tag/"):]
-	t.Page.Articles = data.Articles.Tag(s)
-	t.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
-	t.Page.ServeHTTP(w, r)
+func atoiMust(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return i
 }
+
+func parsePage(u url.URL) int {
+	if page, ok := u.Query()["page"]; ok {
+		if pg, err := strconv.Atoi(page[0]); err == nil {
+			return pg
+		}
+	}
+	return 1
+}
+
+type TagPage struct{ Page }
+
+func (p TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s := p.Page.Match[0]
+	p.Page.Articles = data.Articles.Tag(s)
+	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+	p.Page.ServeHTTP(w, r)
+}
+
+func (p *Page) StoreMatch(s []string) { p.Match = s }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	pg := parsePage(*r.URL)
@@ -42,61 +63,42 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func parsePage(u url.URL) int {
-	if page, ok := u.Query()["page"]; ok {
-		if pg, err := strconv.Atoi(page[0]); err == nil {
-			return pg
-		}
-	}
-	return 1
+type IndexPage struct{ Page }
+
+func (p IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p.Page.Articles = data.Articles.Enabled()
+	p.Page.Title = conf.Blog.Title
+	p.Page.ServeHTTP(w, r)
 }
 
-type IndexPage struct { Page }
-func (i IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path == "/" {
-		i.Page.Articles = data.Articles.Enabled()
-		i.Page.Title = conf.Blog.Title
-	} else {
-		a, err := data.Articles.Find(r.URL.Path[1:])
-		if err != nil {
-			http.NotFound(w, r)
-			return
-		}
-		i.Page.Title = a.Title
-		i.Page.Articles = gold.Articles{a}
-	}
-	i.Page.ServeHTTP(w, r)
-}
+type SlugPage struct{ Page }
 
-/*
-func year(w http.ResponseWriter, r *http.Request) {
-	y, err := strconv.Atoi(s[0])
+func (p SlugPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	a, err := data.Articles.Find(p.Page.Match[0])
 	if err != nil {
-		log.Fatal(err)
+		http.NotFound(w, r)
+		return
 	}
-	a := data.Articles.Year(y)
-	p := Page{
-		Title:    fmt.Sprint(conf.Blog.Title, " - ", y),
-		Articles: a,
-	}
-	genpage(w, p)
+	p.Page.Title = a.Title
+	p.Page.Articles = gold.Articles{a}
+	p.Page.ServeHTTP(w, r)
 }
 
-func month(w http.ResponseWriter, r *http.Request) {
-	y, err := strconv.Atoi(s[0])
-	if err != nil {
-		log.Fatal(err)
-	}
-	m, err := strconv.Atoi(s[1])
-	if err != nil {
-		log.Fatal(err)
-	}
+type YearPage struct{ Page }
 
-	a := data.Articles.Enabled().Year(y).Month(m)
-	p := Page{
-		Title:    fmt.Sprint(conf.Blog.Title, " - ", y, time.Month(m)),
-		Articles: a,
-	}
-	genpage(w, p)
+func (p YearPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	y := atoiMust(p.Match[0])
+	p.Page.Articles = data.Articles.Year(y)
+	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", y)
+	p.Page.ServeHTTP(w, r)
 }
-*/
+
+type MonthPage struct{ Page }
+
+func (p MonthPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	y := atoiMust(p.Match[0])
+	m := atoiMust(p.Match[1])
+	p.Page.Articles = data.Articles.Year(y).Month(m)
+	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", y, time.Month(m))
+	p.Page.ServeHTTP(w, r)
+}

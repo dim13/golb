@@ -31,3 +31,7 @@ func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 }
+
+func (rss Rss) StoreMatch(s []string) {
+	/* do nothing */
+}
