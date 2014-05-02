@@ -71,9 +71,7 @@ func parsePage(u url.URL) int {
 
 func (p *Page) StoreMatch(s []string) { p.Match = s }
 
-func (p Page) MakeArchive() []Archive {
-	var arch []Archive
-
+func (p *Page) MakeArchive() {
 	ym := data.Articles.Enabled().YearMap()
 	for y, v := range ym {
 		year := Archive{
@@ -94,10 +92,9 @@ func (p Page) MakeArchive() []Archive {
 			}
 			sort.Sort(ByMonth(year.Month))
 		}
-		arch = append(arch, year)
+		p.Archive = append(p.Archive, year)
 	}
-	sort.Sort(sort.Reverse(ByYear(arch)))
-	return arch
+	sort.Sort(sort.Reverse(ByYear(p.Archive)))
 }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -112,7 +109,7 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if p.Year == 0 {
 		p.Year = time.Now().Year()
 	}
-	p.Archive = p.MakeArchive()
+	p.MakeArchive()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
