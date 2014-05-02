@@ -12,6 +12,7 @@
 	<article>
 		<header>
 			<h1><a href="{{.FullPath}}">{{.Title}}</a></h1>
+			<p>Published: <time>{{.PostDate}}</time></p>
 		</header>
 		{{$comments := .Comments.Enabled}}
 		{{if eq $nar 1}}
@@ -36,7 +37,6 @@
 			{{end}}
 
 			<footer>
-			<p>Published: <time>{{.PostDate}}</time></p>
 			{{if $comments}}
 			<p>Comments: <a href="{{.FullPath}}#comments">{{len $comments}}</a></p>
 			{{end}}
