@@ -98,11 +98,11 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
 	p.TagCloud = data.Articles.TagCloud()
 	p.Config = conf
-	if p.Year == 0 && p.Month == 0 {
-		p.Month = time.Now().Month()
-	}
 	if p.Year == 0 {
 		p.Year = time.Now().Year()
+		if p.Month == 0 {
+			p.Month = time.Now().Month()
+		}
 	}
 	p.MakeArchive()
 
