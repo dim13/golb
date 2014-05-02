@@ -72,15 +72,13 @@ func parsePage(u url.URL) int {
 func (p *Page) StoreMatch(s []string) { p.Match = s }
 
 func (p *Page) MakeArchive() {
-	ym := data.Articles.Enabled().YearMap()
-	for y, v := range ym {
+	for y, v := range data.Articles.Enabled().YearMap() {
 		year := Archive{
 			Year:  y,
 			Count: len(v),
 		}
-		mm := v.MonthMap()
 		if p.Year == y {
-			for m, v := range mm {
+			for m, v := range v.MonthMap() {
 				month := Month{
 					Month: time.Month(m),
 					Count: len(v),
