@@ -25,7 +25,10 @@ func (f HandlerFunc) Select(s []string)                                {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
-	r := &route{regexp.MustCompile(re), handler}
+	r := &route{
+		re:      regexp.MustCompile(re),
+		handler: handler,
+	}
 	h.routes = append(h.routes, r)
 }
 
