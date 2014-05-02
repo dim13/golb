@@ -18,6 +18,15 @@ var (
 	sitemap Sitemap
 )
 
+func assetHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, r.URL.Path[1:])
+}
+
+/* temporary helper function */
+func imgHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, conf.Blog.Url + r.URL.Path, http.StatusFound)
+}
+
 func main() {
 	var err error
 
@@ -31,17 +40,17 @@ func main() {
 		log.Println(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
-	rss = NewRss()
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	http.HandleFunc("/assets/", assetHandler)
-	http.HandleFunc("/images/", assetHandler)
+	http.HandleFunc("/images/", imgHandler)
+	http.Handle("/tag/", TagPage{})
 	/*
 	http.HandleFunc("^/admin/(.+)$", adminSlug)
 	http.HandleFunc("^/admin/?$", adminList)
 	 */
-	http.Handle("/rss.xml", rss)
+	http.Handle("/rss.xml", NewRss())
 	http.HandleFunc("/sitemap.xml", sitemapHandler)
 	/*
 	http.HandleFunc("^/(\\d+)/?$", year)

@@ -24,6 +24,7 @@ func NewRss() Rss {
 		Articles: a[:app],
 	}
 }
+
 func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
 	if err != nil {

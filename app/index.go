@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
+//	"strings"
 )
 
 type Page struct {
@@ -19,6 +19,14 @@ type Page struct {
 	PrevPage int
 	NextPage int
 	TagCloud gold.TagCloud
+}
+
+type TagPage struct { Page }
+func (t TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s := r.URL.Path[len("/tag/"):]
+	t.Page.Articles = data.Articles.Tag(s)
+	t.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+	t.Page.ServeHTTP(w, r)
 }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -48,10 +56,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var a gold.Articles
 
 	switch {
+		/*
 	case strings.HasPrefix(r.URL.Path, "/tag/"):
 		s := r.URL.Path[len("/tag/"):]
 		a = data.Articles.Tag(s)
 		p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+		 */
 	case r.URL.Path == "/":
 		a = data.Articles.Enabled()
 		p.Title = conf.Blog.Title
@@ -70,10 +80,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	p.Articles = a
 	p.ServeHTTP(w, r)
-}
-
-func assetHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, r.URL.Path[1:])
 }
 
 /*
