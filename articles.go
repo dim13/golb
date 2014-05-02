@@ -133,17 +133,6 @@ func (a Articles) Month(month time.Month) (A Articles) {
 	return A
 }
 
-func (a Articles) YearMonth(year, month int) (A Articles) {
-	for _, v := range a {
-		if v.Date.Year() == year &&
-			v.Date.Month() == time.Month(month) &&
-			v.Enabled {
-			A = append(A, v)
-		}
-	}
-	return A
-}
-
 func (a Articles) Enabled() (A Articles) {
 	for _, v := range a {
 		if v.Enabled {
