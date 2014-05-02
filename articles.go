@@ -2,6 +2,7 @@ package gold
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -174,3 +175,6 @@ func (a Articles) MonthMap() MonthMap {
 	return mm
 }
 
+func (a Article) FullPath() string {
+	return fmt.Sprintf("/%.4d/%.2d/%s", a.Date.Year(), a.Date.Month(), a.Slug)
+}

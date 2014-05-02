@@ -11,7 +11,7 @@
 {{range .Articles.Enabled}}
 	<article>
 		<header>
-			<h1><a href="/{{.Slug}}">{{.Title}}</a></h1>
+			<h1><a href="{{.FullPath}}">{{.Title}}</a></h1>
 		</header>
 		{{$comments := .Comments.Enabled}}
 		{{if eq $nar 1}}
@@ -32,13 +32,13 @@
 		{{else}}
 			{{.ReadMore}}
 			{{if .HasMore}}
-				<p><a href="/{{.Slug}}">Read the rest of this story &hellip;</a></p>
+				<p><a href="{{.FullPath}}">Read the rest of this story &hellip;</a></p>
 			{{end}}
 
 			<footer>
 			<p>Published: <time>{{.PostDate}}</time></p>
 			{{if $comments}}
-			<p>Comments: <a href="/{{.Slug}}#comments">{{len $comments}}</a></p>
+			<p>Comments: <a href="{{.FullPath}}#comments">{{len $comments}}</a></p>
 			{{end}}
 			{{with .Tags}}
 			<p>Tagged: {{range .}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
@@ -62,7 +62,7 @@
 		<li><a href="/{{$year}}/{{.IntMonth}}/">{{.Month}}</a> ({{.Count}})</li>
 			<ul>
 			{{range .Articles}}
-			<li><a href="/{{.Slug}}">{{.Title}}</a></li>
+			<li><a href="{{.FullPath}}">{{.Title}}</a></li>
 			{{end}}
 			</ul>
 		{{end}}
