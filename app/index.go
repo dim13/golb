@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -22,6 +23,33 @@ type Page struct {
 	Match    []string
 	Year     int
 	Month    time.Month
+	Archive  []Archive
+}
+
+type ByYear []Archive
+type Archive struct {
+	Year  int
+	Count int
+	Month []Month
+}
+
+type ByMonth []Month
+type Month struct {
+	Month    time.Month
+	Count    int
+	Articles gold.Articles
+}
+
+func (m ByMonth) Len() int           { return len(m) }
+func (m ByMonth) Swap(i, j int)      { m[i], m[j] = m[j], m[i] }
+func (m ByMonth) Less(i, j int) bool { return m[i].Month < m[j].Month }
+
+func (y ByYear) Len() int           { return len(y) }
+func (y ByYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
+func (y ByYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
+
+func (m Month) IntMonth() string {
+	return fmt.Sprintf("%.2d", int(m.Month))
 }
 
 func atoiMust(s string) int {
@@ -43,12 +71,48 @@ func parsePage(u url.URL) int {
 
 func (p *Page) StoreMatch(s []string) { p.Match = s }
 
+func (p Page) MakeArchive() []Archive {
+	var arch []Archive
+
+	ym := data.Articles.Enabled().YearMap()
+	for y, v := range ym {
+		year := Archive{
+			Year:  y,
+			Count: len(v),
+		}
+		mm := v.MonthMap()
+		if p.Year == y {
+			for m, v := range mm {
+				month := Month{
+					Month: time.Month(m),
+					Count: len(v),
+				}
+				if p.Month == time.Month(m) {
+					month.Articles = v
+				}
+				year.Month = append(year.Month, month)
+			}
+			sort.Sort(ByMonth(year.Month))
+		}
+		arch = append(arch, year)
+	}
+	sort.Sort(sort.Reverse(ByYear(arch)))
+	return arch
+}
+
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	pg := parsePage(*r.URL)
 	app := conf.Blog.ArticlesPerPage
 	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
 	p.TagCloud = data.Articles.TagCloud()
 	p.Config = conf
+	if p.Year == 0 && p.Month == 0 {
+		p.Month = time.Now().Month()
+	}
+	if p.Year == 0 {
+		p.Year = time.Now().Year()
+	}
+	p.Archive = p.MakeArchive()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
@@ -83,6 +147,8 @@ func (p SlugPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	p.Title = a.Title
 	p.Articles = gold.Articles{a}
+	p.Year = a.Year()
+	p.Month = a.Month()
 	p.Page.ServeHTTP(w, r)
 }
 

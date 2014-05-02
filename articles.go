@@ -115,7 +115,18 @@ func (a Article) HasMore() bool {
 	return strings.Contains(a.Body, readMore)
 }
 
+func (a Article) Year() int {
+	return a.Date.Year()
+}
+
+func (a Article) Month() time.Month {
+	return a.Date.Month()
+}
+
 func (a Articles) Year(year int) (A Articles) {
+	if year == 0 {
+		year = time.Now().Year()
+	}
 	for _, v := range a {
 		if v.Date.Year() == year {
 			A = append(A, v)
@@ -125,6 +136,9 @@ func (a Articles) Year(year int) (A Articles) {
 }
 
 func (a Articles) Month(month time.Month) (A Articles) {
+	if month == 0 {
+		month = time.Now().Month()
+	}
 	for _, v := range a {
 		if v.Date.Month() == month {
 			A = append(A, v)

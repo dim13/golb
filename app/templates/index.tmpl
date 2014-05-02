@@ -51,26 +51,26 @@
 </div>
 
 <aside>
-{{/*
 	<section id="archive">
 	<h3>Archive</h3>
 	<ul>
 	{{range .Archive}}
 	<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
-	<ul>
-	{{range .Month}}
-	<li><a href="/{{.Year}}/{{.Month}}/">{{.Month}}</a> ({{.Count}})</li>	
-	<ul>
-	{{range .Slugs}}
-	<li><a href="/{{.Slug}}">{{.Title}}</a></li>
-	{{end}}
-	</ul>
-	{{end}}
-	</ul>
+		<ul>
+		{{$year := .Year}}
+		{{range .Month}}
+		<li><a href="/{{$year}}/{{.IntMonth}}/">{{.Month}}</a> ({{.Count}})</li>
+			<ul>
+			{{range .Articles}}
+			<li><a href="/{{.Slug}}">{{.Title}}</a></li>
+			{{end}}
+			</ul>
+		{{end}}
+		</ul>
+
 	{{end}}
 	</ul>
 	</section>
- */}}
 
 	<section id="tagcloud">
 	<h3>Tag Cloud</h3>
