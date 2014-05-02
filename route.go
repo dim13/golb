@@ -21,7 +21,7 @@ type ReHandler struct {
 	routes []*route
 }
 
-func (f HandlerFunc) Select(s []string)                              {}
+func (f HandlerFunc) Select(s []string)                                {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
