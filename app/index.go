@@ -20,7 +20,6 @@ type Page struct {
 	PrevPage int
 	NextPage int
 	TagCloud gold.TagCloud
-	Match    []string
 	Year     int
 	Month    time.Month
 	Archive  []Archive
@@ -69,8 +68,6 @@ func parsePage(u url.URL) int {
 	return 1
 }
 
-func (p *Page) StoreMatch(s []string) { p.Match = s }
-
 func (p *Page) MakeArchive() {
 	for y, v := range data.Articles.Enabled().YearMap() {
 		year := Archive{
@@ -117,51 +114,46 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type TagPage struct{ Page }
 
-func (p TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s := p.Page.Match[0]
+func (p *TagPage) Selector(match []string) {
+	s := match[0]
 	p.Articles = data.Articles.Tag(s)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
-	p.Page.ServeHTTP(w, r)
 }
 
 type IndexPage struct{ Page }
 
-func (p IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p *IndexPage) Selector(match []string) {
 	p.Articles = data.Articles.Enabled()
 	p.Title = conf.Blog.Title
-	p.Page.ServeHTTP(w, r)
 }
 
 type SlugPage struct{ Page }
 
-func (p SlugPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a, err := data.Articles.Find(p.Match[0])
-	if err != nil {
-		http.NotFound(w, r)
-		return
+func (p *SlugPage) Selector(match []string) {
+	a, err := data.Articles.Find(match[0])
+	if err == nil {
+		p.Title = a.Title
+	} else {
+		p.Title = conf.Blog.Title
 	}
-	p.Title = a.Title
 	p.Articles = gold.Articles{a}
 	p.Year = a.Year()
 	p.Month = a.Month()
-	p.Page.ServeHTTP(w, r)
 }
 
 type YearPage struct{ Page }
 
-func (p YearPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Year = atoiMust(p.Match[0])
+func (p *YearPage) Selector(match []string) {
+	p.Year = atoiMust(match[0])
 	p.Articles = data.Articles.Year(p.Year)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
-	p.Page.ServeHTTP(w, r)
 }
 
 type MonthPage struct{ Page }
 
-func (p MonthPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Year = atoiMust(p.Match[0])
-	p.Month = time.Month(atoiMust(p.Match[1]))
+func (p *MonthPage) Selector(match []string) {
+	p.Year = atoiMust(match[0])
+	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = data.Articles.Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
-	p.Page.ServeHTTP(w, r)
 }

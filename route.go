@@ -9,7 +9,7 @@ type HandlerFunc http.HandlerFunc
 
 type HandlerMatch interface {
 	http.Handler
-	StoreMatch([]string)
+	Selector([]string)
 }
 
 type route struct {
@@ -21,7 +21,7 @@ type ReHandler struct {
 	routes []*route
 }
 
-func (f HandlerFunc) StoreMatch(s []string)                            {}
+func (f HandlerFunc) Selector(s []string)                              {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler HandlerMatch) {
@@ -41,7 +41,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, route := range h.routes {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
-			route.handler.StoreMatch(matches[1:])
+			route.handler.Selector(matches[1:])
 			route.handler.ServeHTTP(w, r)
 			return
 		}

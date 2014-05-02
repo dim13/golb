@@ -48,6 +48,4 @@ func (s SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (sm SiteMap) StoreMatch(s []string) {
-	/* do nothing */
-}
+func (sm SiteMap) Selector(match []string) {}

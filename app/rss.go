@@ -32,6 +32,4 @@ func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (rss Rss) StoreMatch(s []string) {
-	/* do nothing */
-}
+func (rss Rss) Selector(match []string) {}
