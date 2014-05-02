@@ -39,15 +39,6 @@ func parsePage(u url.URL) int {
 	return 1
 }
 
-type TagPage struct{ Page }
-
-func (p TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	s := p.Page.Match[0]
-	p.Page.Articles = data.Articles.Tag(s)
-	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
-	p.Page.ServeHTTP(w, r)
-}
-
 func (p *Page) StoreMatch(s []string) { p.Match = s }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -63,24 +54,33 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type TagPage struct{ Page }
+
+func (p TagPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s := p.Page.Match[0]
+	p.Articles = data.Articles.Tag(s)
+	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+	p.Page.ServeHTTP(w, r)
+}
+
 type IndexPage struct{ Page }
 
 func (p IndexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Page.Articles = data.Articles.Enabled()
-	p.Page.Title = conf.Blog.Title
+	p.Articles = data.Articles.Enabled()
+	p.Title = conf.Blog.Title
 	p.Page.ServeHTTP(w, r)
 }
 
 type SlugPage struct{ Page }
 
 func (p SlugPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	a, err := data.Articles.Find(p.Page.Match[0])
+	a, err := data.Articles.Find(p.Match[0])
 	if err != nil {
 		http.NotFound(w, r)
 		return
 	}
-	p.Page.Title = a.Title
-	p.Page.Articles = gold.Articles{a}
+	p.Title = a.Title
+	p.Articles = gold.Articles{a}
 	p.Page.ServeHTTP(w, r)
 }
 
@@ -88,8 +88,8 @@ type YearPage struct{ Page }
 
 func (p YearPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	y := atoiMust(p.Match[0])
-	p.Page.Articles = data.Articles.Year(y)
-	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", y)
+	p.Articles = data.Articles.Year(y)
+	p.Title = fmt.Sprint(conf.Blog.Title, " - ", y)
 	p.Page.ServeHTTP(w, r)
 }
 
@@ -98,7 +98,7 @@ type MonthPage struct{ Page }
 func (p MonthPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	y := atoiMust(p.Match[0])
 	m := atoiMust(p.Match[1])
-	p.Page.Articles = data.Articles.Year(y).Month(m)
-	p.Page.Title = fmt.Sprint(conf.Blog.Title, " - ", y, time.Month(m))
+	p.Articles = data.Articles.Year(y).Month(m)
+	p.Title = fmt.Sprint(conf.Blog.Title, " - ", y, time.Month(m))
 	p.Page.ServeHTTP(w, r)
 }
