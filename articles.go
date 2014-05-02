@@ -124,9 +124,9 @@ func (a Articles) Year(year int) (A Articles) {
 	return A
 }
 
-func (a Articles) Month(month int) (A Articles) {
+func (a Articles) Month(month time.Month) (A Articles) {
 	for _, v := range a {
-		if v.Date.Month() == time.Month(month) {
+		if v.Date.Month() == month {
 			A = append(A, v)
 		}
 	}

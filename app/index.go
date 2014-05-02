@@ -20,6 +20,8 @@ type Page struct {
 	NextPage int
 	TagCloud gold.TagCloud
 	Match    []string
+	Year     int
+	Month    time.Month
 }
 
 func atoiMust(s string) int {
@@ -87,18 +89,18 @@ func (p SlugPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type YearPage struct{ Page }
 
 func (p YearPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	y := atoiMust(p.Match[0])
-	p.Articles = data.Articles.Year(y)
-	p.Title = fmt.Sprint(conf.Blog.Title, " - ", y)
+	p.Year = atoiMust(p.Match[0])
+	p.Articles = data.Articles.Year(p.Year)
+	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
 	p.Page.ServeHTTP(w, r)
 }
 
 type MonthPage struct{ Page }
 
 func (p MonthPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	y := atoiMust(p.Match[0])
-	m := atoiMust(p.Match[1])
-	p.Articles = data.Articles.Year(y).Month(m)
-	p.Title = fmt.Sprint(conf.Blog.Title, " - ", y, time.Month(m))
+	p.Year = atoiMust(p.Match[0])
+	p.Month = time.Month(atoiMust(p.Match[1]))
+	p.Articles = data.Articles.Year(p.Year).Month(p.Month)
+	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
 	p.Page.ServeHTTP(w, r)
 }
