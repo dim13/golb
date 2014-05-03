@@ -133,12 +133,12 @@ func (p *SlugPage) Select(match []string) {
 	a, err := data.Articles.Find(match[0])
 	if err == nil {
 		p.Title = a.Title
+		p.Articles = gold.Articles{a}
+		p.Year = a.Year()
+		p.Month = a.Month()
 	} else {
 		p.Title = conf.Blog.Title
 	}
-	p.Articles = gold.Articles{a}
-	p.Year = a.Year()
-	p.Month = a.Month()
 }
 
 type YearPage struct{ Page }
