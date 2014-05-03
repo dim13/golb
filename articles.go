@@ -159,7 +159,7 @@ func (a Articles) Enabled() (A Articles) {
 
 func (a Articles) YearMap() YearMap {
 	ym := make(YearMap)
-	for _, v := range a.Enabled() {
+	for _, v := range a {
 		y := v.Date.Year()
 		ym[y] = append(ym[y], v)
 	}
@@ -168,7 +168,7 @@ func (a Articles) YearMap() YearMap {
 
 func (a Articles) MonthMap() MonthMap {
 	mm := make(MonthMap)
-	for _, v := range a.Enabled() {
+	for _, v := range a {
 		m := int(v.Date.Month())
 		mm[m] = append(mm[m], v)
 	}
