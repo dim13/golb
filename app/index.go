@@ -35,6 +35,7 @@ type Archive struct {
 type ByMonth []Month
 type Month struct {
 	Month    time.Month
+	Year     int
 	Count    int
 	Articles gold.Articles
 }
@@ -46,10 +47,6 @@ func (m ByMonth) Less(i, j int) bool { return m[i].Month < m[j].Month }
 func (y ByYear) Len() int           { return len(y) }
 func (y ByYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
 func (y ByYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
-
-func (m Month) IntMonth() string {
-	return fmt.Sprintf("%.2d", int(m.Month))
-}
 
 func atoiMust(s string) int {
 	i, err := strconv.Atoi(s)
@@ -77,6 +74,7 @@ func (p *Page) MakeArchive() {
 		if p.Year == y {
 			for m, v := range v.MonthMap() {
 				month := Month{
+					Year:  y,
 					Month: time.Month(m),
 					Count: len(v),
 				}

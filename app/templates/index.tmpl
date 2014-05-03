@@ -57,9 +57,8 @@
 	{{range .Archive}}
 	<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
 		<ul>
-		{{$year := .Year}}
 		{{range .Month}}
-		<li><a href="/{{$year}}/{{.IntMonth}}/">{{.Month}}</a> ({{.Count}})</li>
+		<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a> ({{.Count}})</li>
 			<ul>
 			{{range .Articles}}
 			<li><a href="{{.FullPath}}">{{.Title}}</a></li>
@@ -78,6 +77,13 @@
 	{{range .TagCloud}}
 	<li class="tagcloud_{{.Wight}}"><a href="/tag/{{.Tag}}">{{.Tag}}</a></li>
 	{{end}}
+	</ul>
+	</section>
+
+	<section id="feeds">
+	<h3>Feeds</h3>
+	<ul>
+	<li><a href="/rss.xml">RSS Feed</a></li>
 	</ul>
 	</section>
 </aside>
