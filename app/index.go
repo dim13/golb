@@ -15,7 +15,6 @@ type Page struct {
 	Config   *gold.Config
 	Title    string
 	Articles gold.Articles
-	Article  *gold.Article
 	Error    error
 	PrevPage int
 	NextPage int
