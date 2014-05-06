@@ -49,13 +49,13 @@ func main() {
 
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/images/", imgHandler)
-	re.Handle("^/tags?/(.+)$", &TagPage{})
+	re.Handle("^/rss.xml$", rss)
+	re.Handle("^/sitemap.xml$", sitemap)
 	/*
 	re.HandleFunc("^/admin/(.+)$", adminSlug)
 	re.HandleFunc("^/admin/?$", adminList)
 	 */
-	re.Handle("^/rss.xml$", rss)
-	re.Handle("^/sitemap.xml$", sitemap)
+	re.Handle("^/tags?/(.+)$", &TagPage{})
 	re.Handle("^/\\d+/\\d+/(.+)$", &SlugPage{})
 	re.Handle("^/(\\d+)/(\\d+)/?$", &MonthPage{})
 	re.Handle("^/(\\d+)/?$", &YearPage{})
