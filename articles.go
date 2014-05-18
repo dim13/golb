@@ -62,6 +62,21 @@ func (a *Articles) Add(article *Article) error {
 	return nil
 }
 
+func (a *Articles) Update(article *Article) error {
+	article.Date = time.Now()
+	if article.Slug == "" {
+		article.makeSlug()
+	}
+	/* FIXME: find and update */
+	for i, _ := range *a {
+		if (*a)[i].Slug == article.Slug {
+			(*a)[i] = article
+			return nil
+		}
+	}
+	return errors.New("not found " + article.Slug)
+}
+
 func (a Articles) Find(slug string) (*Article, error) {
 	for i, _ := range a {
 		if a[i].Slug == slug {
