@@ -67,23 +67,29 @@ func (a *Articles) Update(article *Article) error {
 	if article.Slug == "" {
 		article.makeSlug()
 	}
-	/* FIXME: find and update */
-	for i, _ := range *a {
-		if (*a)[i].Slug == article.Slug {
-			(*a)[i] = article
-			return nil
+	i, err := a.locate(article.Slug)
+	if err != nil {
+		return a.Add(article)
+	}
+	(*a)[i] = article
+	return nil
+}
+
+func (a Articles) locate(slug string) (int, error) {
+	for i, ar := range a {
+		if ar.Slug == slug {
+			return i, nil
 		}
 	}
-	return errors.New("not found " + article.Slug)
+	return 0, errors.New("not found " + slug)
 }
 
 func (a Articles) Find(slug string) (*Article, error) {
-	for i, _ := range a {
-		if a[i].Slug == slug {
-			return a[i], nil
-		}
+	i, err := a.locate(slug)
+	if err != nil {
+		return nil, err
 	}
-	return nil, errors.New("not found")
+	return a[i], nil
 }
 
 func (a Articles) Page(page, app int) (Articles, int, int) {
