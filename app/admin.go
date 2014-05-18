@@ -29,6 +29,10 @@ func (p *AdminIndex) Select(match []string) {
 	p.Title = "Admin Interface"
 }
 
+func (p *AdminIndex) Store(r *http.Request) {
+	log.Println(p, r)
+}
+
 type AdminSlug struct { AdminPage }
 
 func (p *AdminSlug) Select(match []string) {
@@ -39,44 +43,4 @@ func (p *AdminSlug) Select(match []string) {
 	}
 }
 
-/*
-import (
-	"log"
-	"net/http"
-)
-
-func adminListHandler(w http.ResponseWriter, r *http.Request, s []string) {
-	p := Page{
-		Config:   conf,
-		Title:    "Admin interface",
-		Articles: data.Articles,
-	}
-	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func adminSlugHandler(w http.ResponseWriter, r *http.Request, s []string) {
-	var p Page
-
-	a, err := data.Articles.Find(s[0])
-	if err != nil {
-		p = Page{
-			Config: conf,
-			Error:  err,
-		}
-	} else {
-		p = Page{
-			Config:  conf,
-			Title:   a.Title,
-			Article: a,
-		}
-	}
-
-	err = tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-*/
+func (p *AdminSlug) Store(r *http.Request) {}

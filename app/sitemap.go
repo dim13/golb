@@ -49,3 +49,4 @@ func (s SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sm SiteMap) Select(match []string) {}
+func (sm SiteMap) Store(r *http.Request) {}

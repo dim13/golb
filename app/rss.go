@@ -33,3 +33,4 @@ func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (rss Rss) Select(match []string) {}
+func (rss Rss) Store(r *http.Request) {}
