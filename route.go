@@ -47,13 +47,11 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
 			route.handler.Select(matches[1:])
-			switch r.Method {
-			case "POST":
+			if r.Method == "POST" {
 				route.handler.Store(r)
-				http.Redirect(w, r, r.URL.Path, http.StatusFound)
-			case "GET":
-				route.handler.ServeHTTP(w, r)
+				//http.Redirect(w, r, r.URL.Path, http.StatusFound)
 			}
+			route.handler.ServeHTTP(w, r)
 			return
 		}
 	}

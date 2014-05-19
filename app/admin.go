@@ -43,4 +43,19 @@ func (p *AdminSlug) Select(match []string) {
 	}
 }
 
-func (p *AdminSlug) Store(r *http.Request) {}
+func (p *AdminSlug) Store(r *http.Request) {
+	en := r.FormValue("enabled")
+	t := gold.ReadTags(r.FormValue("tags"))
+	a := gold.Article{
+		Title: r.FormValue("title"),
+		Slug: r.FormValue("slug"),
+		Tags: t,
+		Body: r.FormValue("body"),
+		Enabled: en != "",
+	}
+	p.Article = &a
+	if r.FormValue("save") != "" {
+		data.Articles.Update(&a)
+	}
+	//log.Println(p, r)
+}
