@@ -44,14 +44,12 @@ func (p *AdminSlug) Select(match []string) {
 }
 
 func (p *AdminSlug) Store(r *http.Request) {
-	en := r.FormValue("enabled")
-	t := gold.ReadTags(r.FormValue("tags"))
 	a := gold.Article{
 		Title: r.FormValue("title"),
 		Slug: r.FormValue("slug"),
-		Tags: t,
+		Tags: gold.ReadTags(r.FormValue("tags")),
 		Body: r.FormValue("body"),
-		Enabled: en != "",
+		Enabled: r.FormValue("enabled") != "",
 	}
 	p.Article = &a
 	if r.FormValue("save") != "" {
