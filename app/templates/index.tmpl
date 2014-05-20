@@ -14,10 +14,9 @@
 			<h1><a href="{{.FullPath}}">{{.Title}}</a></h1>
 			<p>Published: <time>{{.PostDate}}</time></p>
 		</header>
-		{{$comments := .Comments.Enabled}}
 		{{if eq $nar 1}}
 			{{.Body}}
-			{{with $comments}}
+			{{with .Comments.Enabled}}
 			<article id="comments">
 			<h4>Comments</h4>
 				{{range .}}
@@ -37,12 +36,14 @@
 			{{end}}
 
 			<footer>
-			{{if $comments}}
-			<p>Comments: <a href="{{.FullPath}}#comments">{{len $comments}}</a></p>
-			{{end}}
-			{{with .Tags}}
-			<p>Tagged: {{range .}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</p>
-			{{end}}
+			<ul>
+			<li class="comments_count">
+			Comments: <a href="{{.FullPath}}#comments">{{len .Comments.Enabled}}</a>
+			</li>
+			<li class="tags">
+			Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}
+			</li>
+			</ul>
 			</footer>
 		{{end}}
 	</article>
