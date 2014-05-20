@@ -18,11 +18,11 @@ func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.Config = conf
 	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
 
-type AdminIndex struct { AdminPage }
+type AdminIndex struct{ AdminPage }
 
 func (p *AdminIndex) Select(match []string) {
 	p.Articles = data.Articles
@@ -30,10 +30,10 @@ func (p *AdminIndex) Select(match []string) {
 }
 
 func (p *AdminIndex) Store(r *http.Request) {
-	log.Println(p, r)
+	//log.Println(p, r)
 }
 
-type AdminSlug struct { AdminPage }
+type AdminSlug struct{ AdminPage }
 
 func (p *AdminSlug) Select(match []string) {
 	a, err := data.Articles.Find(match[0])
@@ -45,10 +45,10 @@ func (p *AdminSlug) Select(match []string) {
 
 func (p *AdminSlug) Store(r *http.Request) {
 	a := gold.Article{
-		Title: r.FormValue("title"),
-		Slug: r.FormValue("slug"),
-		Tags: gold.ReadTags(r.FormValue("tags")),
-		Body: r.FormValue("body"),
+		Title:   r.FormValue("title"),
+		Slug:    r.FormValue("slug"),
+		Tags:    gold.ReadTags(r.FormValue("tags")),
+		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") != "",
 	}
 	p.Article = &a

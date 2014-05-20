@@ -14,6 +14,7 @@
 			<li>
 			{{if .Enabled}}{{else}}<s>{{end}}
 			{{.PostDate}} {{.Name}}
+			<blockquote>{{.Comment}}</blockquote>
 			{{if .Enabled}}{{else}}</s>{{end}}
 			</li>
 		{{end}}
