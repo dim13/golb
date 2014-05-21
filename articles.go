@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-var (
+const (
 	TimeFormat = "January 2, 2006"
 	readMore   = "<!--readmore-->"
 )
