@@ -36,8 +36,7 @@ func (c *Comment) PostDate() string {
 	return c.Date.Local().Format(TimeFormat) // defined in articles.go
 }
 
-func (c Comments) Enabled() Comments {
-	var C Comments
+func (c Comments) Enabled() (C Comments) {
 	for _, v := range c {
 		if v.Enabled {
 			C = append(C, v)
