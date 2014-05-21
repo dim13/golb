@@ -12,10 +12,10 @@
 		<ul>
 		{{range .Comments}}
 			<li>
-			{{if .Enabled}}{{else}}<s>{{end}}
+			{{if not .Enabled}}<s>{{end}}
 			{{.PostDate}} {{.Name}}
 			<blockquote>{{.Comment}}</blockquote>
-			{{if .Enabled}}{{else}}</s>{{end}}
+			{{if not .Enabled}}</s>{{end}}
 			</li>
 		{{end}}
 		</ul>
