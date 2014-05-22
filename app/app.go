@@ -23,7 +23,7 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 /* temporary helper function */
-func imgHandler(w http.ResponseWriter, r *http.Request) {
+func tmpHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, conf.Blog.Url + r.URL.Path, http.StatusFound)
 }
 
@@ -48,7 +48,8 @@ func main() {
 	re := new(gold.ReHandler)
 
 	re.HandleFunc("^/assets/", assetHandler)
-	re.HandleFunc("^/images/", imgHandler)
+	re.HandleFunc("^/images/", tmpHandler)
+	re.HandleFunc("^/videos/", tmpHandler)
 	re.Handle("^/rss.xml$", rss)
 	re.Handle("^/sitemap.xml$", sitemap)
 	re.Handle("^/admin/(.+)$", &AdminSlug{})
