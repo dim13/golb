@@ -4,14 +4,14 @@
 	font-family: 'EntypoSocial';
 	font-style: normal;
 	font-weight: normal;
-	src: url(/themes/dim13-html5/fonts/entypo-social.woff) format('woff');
+	src: url(/assets/fonts/entypo-social.woff) format('woff');
 }
 
 @font-face {
 	font-family: 'Entypo';
 	font-style: normal;
 	font-weight: normal;
-	src: url(/themes/dim13-html5/fonts/entypo.woff) format('woff');
+	src: url(/assets/fonts/fonts/entypo.woff) format('woff');
 }
 
 .social { font-family: 'EntypoSocial'; font-size: 18pt; }
@@ -121,7 +121,7 @@ header ul {
 header li a {
 	color: #3465a4;
 }
-header li.author {
+header li.pubdate {
 /*	float: left; */
 /*	display: inline; */
 	text-align: left;
