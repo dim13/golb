@@ -94,13 +94,10 @@
 	{{end}}
 
 <footer>
-	<p>Copyright &copy; {{html .Config.Blog.Owner}}</p>
-	{{with .PrevPage}}
-	<a href="?page={{.}}">&larr; Newer Articles</a>
-	{{end}}
-
-	{{with .NextPage}}
-	<a href="?page={{.}}">Older Articles &rarr;</a>
-	{{end}}
+	<ul>
+	<li class="lastpage">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
+	<li class="nextpage">{{with .NextPage}}<a href="?page={{.}}">Older Articles &rarr;</a>{{end}}</li>
+	<li>Copyright &copy; {{html .Config.Blog.Owner}}</li>
+	</ul>
 </footer>
 </html>
