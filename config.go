@@ -8,9 +8,7 @@ type blog struct {
 	Title    string
 	Subtitle string
 	Url      string
-	Theme    string
 	Owner    string
-	Rights   string
 	ArticlesPerPage int
 	TagsInCloud     int
 	DataBase        string
