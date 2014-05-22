@@ -95,9 +95,9 @@
 
 <footer>
 	<ul>
-	<li class="lastpage">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
+	<li class="prevpage">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
 	<li class="nextpage">{{with .NextPage}}<a href="?page={{.}}">Older Articles &rarr;</a>{{end}}</li>
-	<li>Copyright &copy; {{html .Config.Blog.Owner}}</li>
+	<li>Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
 	</ul>
 </footer>
 </html>
