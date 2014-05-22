@@ -126,7 +126,7 @@ func (a Article) RssDate() string {
 	return a.Date.Local().Format(time.RFC1123Z)
 }
 
-func (a Article) ReadMore() string {
+func (a Article) Spoiler() string {
 	if i := strings.Index(a.Body, readMore); i > 0 {
 		return a.Body[:i]
 	}
