@@ -6,7 +6,45 @@
 	<p id="blog_title"><a href="/">{{.Config.Blog.Title}}</a></p>
 	<p id="blog_subtitle">{{.Config.Blog.Subtitle}}</p>
 	</header>
-<div>
+
+	<aside>
+		<section id="archive">
+		<h3>Archive</h3>
+		<ul>
+		{{range .Archive}}
+		<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
+			<ul>
+			{{range .Month}}
+			<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a> ({{.Count}})</li>
+				<ul>
+				{{range .Articles}}
+				<li><a href="{{.FullPath}}">{{.Title}}</a></li>
+				{{end}}
+				</ul>
+			{{end}}
+			</ul>
+
+		{{end}}
+		</ul>
+		</section>
+
+		<section id="tagcloud">
+		<h3>Tag Cloud</h3>
+		<ul>
+		{{range .TagCloud}}
+		<li class="tagcloud_{{.Wight}}"><a href="/tag/{{.Tag}}">{{.Tag}}</a></li>
+		{{end}}
+		</ul>
+		</section>
+
+		<section id="feeds">
+		<h3>Feeds</h3>
+		<ul>
+		<li><a href="/rss.xml">RSS Feed</a></li>
+		</ul>
+		</section>
+	</aside>
+
 {{$nar := len .Articles.Enabled}}
 {{$url := .Config.Blog.Url}}
 {{range .Articles.Enabled}}
@@ -57,45 +95,6 @@
 	</article>
 
 {{end}}
-</div>
-
-<aside>
-	<section id="archive">
-	<h3>Archive</h3>
-	<ul>
-	{{range .Archive}}
-	<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
-		<ul>
-		{{range .Month}}
-		<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a> ({{.Count}})</li>
-			<ul>
-			{{range .Articles}}
-			<li><a href="{{.FullPath}}">{{.Title}}</a></li>
-			{{end}}
-			</ul>
-		{{end}}
-		</ul>
-
-	{{end}}
-	</ul>
-	</section>
-
-	<section id="tagcloud">
-	<h3>Tag Cloud</h3>
-	<ul>
-	{{range .TagCloud}}
-	<li class="tagcloud_{{.Wight}}"><a href="/tag/{{.Tag}}">{{.Tag}}</a></li>
-	{{end}}
-	</ul>
-	</section>
-
-	<section id="feeds">
-	<h3>Feeds</h3>
-	<ul>
-	<li><a href="/rss.xml">RSS Feed</a></li>
-	</ul>
-	</section>
-</aside>
 
 	{{with .Error}}
 	<p>{{.}}</p>
