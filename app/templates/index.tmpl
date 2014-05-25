@@ -52,12 +52,12 @@
 		<header>
 			<h1><a href="{{.FullPath}}">{{.Title}}</a></h1>
 			<ul>
-			<!--li class="social">
+			<!--li class="social right">
 				<a class="facebook" href="//www.facebook.com/sharer.php?u={{$url}}{{.FullPath}}" title="Share at Facebook" target="_blank">&#62222;</a>
 				<a class="twitter" href="//twitter.com/share?url={{$url}}{{.FullPath}}" title="Share at Twitter" target="_blank">&#62217;</a>
 				<a class="twitter" href="//plus.google.com/share?url={{$url}}{{.FullPath}}" title="Share at Google+" target="_blank">&#62223;</a>
 			</li-->
-			<li>Published: <time>{{.PostDate}}</time></li>
+			<li class="left">Published: <time>{{.PostDate}}</time></li>
 			</ul>
 		</header>
 		{{if eq $nar 1}}
@@ -85,7 +85,6 @@
 			<ul>
 			<li class="left">Comments: <a href="{{.FullPath}}#comments">{{len .Comments.Enabled}}</a></li>
 			<li class="right">Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</li>
-			<li>&nbsp;</li>
 			</ul>
 			</footer>
 		{{end}}
@@ -99,8 +98,8 @@
 
 <footer>
 	<ul>
-	<li class="left">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
-	<li class="right">{{with .NextPage}}<a href="?page={{.}}">Older Articles &rarr;</a>{{end}}</li>
+	{{with .PrevPage}}<li class="left"><a href="?page={{.}}">&larr; Newer Articles</a></li>{{end}}
+	{{with .NextPage}}<li class="right"><a href="?page={{.}}">Older Articles &rarr;</a></li>{{end}}
 	<li>Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
 	</ul>
 </footer>

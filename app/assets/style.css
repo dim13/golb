@@ -14,8 +14,8 @@
 	src: url(/assets/fonts/fonts/entypo.woff) format('woff');
 }
 
-.social { font-family: 'EntypoSocial'; font-size: 18pt; }
-.entypo { font-family: 'Entypo'; font-size: 18pt; }
+.social { font-family: 'EntypoSocial'; }
+.entypo { font-family: 'Entypo'; }
 
 pre, code, kbd {
 	font-family: 'Inconsolata', monospace;
@@ -113,17 +113,12 @@ header p a {
 header ul {
 	color: #888a85;
 	font-size: smaller;
-	list-style: none;
+	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
 header li a {
 	color: #3465a4;
-}
-header li.social {
-	float: right;
-	text-align: right;
-	margin-top: -1ex;
 }
 
 /* IE lt 9 hack */
@@ -151,11 +146,11 @@ aside section {
 	margin-bottom: 10%;
 }
 aside ul {
-	list-style: none;
+	list-style-type: none;
 	padding: 0;
 }
 aside ul ul {
-	list-style: none;
+	list-style-type: none;
 	margin-left: 2em;
 }
 
@@ -182,16 +177,17 @@ footer {
 footer a {
 	color: #3465a4;
 }
-footer ul {
-	list-style: none;
+footer ul, header ul {
+	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	overflow: hidden;
 }
-footer li.left {
+li.left {
 	float: left;
 	text-align: left;
 }
-footer li.right {
+li.right {
 	float: right;
 	text-align: right;
 }
