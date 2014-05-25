@@ -134,12 +134,9 @@ section, article, aside, footer, header, nav, hgroup {
 	display:block;
 }
 
-div {
-	width: 70%;
-	float: left;
-}
-
 article {
+	float: left;
+	width: 70%;
 	margin-bottom: 2em;
 }
 
