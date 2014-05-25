@@ -15,6 +15,7 @@ const (
 type Articles []*Article
 type Article struct {
 	Date     time.Time
+	Edit     time.Time
 	Title    string
 	Slug     string
 	Body     string
@@ -63,7 +64,7 @@ func (a *Articles) Add(article *Article) error {
 }
 
 func (a *Articles) Update(article *Article) error {
-	article.Date = time.Now()
+	article.Edit = time.Now()
 	if article.Slug == "" {
 		article.makeSlug()
 	}
@@ -120,6 +121,13 @@ func (a Articles) Page(page, app int) (Articles, int, int) {
 
 func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
+}
+
+func (a Article) Edited() bool {
+	return a.Edit.After(a.Date)
+}
+func (a Article) EditDate() string {
+	return a.Edit.Local().Format(TimeFormat)
 }
 
 func (a Article) RssDate() string {
