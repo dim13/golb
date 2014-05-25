@@ -120,9 +120,6 @@ header ul {
 header li a {
 	color: #3465a4;
 }
-header li {
-	text-align: left;
-}
 header li.social {
 	float: right;
 	text-align: right;
@@ -182,9 +179,6 @@ footer {
 	padding: 1em 0pt;
 	margin-top: 2em;
 }
-footer p {
-	text-align: left;
-}
 footer a {
 	color: #3465a4;
 }
@@ -193,18 +187,11 @@ footer ul {
 	padding: 0;
 	margin: 0;
 }
-footer li.comments_count {
+footer li.left {
 	float: left;
 	text-align: left;
 }
-footer li.tags {
-	text-align: right;
-}
-footer li.prevpage {
-	float: left;
-	text-align: left;
-}
-footer li.nextpage {
+footer li.right {
 	float: right;
 	text-align: right;
 }

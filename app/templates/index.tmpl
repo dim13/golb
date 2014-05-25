@@ -83,12 +83,9 @@
 
 			<footer>
 			<ul>
-			<li class="comments_count">
-			Comments: <a href="{{.FullPath}}#comments">{{len .Comments.Enabled}}</a>
-			</li>
-			<li class="tags">
-			Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}
-			</li>
+			<li class="left">Comments: <a href="{{.FullPath}}#comments">{{len .Comments.Enabled}}</a></li>
+			<li class="right">Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</li>
+			<li>&nbsp;</li>
 			</ul>
 			</footer>
 		{{end}}
@@ -102,8 +99,8 @@
 
 <footer>
 	<ul>
-	<li class="prevpage">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
-	<li class="nextpage">{{with .NextPage}}<a href="?page={{.}}">Older Articles &rarr;</a>{{end}}</li>
+	<li class="left">{{with .PrevPage}}<a href="?page={{.}}">&larr; Newer Articles</a>{{end}}</li>
+	<li class="right">{{with .NextPage}}<a href="?page={{.}}">Older Articles &rarr;</a>{{end}}</li>
 	<li>Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
 	</ul>
 </footer>
