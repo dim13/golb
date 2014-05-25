@@ -100,7 +100,7 @@
 	<ul>
 	{{with .PrevPage}}<li class="left"><a href="?page={{.}}">&larr; Newer Articles</a></li>{{end}}
 	{{with .NextPage}}<li class="right"><a href="?page={{.}}">Older Articles &rarr;</a></li>{{end}}
-	<li>Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
+	<li class="center">Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
 	</ul>
 </footer>
 </html>
