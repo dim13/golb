@@ -72,6 +72,7 @@ func (a *Articles) Update(article *Article) error {
 	if err != nil {
 		return a.Add(article)
 	}
+	article.Date = (*a)[i].Date
 	(*a)[i] = article
 	return nil
 }
