@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dim13/gold"
+	"github.com/dim13/gold/storage"
 	"log"
 	"net/http"
 	"sort"
@@ -11,8 +11,8 @@ import (
 const listen = ":8000"
 
 var (
-	conf *gold.Config
-	data *gold.Data
+	conf *storage.Config
+	data *storage.Data
 	tmpl *template.Template
 	rss Rss
 	sitemap SiteMap
@@ -30,12 +30,12 @@ func tmpHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var err error
 
-	conf, err = gold.ReadConf("config/config.ini")
+	conf, err = storage.ReadConf("config/config.ini")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	data = gold.Open(conf.Blog.DataBase)
+	data = storage.Open(conf.Blog.DataBase)
 	if err := data.Read(); err != nil {
 		log.Println(err)
 	}
@@ -45,7 +45,7 @@ func main() {
 	rss = NewRss()
 	sitemap = NewSitemap()
 
-	re := new(gold.ReHandler)
+	re := new(ReHandler)
 
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/images/", tmpHandler)

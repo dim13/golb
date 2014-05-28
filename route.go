@@ -1,4 +1,4 @@
-package gold
+package main
 
 import (
 	"net/http"

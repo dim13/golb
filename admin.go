@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/dim13/gold"
+	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/storage"
 	"log"
 	"net/http"
 )
 
 type AdminPage struct {
-	Articles gold.Articles
-	Article  *gold.Article
+	Articles articles.Articles
+	Article  *articles.Article
 	Title    string
-	Config   *gold.Config
+	Config   *storage.Config
 	Error    string
 }
 
@@ -44,10 +45,10 @@ func (p *AdminSlug) Select(match []string) {
 }
 
 func (p *AdminSlug) Store(r *http.Request) {
-	a := gold.Article{
+	a := articles.Article{
 		Title:   r.FormValue("title"),
 		Slug:    r.FormValue("slug"),
-		Tags:    gold.ReadTags(r.FormValue("tags")),
+		Tags:    articles.ReadTags(r.FormValue("tags")),
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") != "",
 	}

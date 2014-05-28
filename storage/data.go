@@ -1,15 +1,15 @@
-package gold
+package storage
 
 import (
-	"github.com/dim13/jsondb"
+	"github.com/dim13/gold/articles"
 	"sort"
 )
 
 type Data struct {
-	Articles Articles
+	Articles articles.Articles
 	fileName string
-	TagMap   TagMap
-	Tags     TagCount
+	TagMap   articles.TagMap
+	Tags     articles.TagCount
 }
 
 func Open(name string) *Data {
@@ -19,7 +19,7 @@ func Open(name string) *Data {
 }
 
 func (d *Data) Read() error {
-	return jsondb.Read(d.fileName, &d.Articles)
+	return ReadJson(d.fileName, &d.Articles)
 }
 
 func (d *Data) Write() error {
@@ -27,10 +27,10 @@ func (d *Data) Write() error {
 	for i, _ := range d.Articles {
 		sort.Sort(d.Articles[i].Comments)
 	}
-	return jsondb.Write(d.fileName, &d.Articles)
+	return WriteJson(d.fileName, &d.Articles)
 }
 
-func (d *Data) AddArticle(a *Article) {
+func (d *Data) AddArticle(a *articles.Article) {
 	d.Articles.Add(a)
 	d.Tags = d.Articles.CountTags()
 	d.TagMap = d.Articles.TagMap()

@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/dim13/gold"
+	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/storage"
 	"log"
 	"net/http"
 	"net/url"
@@ -12,13 +13,13 @@ import (
 )
 
 type Page struct {
-	Config   *gold.Config
+	Config   *storage.Config
 	Title    string
-	Articles gold.Articles
+	Articles articles.Articles
 	Error    error
 	PrevPage int
 	NextPage int
-	TagCloud gold.TagCloud
+	TagCloud articles.TagCloud
 	Year     int
 	Month    time.Month
 	Archive  []Archive
@@ -36,7 +37,7 @@ type Month struct {
 	Month    time.Month
 	Year     int
 	Count    int
-	Articles gold.Articles
+	Articles articles.Articles
 }
 
 func (m ByMonth) Len() int           { return len(m) }
@@ -134,7 +135,7 @@ func (p *SlugPage) Select(match []string) {
 	a, err := data.Articles.Find(match[0])
 	if err == nil {
 		p.Title = a.Title
-		p.Articles = gold.Articles{a}
+		p.Articles = articles.Articles{a}
 		p.Year = a.Year()
 		p.Month = a.Month()
 	} else {

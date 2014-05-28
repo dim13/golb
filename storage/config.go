@@ -1,4 +1,4 @@
-package gold
+package storage
 
 import (
 	"code.google.com/p/gcfg"

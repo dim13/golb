@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dim13/gold"
+	"github.com/dim13/gold/articles"
 	"log"
 	"net/http"
 )
@@ -10,7 +10,7 @@ type Rss struct {
 	Url      string
 	Title    string
 	Subtitle string
-	Articles gold.Articles
+	Articles articles.Articles
 }
 
 func NewRss() Rss {
