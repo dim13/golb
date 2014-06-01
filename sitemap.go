@@ -21,32 +21,28 @@ func (sm Sitemap) LastMod() string {
 	return sm.Date.Local().Format("2006-02-01")
 }
 
-func (sm *SiteMap) Select(match []string) {
-	*sm = append(*sm, Sitemap{
-		Loc:      conf.Blog.Url,
+func sitemapHandler(w http.ResponseWriter, r *http.Request) {
+	var sm SiteMap
+	sm = append(sm, Sitemap{
+		Loc:      "http://" + r.Host,
 		Priority: 1.0,
 	})
 	for _, a := range data.Articles.Enabled() {
-		*sm = append(*sm, Sitemap{
-			Loc:        conf.Blog.Url + "/" + a.Slug,
+		sm = append(sm, Sitemap{
+			Loc:        "http://" + r.Host + "/" + a.Slug,
 			Priority:   0.8,
 			Date:       a.Date,
 			ChangeFreq: "monthly",
 		})
 	}
 	for _, t := range data.Articles.TagCloud() {
-		*sm = append(*sm, Sitemap{
-			Loc:      conf.Blog.Url + "/tag/" + t.Tag,
+		sm = append(sm, Sitemap{
+			Loc:      "http://" + r.Host + "/tag/" + t.Tag,
 			Priority: 0.6 - float64(t.Wight)/10,
 		})
 	}
-}
-
-func (sm *SiteMap) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
-
-func (sm *SiteMap) Store(r *http.Request) {}

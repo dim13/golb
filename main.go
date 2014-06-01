@@ -26,12 +26,12 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 
 /* temporary helper function */
 func tmpHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, conf.Blog.Url+r.URL.Path, http.StatusFound)
+	http.Redirect(w, r, "http://"+r.Host+r.URL.Path, http.StatusFound)
 }
 
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "User-agent: *")
-	fmt.Fprintln(w, "Sitemap:", conf.Blog.Url+"/sitemap.xml")
+	fmt.Fprintln(w, "Sitemap:", "http://"+r.Host+"/sitemap.xml")
 }
 
 func main() {
@@ -55,11 +55,10 @@ func main() {
 
 	re := new(ReHandler)
 	re.HandleFunc("^/assets/", assetHandler)
-	re.HandleFunc("^/images/", tmpHandler)
-	re.HandleFunc("^/videos/", tmpHandler)
+	re.HandleFunc("^/(images|videos)/", tmpHandler)
 	re.HandleFunc("^/robots.txt$", robotsHandler)
-	re.Handle("^/rss.xml$", &Rss{})
-	re.Handle("^/sitemap.xml$", &SiteMap{})
+	re.HandleFunc("^/rss.xml$", rssHandler)
+	re.HandleFunc("^/sitemap.xml$", sitemapHandler)
 	re.Handle("^/admin/(.+)$", &AdminSlug{})
 	re.Handle("^/admin/?$", &AdminIndex{})
 	re.Handle("^/tags?/(.+)$", &TagPage{})
