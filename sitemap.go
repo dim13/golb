@@ -24,8 +24,9 @@ func (sm Sitemap) LastMod() string {
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm SiteMap
 	sm = append(sm, Sitemap{
-		Loc:      "http://" + r.Host,
-		Priority: 1.0,
+		Loc:        "http://" + r.Host,
+		ChangeFreq: "daily",
+		Priority:   1.0,
 	})
 	for _, a := range data.Articles.Enabled() {
 		sm = append(sm, Sitemap{
@@ -37,8 +38,9 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for _, t := range data.Articles.TagCloud() {
 		sm = append(sm, Sitemap{
-			Loc:      "http://" + r.Host + "/tag/" + t.Tag,
-			Priority: 0.6 - float64(t.Wight)/10,
+			Loc:        "http://" + r.Host + "/tag/" + t.Tag,
+			Priority:   0.6 - float64(t.Wight)/10,
+			ChangeFreq: "weekly",
 		})
 	}
 	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
