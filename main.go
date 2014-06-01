@@ -26,7 +26,7 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 
 /* temporary helper function */
 func tmpHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "http://"+r.Host+r.URL.Path, http.StatusFound)
+	http.Redirect(w, r, "http://www.dim13.org"+r.URL.Path, http.StatusFound)
 }
 
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
