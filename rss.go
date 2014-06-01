@@ -13,11 +13,18 @@ type Rss struct {
 	Articles articles.Articles
 }
 
-func NewRss() Rss {
+func (rss *Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (rss *Rss) Select(match []string) {
 	a := data.Articles.Enabled()
 	app := conf.Blog.ArticlesPerPage
 
-	return Rss{
+	*rss = Rss{
 		Url:      conf.Blog.Url,
 		Title:    conf.Blog.Title,
 		Subtitle: conf.Blog.Subtitle,
@@ -25,12 +32,4 @@ func NewRss() Rss {
 	}
 }
 
-func (rss Rss) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func (rss Rss) Select(match []string) {}
-func (rss Rss) Store(r *http.Request) {}
+func (rss *Rss) Store(r *http.Request) {}

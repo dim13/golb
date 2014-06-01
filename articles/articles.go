@@ -125,7 +125,7 @@ func (a Article) PostDate() string {
 }
 
 func (a Article) Edited() bool {
-	return a.Edit.After(a.Date)
+	return !a.Edit.IsZero()
 }
 func (a Article) EditDate() string {
 	return a.Edit.Local().Format(TimeFormat)

@@ -14,8 +14,6 @@ var (
 	conf *storage.Config
 	data *storage.Data
 	tmpl *template.Template
-	rss Rss
-	sitemap SiteMap
 )
 
 func assetHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,16 +40,14 @@ func main() {
 	sort.Sort(sort.Reverse(data.Articles))
 
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
-	rss = NewRss()
-	sitemap = NewSitemap()
 
 	re := new(ReHandler)
 
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/images/", tmpHandler)
 	re.HandleFunc("^/videos/", tmpHandler)
-	re.Handle("^/rss.xml$", rss)
-	re.Handle("^/sitemap.xml$", sitemap)
+	re.Handle("^/rss.xml$", &Rss{})
+	re.Handle("^/sitemap.xml$", &SiteMap{})
 	re.Handle("^/admin/(.+)$", &AdminSlug{})
 	re.Handle("^/admin/?$", &AdminIndex{})
 	re.Handle("^/tags?/(.+)$", &TagPage{})
