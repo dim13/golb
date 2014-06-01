@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/dim13/gold/storage"
 	"log"
 	"net/http"
@@ -22,7 +23,12 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 
 /* temporary helper function */
 func tmpHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, conf.Blog.Url + r.URL.Path, http.StatusFound)
+	http.Redirect(w, r, conf.Blog.Url+r.URL.Path, http.StatusFound)
+}
+
+func robotsHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "User-agent: *")
+	fmt.Fprintln(w, "Sitemap:", conf.Blog.Url+"/sitemap.xml")
 }
 
 func main() {
@@ -46,6 +52,7 @@ func main() {
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/images/", tmpHandler)
 	re.HandleFunc("^/videos/", tmpHandler)
+	re.HandleFunc("^/robots.txt$", robotsHandler)
 	re.Handle("^/rss.xml$", &Rss{})
 	re.Handle("^/sitemap.xml$", &SiteMap{})
 	re.Handle("^/admin/(.+)$", &AdminSlug{})
