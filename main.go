@@ -9,7 +9,10 @@ import (
 	"text/template"
 )
 
-const listen = ":8000"
+const (
+	listen = ":8000"
+	config = "config/config.ini"
+)
 
 var (
 	conf *storage.Config
@@ -34,21 +37,23 @@ func robotsHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var err error
 
-	conf, err = storage.ReadConf("config/config.ini")
+	log.Println("Read", config)
+	conf, err = storage.ReadConf(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	log.Println("Open", conf.Blog.DataBase)
 	data = storage.Open(conf.Blog.DataBase)
 	if err := data.Read(); err != nil {
 		log.Println(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
 
+	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
 	re := new(ReHandler)
-
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/images/", tmpHandler)
 	re.HandleFunc("^/videos/", tmpHandler)
@@ -64,6 +69,7 @@ func main() {
 	re.Handle("^/(.+)$", &SlugPage{})
 	re.Handle("^/$", &IndexPage{})
 
+	log.Println("Listen on", listen)
 	if err := http.ListenAndServe(listen, re); err != nil {
 		log.Fatal(err)
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"regexp"
 )
@@ -27,6 +28,7 @@ func (f HandlerFunc) Store(r *http.Request)                            {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
+	log.Println("SelectHandler", re)
 	r := &route{
 		re:      regexp.MustCompile(re),
 		handler: handler,
@@ -34,10 +36,11 @@ func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	h.routes = append(h.routes, r)
 }
 
-func (h *ReHandler) HandleFunc(re string, handler func(http.ResponseWriter, *http.Request)) {
+func (h *ReHandler) HandleFunc(re string, handler HandlerFunc) {
+	log.Println("HandlerFunc", re)
 	r := &route{
 		re:      regexp.MustCompile(re),
-		handler: HandlerFunc(handler),
+		handler: handler,
 	}
 	h.routes = append(h.routes, r)
 }
