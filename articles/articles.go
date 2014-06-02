@@ -187,6 +187,13 @@ func (a Articles) Enabled() (A Articles) {
 	return A
 }
 
+func (a Articles) Skip(n int) Articles {
+	if n > len(a) {
+		return nil
+	}
+	return a[n:]
+}
+
 func (a Articles) Limit(n int) Articles {
 	if n > len(a) {
 		n = len(a)
