@@ -188,8 +188,8 @@ func (a Articles) Enabled() (A Articles) {
 }
 
 func (a Articles) Limit(n int) Articles {
-	if n > len(a)-1 {
-		n = len(a) - 1
+	if n > len(a) {
+		n = len(a)
 	}
 	return a[:n]
 }
