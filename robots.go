@@ -1,11 +1,20 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
+type Robots struct {
+	Url string
+}
+
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "User-agent: *")
-	fmt.Fprintln(w, "Sitemap:", "http://"+r.Host+"/sitemap.xml")
+	rob := Robots{
+		Url: "http://" + r.Host,
+	}
+	err := tmpl.ExecuteTemplate(w, "robots.tmpl", rob)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
