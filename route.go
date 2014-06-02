@@ -49,7 +49,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, route := range h.routes {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
-			log.Println("Match", matches)
+			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
 			if r.Method == "POST" {
 				log.Println("POST", matches)
