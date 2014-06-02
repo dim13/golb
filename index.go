@@ -167,11 +167,9 @@ func (p *MonthPage) Select(match []string) {
 func (p *MonthPage) Store(r *http.Request) {}
 
 func (p Page) LastYear() int {
-	a := data.Articles.Enabled()
-	return a[0].Year()
+	return data.Articles.Enabled().Head().Year()
 }
 
 func (p Page) FirstYear() int {
-	a := data.Articles.Enabled()
-	return a[len(a)-1].Year()
+	return data.Articles.Enabled().Tail().Year()
 }

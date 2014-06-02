@@ -40,7 +40,7 @@ func main() {
 	log.Println("Open", conf.Blog.DataBase)
 	data = storage.Open(conf.Blog.DataBase)
 	if err := data.Read(); err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
 

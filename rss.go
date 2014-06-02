@@ -14,13 +14,14 @@ type Rss struct {
 }
 
 func rssHandler(w http.ResponseWriter, r *http.Request) {
-	a := data.Articles.Enabled()
 	app := conf.Blog.ArticlesPerPage
+	a := data.Articles.Enabled().Limit(app)
+
 	rss := Rss{
 		Url:      "http://" + r.Host,
 		Title:    conf.Blog.Title,
 		Subtitle: conf.Blog.Subtitle,
-		Articles: a[:app],
+		Articles: a,
 	}
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
 	if err != nil {

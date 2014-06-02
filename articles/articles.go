@@ -187,6 +187,21 @@ func (a Articles) Enabled() (A Articles) {
 	return A
 }
 
+func (a Articles) Limit(n int) Articles {
+	if n > len(a)-1 {
+		n = len(a) - 1
+	}
+	return a[:n]
+}
+
+func (a Articles) Head() Article {
+	return *a[0]
+}
+
+func (a Articles) Tail() Article {
+	return *a[len(a)-1]
+}
+
 func (a Articles) YearMap() YearMap {
 	ym := make(YearMap)
 	for _, v := range a {
