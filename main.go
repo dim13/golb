@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/dim13/gold/storage"
 	"log"
 	"net/http"
 	"sort"
 	"text/template"
+
+	"github.com/dim13/gold/storage"
 )
 
 const (

@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/dim13/gold/articles"
 	"log"
 	"net/http"
+
+	"github.com/dim13/gold/articles"
 )
 
 type Rss struct {
