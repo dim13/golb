@@ -26,7 +26,7 @@ func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type AdminIndex struct{ AdminPage }
 
-func (p *AdminIndex) Select(match []string) {
+func (p *AdminIndex) Select(_ []string) {
 	p.Articles = data.Articles
 	p.Title = "Admin Interface"
 }

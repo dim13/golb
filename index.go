@@ -123,7 +123,7 @@ func (p *TagPage) Store(r *http.Request) {}
 
 type IndexPage struct{ Page }
 
-func (p *IndexPage) Select(match []string) {
+func (p *IndexPage) Select(_ []string) {
 	p.Articles = data.Articles.Enabled()
 	p.Title = conf.Blog.Title
 }
