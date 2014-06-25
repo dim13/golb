@@ -1,4 +1,4 @@
-@import url(//fonts.googleapis.com/css?family=Play|Inconsolata&subset=latin,cyrillic);
+@import url(//fonts.googleapis.com/css?family=PT+Sans|PT+Sans+Caption|PT+Mono&subset=latin,cyrillic);
 
 @font-face {
 	font-family: 'EntypoSocial';
@@ -18,12 +18,12 @@
 .entypo { font-family: 'Entypo'; }
 
 pre, code, kbd {
-	font-family: 'Inconsolata', monospace;
+	font-family: 'PT Mono', monospace;
 }
 
 body, input, textarea {
 	padding: 1ex 1em;
-	font-family: 'Play', sans-serif;
+	font-family: 'PT Sans', sans-serif;
 }
 
 body, html {
@@ -85,7 +85,6 @@ a:hover {
 
 #blog_title {
 	font-size: 2.2em;
-	text-shadow: #555753 1px 1px 1px;
 }
 #blog_title a {
 	color: #000000;
@@ -101,6 +100,7 @@ h1 a {
 
 header {
 	margin-bottom: 2em;
+	font-family: 'PT Sans Caption', sans-serif;
 }
 header p {
 	margin: 0;
@@ -139,7 +139,6 @@ aside {
 }
 aside h3 {
 	border-bottom: thin solid #d3d7cf;
-	text-shadow: #555753 1px 1px 1px;
 }
 aside section {
 	margin-bottom: 10%;
@@ -155,7 +154,6 @@ aside ul ul {
 
 article h1 {
 	border-bottom: thin solid #d3d7cf;
-	text-shadow: #555753 1px 1px 1px;
 }
 article footer {
 	border: none;
