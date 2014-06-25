@@ -131,6 +131,9 @@ article {
 	width: 70%;
 	margin-bottom: 2em;
 }
+section.comment {
+	margin-bottom: 2em;
+}
 aside {
 	float: right;
 	width: 25%;
