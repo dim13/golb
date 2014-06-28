@@ -11,7 +11,7 @@ type Robots struct {
 
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
 	rob := Robots{
-		Host: "http://" + r.Host,
+		Host: r.Host,
 	}
 	err := tmpl.ExecuteTemplate(w, "robots.tmpl", rob)
 	if err != nil {
