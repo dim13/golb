@@ -48,6 +48,7 @@ func main() {
 		log.Fatal(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
+	//data.Write()
 
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))

@@ -19,15 +19,15 @@ func Open(name string) *Data {
 }
 
 func (d *Data) Read() error {
-	return ReadJson(d.fileName, &d.Articles)
+	return Load(d.fileName, &d.Articles)
 }
 
 func (d *Data) Write() error {
-	sort.Sort(d.Articles)
+	sort.Sort(sort.Reverse(d.Articles))
 	for i, _ := range d.Articles {
 		sort.Sort(d.Articles[i].Comments)
 	}
-	return WriteJson(d.fileName, &d.Articles)
+	return Store(d.fileName, &d.Articles)
 }
 
 func (d *Data) AddArticle(a *articles.Article) {
