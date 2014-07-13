@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"sort"
@@ -9,15 +10,12 @@ import (
 	"github.com/dim13/gold/storage"
 )
 
-const (
-	listen = ":8000"
-	config = "config/config.ini"
-)
-
 var (
-	conf *storage.Config
-	data *storage.Data
-	tmpl *template.Template
+	conf   *storage.Config
+	data   *storage.Data
+	tmpl   *template.Template
+	listen string
+	config string
 )
 
 func assetHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +25,12 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 /* temporary helper function */
 func tmpHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "http://www.dim13.org"+r.URL.Path, http.StatusFound)
+}
+
+func init() {
+	flag.StringVar(&listen, "listen", ":8000", "listen at")
+	flag.StringVar(&config, "config", "config/config.ini", "config file")
+	flag.Parse()
 }
 
 func main() {
