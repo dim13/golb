@@ -32,7 +32,8 @@ func (p *AdminIndex) Select(_ []string) {
 }
 
 func (p *AdminIndex) Store(r *http.Request) {
-	//log.Println(p, r)
+	r.ParseForm()
+	log.Println(r.Form)
 }
 
 type AdminSlug struct{ AdminPage }

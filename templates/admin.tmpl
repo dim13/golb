@@ -3,11 +3,15 @@
 {{template "header.tmpl" .}}
 <body>
 <h1>{{.Title}}</h1>
+<form id="new" action="/admin/" method="POST">
+New title: <input size="80" name="title">
+<input type="submit" name="add" value="add">
 <ul>
 {{range .Articles}}
 	<li>
 		{{if not .Enabled}}<s>{{end}}
-		{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a> {{.Tags}}
+		{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a>
+		Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}
 		{{if not .Enabled}}</s>{{end}}
 		<ul>
 		{{range .Comments}}
