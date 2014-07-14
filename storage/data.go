@@ -12,27 +12,23 @@ type Data struct {
 	Tags     articles.TagCount
 }
 
-func Open(name string) *Data {
+func Load(fname string) (*Data, error) {
 	d := new(Data)
-	d.fileName = name
-	return d
+	d.fileName = fname
+	return d, load(d.fileName, &d.Articles)
 }
 
-func (d *Data) Read() error {
-	return Load(d.fileName, &d.Articles)
-}
-
-func (d *Data) Write() error {
+func (d *Data) Store() error {
 	sort.Sort(sort.Reverse(d.Articles))
 	for i, _ := range d.Articles {
 		sort.Sort(d.Articles[i].Comments)
 	}
-	return Store(d.fileName, &d.Articles)
+	return store(d.fileName, &d.Articles)
 }
 
 func (d *Data) AddArticle(a *articles.Article) {
 	d.Articles.Add(a)
 	d.Tags = d.Articles.CountTags()
 	d.TagMap = d.Articles.TagMap()
-	d.Write()
+	d.Store()
 }

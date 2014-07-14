@@ -43,12 +43,12 @@ func main() {
 	}
 
 	log.Println("Open", conf.Blog.DataBase)
-	data = storage.Open(conf.Blog.DataBase)
-	if err := data.Read(); err != nil {
+	data, err = storage.Load(conf.Blog.DataBase)
+	if err != nil {
 		log.Fatal(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
-	//data.Write()
+	//data.Store()
 
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
