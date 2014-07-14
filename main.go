@@ -45,7 +45,7 @@ func main() {
 	log.Println("Open", conf.Blog.DataBase)
 	data, err = storage.Load(conf.Blog.DataBase)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	sort.Sort(sort.Reverse(data.Articles))
 	//data.Store()

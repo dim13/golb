@@ -202,11 +202,17 @@ func (a Articles) Limit(n int) Articles {
 }
 
 func (a Articles) Head() Article {
-	return *a[0]
+	if len(a) > 0 {
+		return *a[0]
+	}
+	return Article{}
 }
 
 func (a Articles) Tail() Article {
-	return *a[len(a)-1]
+	if len(a) > 0 {
+		return *a[len(a)-1]
+	}
+	return Article{}
 }
 
 func (a Articles) YearMap() YearMap {
