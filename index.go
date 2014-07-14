@@ -107,7 +107,7 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
 

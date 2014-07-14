@@ -15,6 +15,6 @@ func robotsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := tmpl.ExecuteTemplate(w, "robots.tmpl", rob)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
