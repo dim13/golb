@@ -96,14 +96,13 @@ func (a Articles) Find(slug string) (*Article, error) {
 
 // Pager
 func (a Articles) Page(page, app int) (A Articles, next int, prev int) {
-	lastpage := len(a)/app + 1
-
 	if page <= 1 {
 		page = 1
 	} else {
 		prev = page - 1
 	}
 
+	lastpage := len(a)/app + 1
 	if page >= lastpage {
 		page = lastpage
 	} else {
