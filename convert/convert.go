@@ -96,7 +96,7 @@ func main() {
 		}
 
 		t := strings.Split(tags, ",")
-		for i, _ := range t {
+		for i := range t {
 			t[i] = strings.TrimSpace(t[i])
 		}
 		log.Println(uri, t)

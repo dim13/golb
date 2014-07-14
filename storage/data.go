@@ -19,7 +19,7 @@ func Load(fname string) (*Data, error) {
 
 func (d *Data) Store() error {
 	sort.Sort(sort.Reverse(d.Articles))
-	for i, _ := range d.Articles {
+	for i := range d.Articles {
 		sort.Sort(d.Articles[i].Comments)
 	}
 	return store(d.fileName, &d.Articles)

@@ -42,7 +42,7 @@ func (a Articles) CountTags() TagCount {
 
 func (a Articles) TagMap() TagMap {
 	tm := make(TagMap)
-	for tag, _ := range a.CountTags() {
+	for tag := range a.CountTags() {
 		for _, article := range a.Enabled() {
 			if article.Tags.Has(tag) {
 				tm[tag] = append(tm[tag], article)
