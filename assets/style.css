@@ -267,3 +267,7 @@ span[title] {
 	article { width: 100%; }
 	aside { display: none; }
 }
+
+span.count {
+	float: right;
+}

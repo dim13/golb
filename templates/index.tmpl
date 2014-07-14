@@ -12,10 +12,10 @@
 		<h3>Archive</h3>
 		<ul>
 		{{range .Archive}}
-		<li><a href="/{{.Year}}/">{{.Year}}</a> ({{.Count}})</li>
+		<li><a href="/{{.Year}}/">{{.Year}}</a><span class="count">{{.Count}}</span></li>
 			<ul>
 			{{range .Month}}
-			<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a> ({{.Count}})</li>
+			<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a><span class="count">{{.Count}}</span></li>
 				<ul>
 				{{range .Articles}}
 				<li><a href="{{.FullPath}}">{{.Title}}</a></li>
