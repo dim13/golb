@@ -24,6 +24,7 @@ func assetHandler(w http.ResponseWriter, r *http.Request) {
 
 /* temporary helper function */
 func tmpHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("redirect to dim13", r.URL.Path)
 	http.Redirect(w, r, "http://www.dim13.org"+r.URL.Path, http.StatusFound)
 }
 
@@ -55,7 +56,7 @@ func main() {
 
 	re := new(ReHandler)
 	re.HandleFunc("^/assets/", assetHandler)
-	re.HandleFunc("^/(images|videos)/", tmpHandler)
+	re.HandleFunc("^/(favicon\\.ico|images|videos)", tmpHandler)
 	re.HandleFunc("^/robots.txt$", robotsHandler)
 	re.HandleFunc("^/rss.xml$", rssHandler)
 	re.HandleFunc("^/sitemap.xml$", sitemapHandler)
