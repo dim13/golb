@@ -94,9 +94,8 @@ func (a Articles) Find(slug string) (*Article, error) {
 	return a[i], nil
 }
 
-func (a Articles) Page(page, app int) (Articles, int, int) {
-	var next, prev int
-
+// Pager
+func (a Articles) Page(page, app int) (Articles, next int, prev int) {
 	lastpage := len(a)/app + 1
 
 	if page <= 1 {
@@ -120,6 +119,7 @@ func (a Articles) Page(page, app int) (Articles, int, int) {
 	return a[from:to], next, prev
 }
 
+// Format Date with TimeFormat
 func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
 }
@@ -131,6 +131,7 @@ func (a Article) EditDate() string {
 	return a.Edit.Local().Format(TimeFormat)
 }
 
+// Format Date for RSS
 func (a Article) RssDate() string {
 	return a.Date.Local().Format(time.RFC1123Z)
 }

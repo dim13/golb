@@ -1,8 +1,9 @@
 package storage
 
 import (
-	"github.com/dim13/gold/articles"
 	"sort"
+
+	"github.com/dim13/gold/articles"
 )
 
 type Data struct {
