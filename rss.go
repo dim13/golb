@@ -26,6 +26,6 @@ func rssHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
