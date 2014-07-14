@@ -49,6 +49,6 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
