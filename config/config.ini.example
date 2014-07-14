@@ -5,7 +5,7 @@ url =  http://www.example.com
 owner = Example User <user@example.com>
 articlesperpage = 10
 tagsincloud = 20
-database = data/site.json
+database = data/site.gob
 
 [captcha]
 public =
