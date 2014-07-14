@@ -95,7 +95,7 @@ func (a Articles) Find(slug string) (*Article, error) {
 }
 
 // Pager
-func (a Articles) Page(page, app int) (Articles, next int, prev int) {
+func (a Articles) Page(page, app int) (A Articles, next int, prev int) {
 	lastpage := len(a)/app + 1
 
 	if page <= 1 {
