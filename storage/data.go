@@ -13,8 +13,7 @@ type Data struct {
 }
 
 func Load(fname string) (*Data, error) {
-	d := new(Data)
-	d.fileName = fname
+	d := &Data{fileName: fname}
 	return d, load(d.fileName, &d.Articles)
 }
 
