@@ -4,6 +4,8 @@ package main
 import (
 	"database/sql"
 	"encoding/gob"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -37,6 +39,7 @@ CREATE TABLE comments (
 */
 
 type Articles []Article
+
 type Article struct {
 	Date     time.Time
 	Title    string
@@ -47,8 +50,11 @@ type Article struct {
 	Author   string
 	Comments Comments
 }
+
 type Tags []string
+
 type Comments []Comment
+
 type Comment struct {
 	Date    time.Time
 	Name    string
@@ -59,20 +65,81 @@ type Comment struct {
 }
 
 var (
-	format = "2006-01-02 15:04:05"
-	input  = "site.db"
-	output = "site.gob"
+	input  string
+	output string
 )
 
-func main() {
-	var A Articles
-
-	db, err := sql.Open("sqlite3", input)
+func writeGob(fname string, v interface{}) {
+	w, err := os.Create(fname)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	defer w.Close()
+	enc := gob.NewEncoder(w)
+	err = enc.Encode(v)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
+func getTags(tags string) Tags {
+	t := strings.Split(tags, ",")
+	for i := range t {
+		t[i] = strings.TrimSpace(t[i])
+	}
+	return t
+}
+
+func getDate(date string) time.Time {
+	d, err := time.Parse("2006-01-02 15:04:05", date)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return d
+}
+
+func (a Article) String() string {
+	return fmt.Sprintf("%s %s %s", a.Date, a.Slug, a.Tags)
+}
+
+func getComments(db *sql.DB, id int) (C Comments) {
+	rows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var (
+			date    string
+			name    string
+			email   []byte
+			url     []byte
+			comment string
+			enabled bool
+		)
+
+		err := rows.Scan(&date, &name, &email, &url, &comment, &enabled)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		c := Comment{
+			Date:    getDate(date),
+			Name:    name,
+			Email:   string(email),
+			URL:     string(url),
+			Comment: comment,
+			Enabled: enabled,
+		}
+
+		C = append(C, c)
+	}
+
+	return C
+}
+
+func getArticles(db *sql.DB) (A Articles) {
 	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
 		log.Fatal(err)
@@ -80,91 +147,53 @@ func main() {
 	defer rows.Close()
 
 	for rows.Next() {
-		var id int
-		var date string
-		var title string
-		var uri string
-		var body string
-		var tags string
-		var enabled bool
-		var author string
-
-		var C Comments
+		var (
+			id      int
+			date    string
+			title   string
+			uri     string
+			body    string
+			tags    string
+			enabled bool
+			author  string
+		)
 
 		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled, &author)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		t := strings.Split(tags, ",")
-		for i := range t {
-			t[i] = strings.TrimSpace(t[i])
-		}
-		log.Println(uri, t)
-
-		d, err := time.Parse(format, date)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		crows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer crows.Close()
-
-		for crows.Next() {
-			var date string
-			var name string
-			var email []byte
-			var url []byte
-			var comment string
-			var enabled bool
-
-			err := crows.Scan(&date, &name, &email, &url, &comment, &enabled)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			d, err := time.Parse(format, date)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			c := Comment{
-				Date:    d,
-				Name:    name,
-				Email:   string(email),
-				URL:     string(url),
-				Comment: comment,
-				Enabled: enabled,
-			}
-
-			C = append(C, c)
-		}
-
 		a := Article{
-			Date:     d,
+			Date:     getDate(date),
 			Title:    title,
 			Slug:     uri,
 			Body:     body,
-			Tags:     t,
+			Tags:     getTags(tags),
 			Enabled:  enabled,
 			Author:   author,
-			Comments: C,
+			Comments: getComments(db, id),
 		}
+
+		fmt.Println(a)
 
 		A = append(A, a)
 	}
 
-	w, err := os.Create(output)
+	return A
+}
+
+func init() {
+	flag.StringVar(&input, "input", "site.db", "input file (sqlite3)")
+	flag.StringVar(&output, "output", "site.gob", "output file (gob)")
+	flag.Parse()
+}
+
+func main() {
+	db, err := sql.Open("sqlite3", input)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer w.Close()
-	enc := gob.NewEncoder(w)
-	err = enc.Encode(A)
-	if err != nil {
-		log.Fatal(err)
-	}
+	defer db.Close()
+
+	writeGob(output, getArticles(db))
 }
