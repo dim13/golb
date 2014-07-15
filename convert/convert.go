@@ -137,9 +137,10 @@ func getComments(db *sql.DB, id int) (C Comments) {
 			Enabled: enabled,
 		}
 
-		fmt.Println(c)
-
-		C = append(C, c)
+		if c.Enabled {
+			fmt.Println(c)
+			C = append(C, c)
+		}
 	}
 
 	return C
@@ -180,9 +181,10 @@ func getArticles(db *sql.DB) (A Articles) {
 			Comments: getComments(db, id),
 		}
 
-		fmt.Println(a)
-
-		A = append(A, a)
+		if a.Enabled {
+			fmt.Println(a)
+			A = append(A, a)
+		}
 	}
 
 	return A
