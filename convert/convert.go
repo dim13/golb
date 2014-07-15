@@ -3,12 +3,13 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
-	_ "github.com/mattn/go-sqlite3"
-	"io/ioutil"
+	"encoding/gob"
 	"log"
+	"os"
 	"strings"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 /*
@@ -60,7 +61,7 @@ type Comment struct {
 var (
 	format = "2006-01-02 15:04:05"
 	input  = "site.db"
-	output = "site.json"
+	output = "site.gob"
 )
 
 func main() {
@@ -156,9 +157,14 @@ func main() {
 		A = append(A, a)
 	}
 
-	data, err := json.MarshalIndent(A, "", "\t")
+	w, err := os.Create(output)
 	if err != nil {
 		log.Fatal(err)
 	}
-	ioutil.WriteFile(output, data, 0664)
+	defer w.Close()
+	enc := gob.NewEncoder(w)
+	err = enc.Encode(A)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
