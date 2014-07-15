@@ -102,6 +102,10 @@ func (a Article) String() string {
 	return fmt.Sprintf("%s %s %s", a.Date, a.Slug, a.Tags)
 }
 
+func (c Comment) String() string {
+	return fmt.Sprintf("%s Comment: %s", c.Date, c.Name)
+}
+
 func getComments(db *sql.DB, id int) (C Comments) {
 	rows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
 	if err != nil {
@@ -132,6 +136,8 @@ func getComments(db *sql.DB, id int) (C Comments) {
 			Comment: comment,
 			Enabled: enabled,
 		}
+
+		fmt.Println(c)
 
 		C = append(C, c)
 	}
