@@ -119,16 +119,12 @@ func (p *TagPage) Select(match []string) {
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
 }
 
-func (p *TagPage) Store(r *http.Request) {}
-
 type IndexPage struct{ Page }
 
 func (p *IndexPage) Select(_ []string) {
 	p.Articles = data.Articles.Enabled()
 	p.Title = conf.Blog.Title
 }
-
-func (p *IndexPage) Store(r *http.Request) {}
 
 type SlugPage struct{ Page }
 
@@ -144,8 +140,6 @@ func (p *SlugPage) Select(match []string) {
 	}
 }
 
-func (p *SlugPage) Store(r *http.Request) {}
-
 type YearPage struct{ Page }
 
 func (p *YearPage) Select(match []string) {
@@ -153,8 +147,6 @@ func (p *YearPage) Select(match []string) {
 	p.Articles = data.Articles.Year(p.Year)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
 }
-
-func (p *YearPage) Store(r *http.Request) {}
 
 type MonthPage struct{ Page }
 
@@ -164,8 +156,6 @@ func (p *MonthPage) Select(match []string) {
 	p.Articles = data.Articles.Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
 }
-
-func (p *MonthPage) Store(r *http.Request) {}
 
 func (p Page) LastYear() int {
 	return data.Articles.Enabled().Head().Year()

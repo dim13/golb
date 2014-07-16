@@ -11,7 +11,12 @@ type HandlerFunc http.HandlerFunc
 type SelectHandler interface {
 	http.Handler
 	Select([]string)
-	Store(*http.Request)
+	/*
+	Get()
+	Post()
+	Put()
+	Delete()
+	 */
 }
 
 type route struct {
@@ -24,7 +29,6 @@ type ReHandler struct {
 }
 
 func (f HandlerFunc) Select(_ []string)                                {}
-func (f HandlerFunc) Store(_ *http.Request)                            {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
@@ -51,11 +55,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if matches != nil {
 			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
-			if r.Method == "POST" {
-				log.Println("POST", matches)
-				route.handler.Store(r)
-				//http.Redirect(w, r, r.URL.Path, http.StatusFound)
-			}
+			log.Println(r.Method, matches)	// debug output
 			route.handler.ServeHTTP(w, r)
 			return
 		}

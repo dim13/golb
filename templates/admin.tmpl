@@ -3,9 +3,11 @@
 {{template "header.tmpl" .}}
 <body>
 <h1>{{.Title}}</h1>
+
 <form id="new" action="/admin/" method="POST">
 New title: <input size="80" name="title">
 <input type="submit" name="add" value="add">
+
 <ul>
 {{range .Articles}}
 	<li>
