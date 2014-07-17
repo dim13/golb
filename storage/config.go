@@ -42,8 +42,6 @@ type Config struct {
 	Google   google
 }
 
-func ReadConf(fname string) (Config, error) {
-	var c Config
-	err := gcfg.ReadFileInto(&c, fname)
-	return c, err
+func ReadConf(fname string) (c Config, err error) {
+	return c, gcfg.ReadFileInto(&c, fname)
 }
