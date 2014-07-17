@@ -56,6 +56,12 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
 			log.Println(r.Method, matches)	// debug output
+			if r.Method == "POST" {
+				r.ParseForm()
+				//route.handler.Store(r.PostForm)
+				log.Println("Redirect:", r.URL, r.PostForm)
+				http.Redirect(w, r, r.URL.Path, http.StatusFound)
+			}
 			route.handler.ServeHTTP(w, r)
 			return
 		}
