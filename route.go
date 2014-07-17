@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	//"url"
 )
 
 type HandlerFunc http.HandlerFunc
@@ -11,12 +12,11 @@ type HandlerFunc http.HandlerFunc
 type SelectHandler interface {
 	http.Handler
 	Select([]string)
-	/*
-	Get()
-	Post()
-	Put()
-	Delete()
-	 */
+	//Store(url.Values)
+	//Get()
+	//Post()
+	//Put()
+	//Delete()
 }
 
 type route struct {
@@ -55,7 +55,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if matches != nil {
 			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
-			log.Println(r.Method, matches)	// debug output
+			log.Println(r.Method, matches) // debug output
 			if r.Method == "POST" {
 				r.ParseForm()
 				//route.handler.Store(r.PostForm)
