@@ -14,16 +14,18 @@ import (
 )
 
 type Page struct {
-	Config   *storage.Config
-	Title    string
-	Articles articles.Articles
-	Error    error
-	PrevPage int
-	NextPage int
-	TagCloud articles.TagCloud
-	Year     int
-	Month    time.Month
-	Archive  []Archive
+	Config    *storage.Config
+	Title     string
+	Articles  articles.Articles
+	Error     error
+	PrevPage  int
+	NextPage  int
+	TagCloud  articles.TagCloud
+	Year      int
+	Month     time.Month
+	Archive   []Archive
+	FirstYear int
+	LastYear  int
 }
 
 type ByYear []Archive
@@ -103,7 +105,10 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			p.Month = time.Now().Month()
 		}
 	}
+
 	p.MakeArchive()
+	p.FirstYear = data.Articles.Enabled().Tail().Year()
+	p.LastYear = data.Articles.Enabled().Head().Year()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
@@ -155,12 +160,4 @@ func (p *MonthPage) Select(match []string) {
 	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = data.Articles.Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
-}
-
-func (p Page) LastYear() int {
-	return data.Articles.Enabled().Head().Year()
-}
-
-func (p Page) FirstYear() int {
-	return data.Articles.Enabled().Tail().Year()
 }
