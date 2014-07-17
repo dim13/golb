@@ -69,7 +69,7 @@ func parsePage(u url.URL) int {
 }
 
 func (p *Page) MakeArchive() {
-	for y, v := range data.Articles.Enabled().YearMap() {
+	for y, v := range art.Enabled().YearMap() {
 		year := Archive{
 			Year:  y,
 			Count: len(v),
@@ -97,7 +97,7 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	pg := parsePage(*r.URL)
 	app := conf.Blog.ArticlesPerPage
 	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
-	p.TagCloud = data.Articles.TagCloud()
+	p.TagCloud = art.TagCloud()
 	p.Config = conf
 	if p.Year == 0 {
 		p.Year = time.Now().Year()
@@ -107,8 +107,8 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.MakeArchive()
-	p.FirstYear = data.Articles.Enabled().Tail().Year()
-	p.LastYear = data.Articles.Enabled().Head().Year()
+	p.FirstYear = art.Enabled().Tail().Year()
+	p.LastYear = art.Enabled().Head().Year()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
@@ -120,21 +120,21 @@ type TagPage struct{ Page }
 
 func (p *TagPage) Select(match []string) {
 	s := match[0]
-	p.Articles = data.Articles.Tag(s)
+	p.Articles = art.Tag(s)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
 }
 
 type IndexPage struct{ Page }
 
 func (p *IndexPage) Select(_ []string) {
-	p.Articles = data.Articles.Enabled()
+	p.Articles = art.Enabled()
 	p.Title = conf.Blog.Title
 }
 
 type SlugPage struct{ Page }
 
 func (p *SlugPage) Select(match []string) {
-	a, err := data.Articles.Find(match[0])
+	a, err := art.Find(match[0])
 	if err == nil {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
@@ -149,7 +149,7 @@ type YearPage struct{ Page }
 
 func (p *YearPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
-	p.Articles = data.Articles.Year(p.Year)
+	p.Articles = art.Year(p.Year)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
 }
 
@@ -158,6 +158,6 @@ type MonthPage struct{ Page }
 func (p *MonthPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
-	p.Articles = data.Articles.Year(p.Year).Month(p.Month)
+	p.Articles = art.Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
 }

@@ -7,12 +7,13 @@ import (
 	"sort"
 	"text/template"
 
+	"github.com/dim13/gold/articles"
 	"github.com/dim13/gold/storage"
 )
 
 var (
 	conf   *storage.Config
-	data   *storage.Data
+	art    *articles.Articles
 	tmpl   *template.Template
 	listen string
 	config string
@@ -44,11 +45,12 @@ func main() {
 	}
 
 	log.Println("Open", conf.Blog.DataBase)
-	data, err = storage.Load(conf.Blog.DataBase)
+	art = new(articles.Articles)
+	err = storage.Load(conf.Blog.DataBase, art)
 	if err != nil {
 		log.Println(err)
 	}
-	sort.Sort(sort.Reverse(data.Articles))
+	sort.Sort(sort.Reverse(art))
 	//data.Store()
 
 	log.Println("Prepare templates")

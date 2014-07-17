@@ -27,7 +27,7 @@ func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type AdminIndex struct{ AdminPage }
 
 func (p *AdminIndex) Select(_ []string) {
-	p.Articles = data.Articles
+	p.Articles = *art
 	p.Title = "Admin Interface"
 }
 
@@ -39,7 +39,7 @@ func (p *AdminIndex) Store(r *http.Request) {
 type AdminSlug struct{ AdminPage }
 
 func (p *AdminSlug) Select(match []string) {
-	a, err := data.Articles.Find(match[0])
+	a, err := art.Find(match[0])
 	if err == nil {
 		p.Title = a.Title
 		p.Article = a
@@ -56,7 +56,7 @@ func (p *AdminSlug) Store(r *http.Request) {
 	}
 	p.Article = &a
 	if r.FormValue("save") != "" {
-		data.Articles.Update(&a)
+		art.Update(&a)
 	}
 	//log.Println(p, r)
 }

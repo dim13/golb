@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func load(fname string, v interface{}) error {
+func Load(fname string, v interface{}) error {
 	r, err := os.Open(fname)
 	if err != nil {
 		return err
@@ -19,7 +19,7 @@ func load(fname string, v interface{}) error {
 	return nil
 }
 
-func store(fname string, v interface{}) error {
+func Store(fname string, v interface{}) error {
 	tmpfile := fname + ".tmp"
 	w, err := os.Create(tmpfile)
 	if err != nil {

@@ -23,7 +23,7 @@ func (sm Sitemap) LastMod() string {
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm SiteMap
-	articles := data.Articles.Enabled()
+	articles := art.Enabled()
 	sm = append(sm, Sitemap{
 		Loc:        "http://" + r.Host,
 		Priority:   1.0,
@@ -38,7 +38,7 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 			ChangeFreq: "monthly",
 		})
 	}
-	for _, t := range data.Articles.TagCloud() {
+	for _, t := range art.TagCloud() {
 		tagged := articles.Tag(t.Tag)
 		sm = append(sm, Sitemap{
 			Loc:        "http://" + r.Host + "/tag/" + t.Tag,
