@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	conf   *storage.Config
+	conf   storage.Config
 	art    *articles.Articles
 	tmpl   *template.Template
 	listen string

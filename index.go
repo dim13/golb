@@ -14,7 +14,7 @@ import (
 )
 
 type Page struct {
-	Config    *storage.Config
+	Config    storage.Config
 	Title     string
 	Articles  articles.Articles
 	Error     error

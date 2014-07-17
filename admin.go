@@ -12,7 +12,7 @@ type AdminPage struct {
 	Articles articles.Articles
 	Article  *articles.Article
 	Title    string
-	Config   *storage.Config
+	Config   storage.Config
 	Error    string
 }
 
