@@ -27,7 +27,7 @@ func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type AdminIndex struct{ AdminPage }
 
 func (p *AdminIndex) Select(_ []string) {
-	p.Articles = *art
+	p.Articles = art
 	p.Title = "Admin Interface"
 }
 

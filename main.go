@@ -13,7 +13,7 @@ import (
 
 var (
 	conf   storage.Config
-	art    *articles.Articles
+	art    articles.Articles
 	tmpl   *template.Template
 	listen string
 	config string
@@ -45,8 +45,7 @@ func main() {
 	}
 
 	log.Println("Open", conf.Blog.DataBase)
-	art = new(articles.Articles)
-	err = storage.Load(conf.Blog.DataBase, art)
+	err = storage.Load(conf.Blog.DataBase, &art)
 	if err != nil {
 		log.Println(err)
 	}
