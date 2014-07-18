@@ -93,7 +93,7 @@ func (a Articles) Find(slug string) (*Article, bool) {
 }
 
 // Pager
-func (a Articles) Page(page, app int) (_ Articles, next int, prev int) {
+func (a Articles) Page(page, app int) (A Articles, next int, prev int) {
 	if page <= 1 {
 		page = 1
 	} else {
@@ -113,7 +113,8 @@ func (a Articles) Page(page, app int) (_ Articles, next int, prev int) {
 		to = len(a)
 	}
 
-	return a[from:to], next, prev
+	A = a[from:to]
+	return
 }
 
 // Format Date with TimeFormat
