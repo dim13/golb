@@ -132,8 +132,7 @@ func (p *IndexPage) Select(_ []string) {
 type SlugPage struct{ Page }
 
 func (p *SlugPage) Select(match []string) {
-	a, err := art.Find(match[0])
-	if err == nil {
+	if a, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
 		p.Year = a.Year()

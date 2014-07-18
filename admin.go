@@ -39,8 +39,7 @@ func (p *AdminIndex) Store(r *http.Request) {
 type AdminSlug struct{ AdminPage }
 
 func (p *AdminSlug) Select(match []string) {
-	a, err := art.Find(match[0])
-	if err == nil {
+	if a, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Article = a
 	}

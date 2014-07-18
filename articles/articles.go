@@ -55,8 +55,7 @@ func (a *Articles) Add(article *Article) error {
 	if article.Slug == "" {
 		article.makeSlug()
 	}
-	_, err := a.Find(article.Slug)
-	if err == nil {
+	if _, ok := a.Find(article.Slug); ok {
 		return errors.New("duplicate slug " + article.Slug)
 	}
 	*a = append(*a, article)
@@ -68,30 +67,29 @@ func (a *Articles) Update(article *Article) error {
 	if article.Slug == "" {
 		article.makeSlug()
 	}
-	i, err := a.locate(article.Slug)
-	if err != nil {
+	if i, ok := a.locate(article.Slug); ok {
+		article.Date = (*a)[i].Date
+		(*a)[i] = article
+	} else {
 		return a.Add(article)
 	}
-	article.Date = (*a)[i].Date
-	(*a)[i] = article
 	return nil
 }
 
-func (a Articles) locate(slug string) (int, error) {
+func (a Articles) locate(slug string) (int, bool) {
 	for i, ar := range a {
 		if ar.Slug == slug {
-			return i, nil
+			return i, true
 		}
 	}
-	return 0, errors.New("not found " + slug)
+	return 0, false
 }
 
-func (a Articles) Find(slug string) (*Article, error) {
-	i, err := a.locate(slug)
-	if err != nil {
-		return nil, err
+func (a Articles) Find(slug string) (*Article, bool) {
+	if i, ok := a.locate(slug); ok {
+		return a[i], true
 	}
-	return a[i], nil
+	return nil, false
 }
 
 // Pager
