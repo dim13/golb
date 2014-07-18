@@ -1,11 +1,6 @@
 <section id="preview">
-	<header>
-	<h1>{{.Title}}</h1>
-	<p>{{.PostDate}}</p>
-	</header>
 	{{.Body}}
 </section>
-
 <section id="edit">
 <form id="edit" action="/admin/{{.Slug}}" method="POST">
 	<p><input size="80" name="title" value="{{.Title}}"> title</p>
