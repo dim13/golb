@@ -232,5 +232,6 @@ func (a Articles) MonthMap() MonthMap {
 }
 
 func (a Article) FullPath() string {
-	return fmt.Sprintf("/%.4d/%.2d/%s", a.Date.Year(), a.Date.Month(), a.Slug)
+	return fmt.Sprintf("/%.4d/%.2d/%s",
+		a.Date.Year(), a.Date.Month(), a.Slug)
 }
