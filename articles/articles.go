@@ -163,7 +163,7 @@ func (a Articles) Year(year int) (A Articles) {
 			A = append(A, v)
 		}
 	}
-	return A
+	return
 }
 
 func (a Articles) Month(month time.Month) (A Articles) {
@@ -175,7 +175,7 @@ func (a Articles) Month(month time.Month) (A Articles) {
 			A = append(A, v)
 		}
 	}
-	return A
+	return
 }
 
 func (a Articles) Enabled() (A Articles) {
@@ -184,7 +184,7 @@ func (a Articles) Enabled() (A Articles) {
 			A = append(A, v)
 		}
 	}
-	return A
+	return
 }
 
 func (a Articles) Skip(n int) Articles {
