@@ -120,14 +120,13 @@ type TagPage struct{ Page }
 func (p *TagPage) Select(match []string) {
 	s := match[0]
 	p.Articles = art.Tag(s)
-	p.Title = fmt.Sprint(conf.Blog.Title, " - ", s)
+	p.Title = s
 }
 
 type IndexPage struct{ Page }
 
 func (p *IndexPage) Select(_ []string) {
 	p.Articles = art.Enabled()
-	p.Title = conf.Blog.Title
 }
 
 type SlugPage struct{ Page }
@@ -139,8 +138,6 @@ func (p *SlugPage) Select(match []string) {
 		p.Articles = articles.Articles{a}
 		p.Year = a.Year()
 		p.Month = a.Month()
-	} else {
-		p.Title = conf.Blog.Title
 	}
 }
 
@@ -149,7 +146,7 @@ type YearPage struct{ Page }
 func (p *YearPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Articles = art.Year(p.Year)
-	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year)
+	p.Title = fmt.Sprint(p.Year)
 }
 
 type MonthPage struct{ Page }
@@ -158,5 +155,5 @@ func (p *MonthPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = art.Year(p.Year).Month(p.Month)
-	p.Title = fmt.Sprint(conf.Blog.Title, " - ", p.Year, p.Month)
+	p.Title = fmt.Sprint(p.Month, p.Year)
 }

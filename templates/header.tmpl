@@ -1,6 +1,6 @@
 <head>
 	<meta charset="UTF-8">
-	<title>{{.Title}}</title>
+	<title>{{.Config.Blog.Title}}{{with .Title}} &mdash; {{.}}{{end}}</title>
 	<meta name="generator" content="gold|blog">
 
 	<link rel="stylesheet" type="text/css" href="/assets/style.css" title="Default">
