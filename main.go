@@ -50,7 +50,6 @@ func main() {
 		log.Println(err)
 	}
 	sort.Sort(sort.Reverse(art))
-	//data.Store()
 
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
