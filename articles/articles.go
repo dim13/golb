@@ -122,11 +122,12 @@ func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
 }
 
-func (a Article) Edited() bool {
-	return !a.Edit.IsZero()
-}
 func (a Article) EditDate() string {
 	return a.Edit.Local().Format(TimeFormat)
+}
+
+func (a Article) Edited() bool {
+	return !a.Edit.IsZero()
 }
 
 // Format Date for RSS
