@@ -50,12 +50,12 @@ func (h *ReHandler) HandleFunc(re string, handler HandlerFunc) {
 }
 
 func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.Method, r.URL)
 	for _, route := range h.routes {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
 			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
-			log.Println(r.Method, matches) // debug output
 			if r.Method == "POST" {
 				r.ParseForm()
 				//route.handler.Store(r.PostForm)
