@@ -69,6 +69,12 @@ func parsePage(u url.URL) int {
 }
 
 func (p *Page) MakeArchive() {
+	if p.Year == 0 {
+		p.Year = p.Articles.Head().Year()
+	}
+	if p.Month == 0 {
+		p.Month = p.Articles.Head().Month()
+	}
 	for y, v := range art.Enabled().YearMap() {
 		year := Archive{
 			Year:  y,
@@ -99,13 +105,6 @@ func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
 	p.TagCloud = art.TagCloud()
 	p.Config = conf
-	if p.Year == 0 {
-		p.Year = time.Now().Year()
-		if p.Month == 0 {
-			p.Month = time.Now().Month()
-		}
-	}
-
 	p.MakeArchive()
 	p.FirstYear = art.Enabled().Tail().Year()
 	p.LastYear = art.Enabled().Head().Year()
