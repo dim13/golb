@@ -4,33 +4,38 @@
 <body>
 <h1>{{.Title}}</h1>
 
-<form id="new" action="/admin/" method="POST">
-New title: <input size="80" name="title">
-<input type="submit" name="add" value="add">
+{{with .Articles}}
+	<form id="new" action="/admin/" method="POST">
+	New title: <input size="80" name="title">
+	<input type="submit" name="add" value="add">
+	</form>
 
-<ul>
-{{range .Articles}}
-	<li>
-		{{if not .Enabled}}<s>{{end}}
-		{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a>
-		Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}
-		{{if not .Enabled}}</s>{{end}}
-		<ul>
-		{{range .Comments}}
-			<li>
+	<ul>
+	{{range .}}
+		<li>
 			{{if not .Enabled}}<s>{{end}}
-			{{.PostDate}} {{.Name}}
-			<blockquote>{{.Comment}}</blockquote>
+			{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a>
+			Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}
 			{{if not .Enabled}}</s>{{end}}
-			</li>
-		{{end}}
-		</ul>
-	</li>
+			<ul>
+			{{range .Comments}}
+				<li>
+				{{if not .Enabled}}<s>{{end}}
+				{{.PostDate}} {{.Name}}
+				<blockquote>{{.Comment}}</blockquote>
+				{{if not .Enabled}}</s>{{end}}
+				</li>
+			{{end}}
+			</ul>
+		</li>
+	{{end}}
+	</ul>
 {{end}}
-</ul>
+
 {{with .Error}}
 	<p>{{.}}</p>
 {{end}}
+
 {{with .Article}}
 {{template "edit.tmpl" .}}
 {{end}}
