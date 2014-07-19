@@ -62,32 +62,26 @@ func (a *Articles) Add(article *Article) error {
 	return nil
 }
 
-func (a *Articles) Update(article *Article) error {
+func (a Articles) Update(article *Article) error {
 	article.Edit = time.Now()
 	if article.Slug == "" {
 		article.makeSlug()
 	}
-	if i, ok := a.locate(article.Slug); ok {
-		article.Date = (*a)[i].Date
-		(*a)[i] = article
-	} else {
-		return a.Add(article)
-	}
-	return nil
-}
-
-func (a Articles) locate(slug string) (int, bool) {
 	for i, ar := range a {
-		if ar.Slug == slug {
-			return i, true
+		if ar.Slug == article.Slug {
+			article.Date = ar.Date
+			a[i] = ar
+			return nil
 		}
 	}
-	return 0, false
+	return a.Add(article)
 }
 
 func (a Articles) Find(slug string) (*Article, bool) {
-	if i, ok := a.locate(slug); ok {
-		return a[i], true
+	for _, ar := range a {
+		if ar.Slug == slug {
+			return ar, true
+		}
 	}
 	return nil, false
 }
