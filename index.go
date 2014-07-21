@@ -126,12 +126,13 @@ func (p *Page) Pager(pg, pp int) {
 }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	e := art.Enabled()
 	p.Pager(getPage(*r.URL), conf.Blog.ArticlesPerPage)
-	p.TagCloud = art.TagCloud()
+	p.TagCloud = e.TagCloud()
 	p.Config = conf
 	p.MakeArchive()
-	p.FirstYear = art.Enabled().Tail().Year()
-	p.LastYear = art.Enabled().Head().Year()
+	p.FirstYear = e.Tail().Year()
+	p.LastYear = e.Head().Year()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
