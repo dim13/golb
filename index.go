@@ -158,7 +158,7 @@ func (p *IndexPage) Select(_ []string) {
 type SlugPage struct{ Page }
 
 func (p *SlugPage) Select(match []string) {
-	if a, ok := art.Find(match[0]); ok {
+	if a, ok := art.Enabled().Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
 		p.Year = a.Year()
@@ -170,7 +170,7 @@ type YearPage struct{ Page }
 
 func (p *YearPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
-	p.Articles = art.Year(p.Year)
+	p.Articles = art.Enabled().Year(p.Year)
 	p.Title = fmt.Sprint(p.Year)
 }
 
@@ -179,6 +179,6 @@ type MonthPage struct{ Page }
 func (p *MonthPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
-	p.Articles = art.Year(p.Year).Month(p.Month)
+	p.Articles = art.Enabled().Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(p.Month, p.Year)
 }
