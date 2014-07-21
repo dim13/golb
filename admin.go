@@ -51,6 +51,11 @@ func (p *AdminSlug) Select(match []string) {
 	if a, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Article = a
+	} else {
+		p.Article = &articles.Article{
+			Slug: match[0],
+			Title: articles.MakeTitle(match[0]),
+		}
 	}
 }
 

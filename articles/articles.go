@@ -33,6 +33,11 @@ func MakeSlug(title string) string {
 	return r.Replace(strings.TrimSpace(title))
 }
 
+func MakeTitle(slug string) string {
+	r := strings.NewReplacer("-", " ")
+	return r.Replace(strings.TrimSpace(slug))
+}
+
 func (a *Article) Publish() {
 	a.Date = time.Now()
 	a.Enabled = true
