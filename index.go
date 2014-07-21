@@ -99,10 +99,34 @@ func (p *Page) MakeArchive() {
 	sort.Sort(sort.Reverse(ByYear(p.Archive)))
 }
 
+func (p *Page) Pager(pg, pp int) {
+	if pg <= 1 {
+		pg = 1
+	} else {
+		p.PrevPage = pg - 1
+	}
+
+	n := len(p.Articles)
+	lastpage := n/pp + 1
+
+	if pg >= lastpage {
+		pg = lastpage
+	} else {
+		p.NextPage = pg + 1
+	}
+
+	from := (pg - 1) * pp
+	to := from + pp - 1
+
+	if to > n {
+		to = n
+	}
+
+	p.Articles = p.Articles[from:to]
+}
+
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	pg := getPage(*r.URL)
-	app := conf.Blog.ArticlesPerPage
-	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
+	p.Pager(getPage(*r.URL), conf.Blog.ArticlesPerPage)
 	p.TagCloud = art.TagCloud()
 	p.Config = conf
 	p.MakeArchive()

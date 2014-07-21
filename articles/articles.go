@@ -86,31 +86,6 @@ func (a Articles) Find(slug string) (*Article, bool) {
 	return nil, false
 }
 
-// Pager
-func (a Articles) Page(page, app int) (A Articles, next int, prev int) {
-	if page <= 1 {
-		page = 1
-	} else {
-		prev = page - 1
-	}
-
-	lastpage := len(a)/app + 1
-	if page >= lastpage {
-		page = lastpage
-	} else {
-		next = page + 1
-	}
-
-	from := (page - 1) * app
-	to := from + app - 1
-	if to > len(a) {
-		to = len(a)
-	}
-
-	A = a[from:to]
-	return
-}
-
 // Format Date with TimeFormat
 func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
