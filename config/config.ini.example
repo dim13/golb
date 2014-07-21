@@ -1,10 +1,8 @@
 [blog]
 title = example.com
 subtitle = My new Blog
-url =  http://www.example.com
-owner = Example User <user@example.com>
-articlesperpage = 10
-tagsincloud = 20
+owner = A.N. Other
+articlesperpage = 8
 database = data/site.gob
 
 [captcha]
@@ -13,7 +11,7 @@ private =
 
 [comments]
 maxlen = 1024
-allowed = false
+enabled = false
 
 [smtp]
 server = localhost:smtp

@@ -15,6 +15,7 @@ import (
 
 type Page struct {
 	Config    storage.Config
+	Url	string
 	Title     string
 	Articles  articles.Articles
 	Error     error
@@ -127,6 +128,7 @@ func (p *Page) Pager(pg, pp int) {
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	e := art.Enabled()
+	p.Url = "http://" + r.Host
 	p.Pager(page(r.URL), conf.Blog.ArticlesPerPage)
 	p.TagCloud = e.TagCloud()
 	p.Config = conf

@@ -5,12 +5,10 @@ import (
 )
 
 type blog struct {
-	Title    string
-	Subtitle string
-	Url      string
-	Owner    string
+	Title           string
+	Subtitle        string
+	Owner           string
 	ArticlesPerPage int
-	TagsInCloud     int
 	DataBase        string
 }
 
@@ -21,7 +19,7 @@ type captcha struct {
 
 type comments struct {
 	Maxlen  int
-	Allowed bool
+	Enabled bool
 }
 
 type smtp struct {
