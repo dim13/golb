@@ -59,7 +59,7 @@ func atoiMust(s string) int {
 	return i
 }
 
-func parsePage(u url.URL) int {
+func getPage(u url.URL) int {
 	if page, ok := u.Query()["page"]; ok {
 		if pg, err := strconv.Atoi(page[0]); err == nil {
 			return pg
@@ -100,7 +100,7 @@ func (p *Page) MakeArchive() {
 }
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	pg := parsePage(*r.URL)
+	pg := getPage(*r.URL)
 	app := conf.Blog.ArticlesPerPage
 	p.Articles, p.NextPage, p.PrevPage = p.Articles.Page(pg, app)
 	p.TagCloud = art.TagCloud()
