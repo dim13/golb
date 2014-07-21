@@ -15,7 +15,7 @@ import (
 
 type Page struct {
 	Config    storage.Config
-	Url	string
+	Url       string
 	Title     string
 	Articles  articles.Articles
 	Error     error
@@ -55,7 +55,8 @@ func (y ByYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
 func atoiMust(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 0
 	}
 	return i
 }
@@ -93,9 +94,7 @@ func (p *Page) MakeArchive() {
 
 func page(u *url.URL) int {
 	if page, ok := u.Query()["page"]; ok {
-		if pg, err := strconv.Atoi(page[0]); err == nil {
-			return pg
-		}
+		return atoiMust(page[0])
 	}
 	return 1
 }
