@@ -1,4 +1,4 @@
-// Convert BlogSum DB (sqlite3) to JSON
+// Convert BlogSum DB (sqlite3) to GOB
 package main
 
 import (
