@@ -59,15 +59,6 @@ func atoiMust(s string) int {
 	return i
 }
 
-func getPage(u url.URL) int {
-	if page, ok := u.Query()["page"]; ok {
-		if pg, err := strconv.Atoi(page[0]); err == nil {
-			return pg
-		}
-	}
-	return 1
-}
-
 func (p *Page) MakeArchive() {
 	if p.Year == 0 {
 		p.Year = p.Articles.Head().Year()
@@ -99,6 +90,15 @@ func (p *Page) MakeArchive() {
 	sort.Sort(sort.Reverse(ByYear(p.Archive)))
 }
 
+func page(u *url.URL) int {
+	if page, ok := u.Query()["page"]; ok {
+		if pg, err := strconv.Atoi(page[0]); err == nil {
+			return pg
+		}
+	}
+	return 1
+}
+
 func (p *Page) Pager(pg, pp int) {
 	if pg <= 1 {
 		pg = 1
@@ -127,7 +127,7 @@ func (p *Page) Pager(pg, pp int) {
 
 func (p Page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	e := art.Enabled()
-	p.Pager(getPage(*r.URL), conf.Blog.ArticlesPerPage)
+	p.Pager(page(r.URL), conf.Blog.ArticlesPerPage)
 	p.TagCloud = e.TagCloud()
 	p.Config = conf
 	p.MakeArchive()
