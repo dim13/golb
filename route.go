@@ -13,10 +13,6 @@ type SelectHandler interface {
 	http.Handler
 	Select([]string)
 	//Store(url.Values)
-	//Get()
-	//Post()
-	//Put()
-	//Delete()
 }
 
 type route struct {

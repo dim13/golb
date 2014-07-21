@@ -45,11 +45,6 @@ func (p *AdminIndex) Select(_ []string) {
 	p.Title = "Admin Interface"
 }
 
-func (p *AdminIndex) Store(r *http.Request) {
-	r.ParseForm()
-	log.Println(r.Form)
-}
-
 type AdminSlug struct{ AdminPage }
 
 func (p *AdminSlug) Select(match []string) {
@@ -57,7 +52,6 @@ func (p *AdminSlug) Select(match []string) {
 		p.Title = a.Title
 		p.Article = a
 	}
-	log.Println(p)
 }
 
 func (p *AdminSlug) Store(r *http.Request) {
