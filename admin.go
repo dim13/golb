@@ -17,10 +17,24 @@ type AdminPage struct {
 }
 
 func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Config = conf
-	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-	if err != nil {
-		log.Println(err)
+	switch r.Method {
+	case "POST":
+		r.ParseForm()
+		log.Println(r.PostForm)
+		if title := r.FormValue("title"); title != "" {
+			a := &articles.Article{Title: title}
+			err := art.Add(a)
+			if err != nil {
+				log.Println(err)
+			}
+			http.Redirect(w, r, r.URL.Path + "/" + a.Slug, http.StatusFound)
+		}
+	case "GET":
+		p.Config = conf
+		err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
@@ -43,6 +57,7 @@ func (p *AdminSlug) Select(match []string) {
 		p.Title = a.Title
 		p.Article = a
 	}
+	log.Println(p)
 }
 
 func (p *AdminSlug) Store(r *http.Request) {

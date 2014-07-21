@@ -28,9 +28,9 @@ type Article struct {
 type YearMap map[int]Articles
 type MonthMap map[int]Articles
 
-func (a *Article) makeSlug() {
+func MakeSlug(title string) string {
 	r := strings.NewReplacer(" ", "-")
-	a.Slug = r.Replace(strings.TrimSpace(a.Title))
+	return r.Replace(strings.TrimSpace(title))
 }
 
 func (a *Article) Publish() {
@@ -53,19 +53,20 @@ func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 func (a *Articles) Add(article *Article) error {
 	article.Date = time.Now()
 	if article.Slug == "" {
-		article.makeSlug()
+		article.Slug = MakeSlug(article.Title)
 	}
 	if _, ok := a.Find(article.Slug); ok {
 		return errors.New("duplicate slug " + article.Slug)
 	}
 	*a = append(*a, article)
+	fmt.Println("new")
 	return nil
 }
 
 func (a Articles) Update(article *Article) error {
 	article.Edit = time.Now()
 	if article.Slug == "" {
-		article.makeSlug()
+		article.Slug = MakeSlug(article.Title)
 	}
 	for i, ar := range a {
 		if ar.Slug == article.Slug {
