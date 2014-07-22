@@ -24,6 +24,11 @@ func (p AdminPage) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
+	log.Println("Post admin redirect", r.URL.Path)
+	http.Redirect(w, r, r.URL.Path, http.StatusFound)
+}
+
 type AdminIndex struct{ AdminPage }
 
 func (p *AdminIndex) Select(_ []string) {
@@ -31,9 +36,12 @@ func (p *AdminIndex) Select(_ []string) {
 	p.Title = "Admin Interface"
 }
 
-func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
-	log.Println("Post admin redirect", r.URL.Path)
-	http.Redirect(w, r, r.URL.Path, http.StatusFound)
+func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
+	title := r.FormValue("title")
+	art.Add(&articles.Article{Title: title})
+	log.Println("admin index add", title)
+	r.URL.Path += "/" + articles.MakeSlug(title)
+	p.AdminPage.Post(w, r)
 }
 
 type AdminSlug struct{ AdminPage }
