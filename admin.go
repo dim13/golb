@@ -16,25 +16,11 @@ type AdminPage struct {
 	Error    string
 }
 
-func (p AdminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "POST":
-		r.ParseForm()
-		log.Println(r.PostForm)
-		if title := r.FormValue("title"); title != "" {
-			a := &articles.Article{Title: title}
-			err := art.Add(a)
-			if err != nil {
-				log.Println(err)
-			}
-			http.Redirect(w, r, r.URL.Path + "/" + a.Slug, http.StatusFound)
-		}
-	case "GET":
-		p.Config = conf
-		err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
-		if err != nil {
-			log.Println(err)
-		}
+func (p AdminPage) Get(w http.ResponseWriter, r *http.Request) {
+	p.Config = conf
+	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
@@ -43,6 +29,11 @@ type AdminIndex struct{ AdminPage }
 func (p *AdminIndex) Select(_ []string) {
 	p.Articles = art
 	p.Title = "Admin Interface"
+}
+
+func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
+	log.Println("Post admin redirect", r.URL.Path)
+	http.Redirect(w, r, r.URL.Path, http.StatusFound)
 }
 
 type AdminSlug struct{ AdminPage }
