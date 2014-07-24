@@ -38,10 +38,9 @@ func (p *AdminIndex) Select(_ []string) {
 
 func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
-	art.Add(&articles.Article{Title: title})
+	art.Add(articles.Article{Title: title})
 	log.Println("admin index add", title)
-	r.URL.Path += "/" + articles.MakeSlug(title)
-	p.AdminPage.Post(w, r)
+	http.Redirect(w, r, "/admin/" + articles.MakeSlug(title), http.StatusFound)
 }
 
 type AdminSlug struct{ AdminPage }
@@ -58,17 +57,14 @@ func (p *AdminSlug) Select(match []string) {
 	}
 }
 
-func (p *AdminSlug) Store(r *http.Request) {
+func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
 	a := articles.Article{
 		Title:   r.FormValue("title"),
 		Slug:    r.FormValue("slug"),
 		Tags:    articles.ReadTags(r.FormValue("tags")),
 		Body:    r.FormValue("body"),
-		Enabled: r.FormValue("enabled") != "",
+		Enabled: r.FormValue("enabled") == "on",
 	}
-	p.Article = &a
-	if r.FormValue("save") != "" {
-		art.Update(&a)
-	}
-	//log.Println(p, r)
+	art.Update(a)
+	http.Redirect(w, r, "/admin/", http.StatusFound)
 }

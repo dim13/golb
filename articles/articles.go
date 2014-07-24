@@ -55,7 +55,7 @@ func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 
-func (a *Articles) Add(article *Article) error {
+func (a *Articles) Add(article Article) error {
 	article.Date = time.Now()
 	if article.Slug == "" {
 		article.Slug = MakeSlug(article.Title)
@@ -63,20 +63,19 @@ func (a *Articles) Add(article *Article) error {
 	if _, ok := a.Find(article.Slug); ok {
 		return errors.New("duplicate slug " + article.Slug)
 	}
-	*a = append(*a, article)
-	fmt.Println("new")
+	*a = append(Articles{&article}, *a...)
 	return nil
 }
 
-func (a Articles) Update(article *Article) error {
-	article.Edit = time.Now()
+func (a *Articles) Update(article Article) error {
 	if article.Slug == "" {
 		article.Slug = MakeSlug(article.Title)
 	}
-	for i, ar := range a {
+	for i, ar := range *a {
 		if ar.Slug == article.Slug {
 			article.Date = ar.Date
-			a[i] = ar
+			article.Edit = time.Now()
+			(*a)[i] = &article
 			return nil
 		}
 	}
