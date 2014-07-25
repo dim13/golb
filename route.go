@@ -60,6 +60,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			case "POST":
 				r.ParseForm()
 				route.handler.Post(w, r)
+				http.Redirect(w, r, r.URL.Path, http.StatusFound)
 			case "GET":
 				route.handler.Get(w, r)
 			}

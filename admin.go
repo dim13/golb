@@ -25,8 +25,7 @@ func (p AdminPage) Get(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
-	log.Println("Post admin redirect", r.URL.Path)
-	http.Redirect(w, r, r.URL.Path, http.StatusFound)
+	log.Println("Catch POST redirect admin", r.URL.Path)
 }
 
 type AdminIndex struct{ AdminPage }
@@ -41,7 +40,6 @@ func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	art.Add(&articles.Article{Title: title})
 	log.Println("admin index add", title)
 	r.URL.Path += "/" + articles.MakeSlug(title)
-	p.AdminPage.Post(w, r)
 }
 
 type AdminSlug struct{ AdminPage }

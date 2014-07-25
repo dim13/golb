@@ -126,8 +126,7 @@ func (p *Page) Pager(pg, pp int) {
 }
 
 func (p Page) Post(w http.ResponseWriter, r *http.Request) {
-	log.Println("Post index redirect", r.URL.Path)
-	http.Redirect(w, r, r.URL.Path, http.StatusFound)
+	log.Println("Catch POST redirect index", r.URL.Path)
 }
 
 func (p Page) Get(w http.ResponseWriter, r *http.Request) {
