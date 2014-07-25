@@ -72,7 +72,7 @@ func (a *Articles) Update(article Article) error {
 	}
 	for i, ar := range *a {
 		if ar.Slug == article.Slug {
-			//article.Date = ar.Date
+			article.Date = ar.Date
 			(*a)[i] = &article
 			return nil
 		}
