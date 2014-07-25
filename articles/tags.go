@@ -73,7 +73,7 @@ func (ts Tags) Has(tag string) bool {
 }
 
 func (t Tags) String() string {
-	return strings.Join(t, ",")
+	return strings.Join(t, " ")
 }
 
 func ReadTags(s string) Tags {
