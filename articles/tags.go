@@ -76,14 +76,23 @@ func (t Tags) String() string {
 	return strings.Join(t, " ")
 }
 
-func ReadTags(s string) (t Tags) {
+func uniq(in []string) (out []string) {
+	m := make(map[string]struct{})
+	for _, v := range in {
+		m[v] = struct{}{}
+	}
+	for k := range m {
+		out = append(out, k)
+	}
+	sort.Sort(sort.StringSlice(out))
+	return
+}
+
+func ReadTags(s string) Tags {
 	f := func(r rune) bool {
 		return unicode.IsSpace(r) || unicode.IsPunct(r)
 	}
-	// TODO uniq tags
-	t = strings.FieldsFunc(s, f)
-	sort.Sort(sort.StringSlice(t))
-	return
+	return uniq(strings.FieldsFunc(s, f))
 }
 
 func (a Articles) TagCloud() TagCloud {
