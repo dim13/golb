@@ -80,6 +80,7 @@ func ReadTags(s string) Tags {
 	f := func(r rune) bool {
 		return unicode.IsSpace(r) || unicode.IsPunct(r)
 	}
+	// TODO uniq tags
 	return strings.FieldsFunc(s, f)
 }
 
