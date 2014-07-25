@@ -15,7 +15,6 @@ const (
 type Articles []*Article
 type Article struct {
 	Date     time.Time
-	Edit     time.Time
 	Title    string
 	Slug     string
 	Body     string
@@ -73,8 +72,7 @@ func (a *Articles) Update(article Article) error {
 	}
 	for i, ar := range *a {
 		if ar.Slug == article.Slug {
-			article.Date = ar.Date
-			article.Edit = time.Now()
+			//article.Date = ar.Date
 			(*a)[i] = &article
 			return nil
 		}
@@ -94,14 +92,6 @@ func (a Articles) Find(slug string) (*Article, bool) {
 // Format Date with TimeFormat
 func (a Article) PostDate() string {
 	return a.Date.Local().Format(TimeFormat)
-}
-
-func (a Article) EditDate() string {
-	return a.Edit.Local().Format(TimeFormat)
-}
-
-func (a Article) Edited() bool {
-	return !a.Edit.IsZero()
 }
 
 // Format Date for RSS

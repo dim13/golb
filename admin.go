@@ -37,8 +37,6 @@ func (p *AdminIndex) Select(_ []string) {
 
 func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
-	art.Add(articles.Article{Title: title})
-	log.Println("admin index add", title)
 	r.URL.Path = "/admin/" + articles.MakeSlug(title)
 }
 

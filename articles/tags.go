@@ -3,6 +3,7 @@ package articles
 import (
 	"sort"
 	"strings"
+	"unicode"
 )
 
 type Tags []string
@@ -76,7 +77,10 @@ func (t Tags) String() string {
 }
 
 func ReadTags(s string) Tags {
-	return strings.Split(s, ",")
+	f := func(r rune) bool {
+		return unicode.IsSpace(r) || unicode.IsPunct(r)
+	}
+	return strings.FieldsFunc(s, f)
 }
 
 func (a Articles) TagCloud() TagCloud {
