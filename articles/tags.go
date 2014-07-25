@@ -53,14 +53,13 @@ func (a Articles) TagMap() TagMap {
 	return tm
 }
 
-func (a Articles) Tag(tag string) Articles {
-	var A Articles
+func (a Articles) Tag(tag string) (A Articles) {
 	for _, v := range a {
 		if v.Tags.Has(tag) {
 			A = append(A, v)
 		}
 	}
-	return A
+	return
 }
 
 func (ts Tags) Has(tag string) bool {
@@ -95,11 +94,10 @@ func ReadTags(s string) Tags {
 	return uniq(strings.FieldsFunc(s, f))
 }
 
-func (a Articles) TagCloud() TagCloud {
-	var tc TagCloud
+func (a Articles) TagCloud() (tc TagCloud) {
 	for k, v := range a.CountTags() {
 		tc = append(tc, tagCloud{Tag: k, Wight: 5 / v})
 	}
 	sort.Sort(byName{tc})
-	return tc
+	return
 }
