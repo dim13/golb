@@ -61,10 +61,6 @@ func (a *Article) Suppress() {
 	a.Enabled = false
 }
 
-func (a *Article) AddComment(c *Comment) {
-	a.Comments.Add(c)
-}
-
 func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
@@ -78,9 +74,11 @@ func (a *Article) ChckSlug() {
 func (a *Articles) Add(art Article) {
 	art.ChckSlug()
 	if ar, ok := a.Find(art.Slug); ok {
+		/* flound slug, update */
 		art.Date = ar.Date
 		*ar = art
 	} else {
+		/* no slug, add new */
 		art.Date = time.Now()
 		*a = append(Articles{&art}, *a...)
 	}
