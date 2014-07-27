@@ -45,7 +45,8 @@ func main() {
 	}
 
 	log.Println("Open", conf.Blog.DataBase)
-	err = storage.Load(conf.Blog.DataBase, &art)
+	articles.SetStorage(conf.Blog.DataBase)
+	err = art.Load()
 	if err != nil {
 		log.Println(err)
 	}

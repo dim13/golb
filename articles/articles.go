@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/dim13/gold/storage"
 )
 
 const (
 	TimeFormat = "January 2, 2006"
 	readMore   = "<!--readmore-->"
 )
+
+var storageFile string
 
 type Articles []*Article
 type Article struct {
@@ -35,6 +39,18 @@ func MakeSlug(title string) string {
 func MakeTitle(slug string) string {
 	r := strings.NewReplacer("-", " ")
 	return r.Replace(strings.TrimSpace(slug))
+}
+
+func SetStorage(file string) {
+	storageFile = file
+}
+
+func (a *Articles) Load() error {
+	return storage.Load(storageFile, a)
+}
+
+func (a *Articles) Store() error {
+	return storage.Store(storageFile, a)
 }
 
 func (a *Article) Publish() {
