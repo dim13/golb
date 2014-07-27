@@ -62,6 +62,6 @@ func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
-	art.Update(a)
+	art.Add(a)
 	r.URL.Path = "/admin/"
 }

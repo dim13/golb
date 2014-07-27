@@ -1,7 +1,6 @@
 package articles
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -76,26 +75,16 @@ func (a *Article) ChckSlug() {
 	}
 }
 
-func (a *Articles) Add(art Article) error {
-	art.Date = time.Now()
-	art.ChckSlug()
-	if _, ok := a.Find(art.Slug); ok {
-		return errors.New("duplicate slug " + art.Slug)
-	}
-	*a = append(Articles{&art}, *a...)
-	a.Store()
-	return nil
-}
-
-func (a *Articles) Update(art Article) error {
+func (a *Articles) Add(art Article) {
 	art.ChckSlug()
 	if ar, ok := a.Find(art.Slug); ok {
 		art.Date = ar.Date
 		*ar = art
-		a.Store()
-		return nil
+	} else {
+		art.Date = time.Now()
+		*a = append(Articles{&art}, *a...)
 	}
-	return a.Add(art)
+	a.Store()
 }
 
 func (a Articles) Find(slug string) (*Article, bool) {
