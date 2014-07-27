@@ -70,30 +70,32 @@ func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 
-func (a *Articles) Add(article Article) error {
-	article.Date = time.Now()
-	if article.Slug == "" {
-		article.Slug = MakeSlug(article.Title)
+func (a *Article) ChckSlug() {
+	if a.Slug == "" {
+		a.Slug = MakeSlug(a.Title)
 	}
-	if _, ok := a.Find(article.Slug); ok {
-		return errors.New("duplicate slug " + article.Slug)
+}
+
+func (a *Articles) Add(art Article) error {
+	art.Date = time.Now()
+	art.ChckSlug()
+	if _, ok := a.Find(art.Slug); ok {
+		return errors.New("duplicate slug " + art.Slug)
 	}
-	*a = append(Articles{&article}, *a...)
+	*a = append(Articles{&art}, *a...)
+	a.Store()
 	return nil
 }
 
-func (a *Articles) Update(article Article) error {
-	if article.Slug == "" {
-		article.Slug = MakeSlug(article.Title)
+func (a *Articles) Update(art Article) error {
+	art.ChckSlug()
+	if ar, ok := a.Find(art.Slug); ok {
+		art.Date = ar.Date
+		*ar = art
+		a.Store()
+		return nil
 	}
-	for i, ar := range *a {
-		if ar.Slug == article.Slug {
-			article.Date = ar.Date
-			(*a)[i] = &article
-			return nil
-		}
-	}
-	return a.Add(article)
+	return a.Add(art)
 }
 
 func (a Articles) Find(slug string) (*Article, bool) {
