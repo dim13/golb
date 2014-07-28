@@ -87,6 +87,7 @@ func (a *Articles) Add(art Article) {
 
 func (a *Articles) Delete(art Article) {
 	if _, i, ok := a.Find(art.Slug); ok {
+		(*a)[i] = nil
 		*a = append((*a)[:i], (*a)[:i+1]...)
 	}
 }
