@@ -36,8 +36,11 @@ func (p *AdminIndex) Select(_ []string) {
 }
 
 func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
-	title := r.FormValue("title")
-	r.URL.Path = "/admin/" + articles.MakeSlug(title)
+	switch r.FormValue("submit") {
+	case "add":
+		title := r.FormValue("title")
+		r.URL.Path = "/admin/" + articles.MakeSlug(title)
+	}
 }
 
 type AdminSlug struct{ AdminPage }
@@ -62,15 +65,19 @@ func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
-	f := func(key string) bool {
-		_, ok := r.PostForm[key];
-		return ok
-	}
-	switch {
-	case f("save"):
+	switch r.FormValue("submit") {
+	case "preview":
+		a.Suppress()
 		art.Add(a)
-	case f("delete"):
+	case "save":
+		art.Add(a)
+		art.Store()
+		r.URL.Path = "/admin/"
+	case "delete":
 		art.Delete(a)
+		art.Store()
+		r.URL.Path = "/admin/"
+	case "cancel":
+		r.URL.Path = "/admin/"
 	}
-	r.URL.Path = "/admin/"
 }

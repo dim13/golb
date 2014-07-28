@@ -82,7 +82,6 @@ func (a *Articles) Add(art Article) {
 		art.Date = time.Now()
 		*a = append(Articles{&art}, *a...)
 	}
-	a.Store()
 }
 
 func (a *Articles) Delete(art Article) {

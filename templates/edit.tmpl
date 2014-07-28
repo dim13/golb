@@ -6,11 +6,13 @@
 	<p><input size="80" name="title" value="{{.Title}}"> title</p>
 	<p><input size="80" name="slug" value="{{.Slug}}"> slug</p>
 	<p><input size="80" name="tags" value="{{.Tags}}"> tags (e.g. <em>foo bar baz</em>)</p>
+	<p>{{.PostDate}} <input type="checkbox" name="enabled"{{if .Enabled}} checked{{end}}> enabled</p>
 	<p><textarea rows="25" cols="80" name="body">{{.Body}}</textarea></p>
 	<p>
-		<input type="submit" name="save" value="save">
-		<input type="submit" name="delete" value="delete">
-		<input type="checkbox" name="enabled"{{if .Enabled}} checked{{end}}> enabled
+		<input type="submit" name="submit" value="preview">
+		<input type="submit" name="submit" value="save">
+		<input type="submit" name="submit" value="delete">
+		<input type="submit" name="submit" value="cancel">
 	</p>
 </form>
 </section>
