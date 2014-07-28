@@ -45,6 +45,7 @@ func SetStorage(file string) {
 }
 
 func (a *Articles) Load() error {
+	*a = nil
 	return storage.Load(storageFile, a)
 }
 

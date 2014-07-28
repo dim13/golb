@@ -65,9 +65,15 @@ func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
+	if p.Article.Slug != a.Slug {
+		art.Delete(*p.Article)
+		r.URL.Path = "/admin/" + a.Slug
+	}
 	switch r.FormValue("submit") {
+	case "reload":
+		log.Println("reloading")
+		art.Load()
 	case "preview":
-		a.Suppress()
 		art.Add(a)
 	case "save":
 		art.Add(a)

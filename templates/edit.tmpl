@@ -9,6 +9,7 @@
 	<p>{{.PostDate}} <input type="checkbox" name="enabled"{{if .Enabled}} checked{{end}}> enabled</p>
 	<p><textarea rows="25" cols="80" name="body">{{.Body}}</textarea></p>
 	<p>
+		<input type="submit" name="submit" value="reload">
 		<input type="submit" name="submit" value="preview">
 		<input type="submit" name="submit" value="save">
 		<input type="submit" name="submit" value="delete">
