@@ -73,7 +73,7 @@ func (a *Article) ChckSlug() {
 
 func (a *Articles) Add(art Article) {
 	art.ChckSlug()
-	if ar, ok := a.Find(art.Slug); ok {
+	if ar, _, ok := a.Find(art.Slug); ok {
 		/* flound slug, update */
 		art.Date = ar.Date
 		*ar = art
@@ -85,13 +85,19 @@ func (a *Articles) Add(art Article) {
 	a.Store()
 }
 
-func (a Articles) Find(slug string) (*Article, bool) {
-	for _, ar := range a {
+func (a *Articles) Delete(art Article) {
+	if _, i, ok := a.Find(art.Slug); ok {
+		*a = append((*a)[:i], (*a)[:i+1]...)
+	}
+}
+
+func (a Articles) Find(slug string) (*Article, int, bool) {
+	for i, ar := range a {
 		if ar.Slug == slug {
-			return ar, true
+			return ar, i, true
 		}
 	}
-	return nil, false
+	return nil, 0, false
 }
 
 // Format Date with TimeFormat
