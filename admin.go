@@ -48,7 +48,7 @@ func (p *AdminSlug) Select(match []string) {
 		p.Article = a
 	} else {
 		p.Article = &articles.Article{
-			Slug: match[0],
+			Slug:  match[0],
 			Title: articles.MakeTitle(match[0]),
 		}
 	}
@@ -62,6 +62,15 @@ func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
-	art.Add(a)
+	f := func(key string) bool {
+		_, ok := r.PostForm[key];
+		return ok
+	}
+	switch {
+	case f("save"):
+		art.Add(a)
+	case f("delete"):
+		art.Delete(a)
+	}
 	r.URL.Path = "/admin/"
 }
