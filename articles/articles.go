@@ -80,7 +80,9 @@ func (a *Articles) Add(art Article) {
 		*ar = art
 	} else {
 		/* no slug, add new */
-		art.Date = time.Now()
+		if art.Date.IsZero() {
+			art.Date = time.Now()
+		}
 		*a = append(Articles{&art}, *a...)
 	}
 }

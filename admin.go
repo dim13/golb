@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/dim13/gold/articles"
 	"github.com/dim13/gold/storage"
@@ -53,6 +54,7 @@ func (p *AdminSlug) Select(match []string) {
 		p.Article = &articles.Article{
 			Slug:  match[0],
 			Title: articles.MakeTitle(match[0]),
+			Date:  time.Now(),
 		}
 	}
 }
