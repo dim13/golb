@@ -4,12 +4,12 @@
 <body>
 <h1>{{.Title}}</h1>
 
-{{with .Articles}}
-	<form id="new" action="/admin/" method="POST">
-	New title: <input size="80" name="title">
-	<input type="submit" name="submit" value="add">
-	</form>
+<form id="new" action="/admin/" method="POST">
+New title: <input size="80" name="title">
+<input type="submit" name="submit" value="add">
+</form>
 
+{{with .Articles}}
 	<ul>
 	{{range .}}
 		<li>
