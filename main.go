@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/route"
 	"github.com/dim13/gold/storage"
 )
 
@@ -55,7 +56,7 @@ func main() {
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
-	re := new(ReHandler)
+	re := new(route.ReHandler)
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/(favicon\\.ico|images|videos)", tmpHandler)
 	re.HandleFunc("^/robots.txt$", robotsHandler)
