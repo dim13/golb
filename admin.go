@@ -29,14 +29,14 @@ func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
 	log.Println("Catch POST redirect admin", r.URL.Path)
 }
 
-type AdminIndex struct{ AdminPage }
+type adminIndex struct{ AdminPage }
 
-func (p *AdminIndex) Select(_ []string) {
+func (p *adminIndex) Select(_ []string) {
 	p.Articles = art
 	p.Title = "Admin Interface"
 }
 
-func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
+func (p *adminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	switch r.FormValue("submit") {
 	case "add":
 		title := r.FormValue("title")
@@ -44,9 +44,9 @@ func (p *AdminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type AdminSlug struct{ AdminPage }
+type adminSlug struct{ AdminPage }
 
-func (p *AdminSlug) Select(match []string) {
+func (p *adminSlug) Select(match []string) {
 	if a, _, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Article = a
@@ -59,7 +59,7 @@ func (p *AdminSlug) Select(match []string) {
 	}
 }
 
-func (p *AdminSlug) Post(w http.ResponseWriter, r *http.Request) {
+func (p *adminSlug) Post(w http.ResponseWriter, r *http.Request) {
 	a := articles.Article{
 		Title:   r.FormValue("title"),
 		Slug:    r.FormValue("slug"),

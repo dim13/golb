@@ -13,9 +13,9 @@ import (
 	"github.com/dim13/gold/storage"
 )
 
-type Page struct {
+type page struct {
 	Config    storage.Config
-	Url       string
+	URL       string
 	Title     string
 	Articles  articles.Articles
 	Error     error
@@ -24,33 +24,33 @@ type Page struct {
 	TagCloud  articles.TagCloud
 	Year      int
 	Month     time.Month
-	Archive   []Archive
+	Archive   []archive
 	FirstYear int
 	LastYear  int
 }
 
-type ByYear []Archive
-type Archive struct {
+type byYear []archive
+type archive struct {
 	Year  int
 	Count int
-	Month []Month
+	Month []month
 }
 
-type ByMonth []Month
-type Month struct {
+type byMonth []month
+type month struct {
 	Month    time.Month
 	Year     int
 	Count    int
 	Articles articles.Articles
 }
 
-func (m ByMonth) Len() int           { return len(m) }
-func (m ByMonth) Swap(i, j int)      { m[i], m[j] = m[j], m[i] }
-func (m ByMonth) Less(i, j int) bool { return m[i].Month < m[j].Month }
+func (m byMonth) Len() int           { return len(m) }
+func (m byMonth) Swap(i, j int)      { m[i], m[j] = m[j], m[i] }
+func (m byMonth) Less(i, j int) bool { return m[i].Month < m[j].Month }
 
-func (y ByYear) Len() int           { return len(y) }
-func (y ByYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
-func (y ByYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
+func (y byYear) Len() int           { return len(y) }
+func (y byYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
+func (y byYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
 
 func atoiMust(s string) int {
 	i, err := strconv.Atoi(s)
@@ -61,7 +61,7 @@ func atoiMust(s string) int {
 	return i
 }
 
-func (p *Page) MakeArchive() {
+func (p *page) MakeArchive() {
 	if p.Year == 0 {
 		p.Year = p.Articles.Head().Year()
 	}
@@ -69,13 +69,13 @@ func (p *Page) MakeArchive() {
 		p.Month = p.Articles.Head().Month()
 	}
 	for y, v := range art.Enabled().YearMap() {
-		year := Archive{
+		year := archive{
 			Year:  y,
 			Count: len(v),
 		}
 		if p.Year == y {
 			for m, v := range v.MonthMap() {
-				month := Month{
+				month := month{
 					Year:  y,
 					Month: time.Month(m),
 					Count: len(v),
@@ -85,21 +85,21 @@ func (p *Page) MakeArchive() {
 				}
 				year.Month = append(year.Month, month)
 			}
-			sort.Sort(ByMonth(year.Month))
+			sort.Sort(byMonth(year.Month))
 		}
 		p.Archive = append(p.Archive, year)
 	}
-	sort.Sort(sort.Reverse(ByYear(p.Archive)))
+	sort.Sort(sort.Reverse(byYear(p.Archive)))
 }
 
-func page(u *url.URL) int {
+func getPage(u *url.URL) int {
 	if page, ok := u.Query()["page"]; ok {
 		return atoiMust(page[0])
 	}
 	return 1
 }
 
-func (p *Page) Pager(pg, pp int) {
+func (p *page) Pager(pg, pp int) {
 	if pg <= 1 {
 		pg = 1
 	} else {
@@ -125,14 +125,14 @@ func (p *Page) Pager(pg, pp int) {
 	p.Articles = p.Articles[from:to]
 }
 
-func (p Page) Post(w http.ResponseWriter, r *http.Request) {
+func (p page) Post(w http.ResponseWriter, r *http.Request) {
 	log.Println("Catch POST redirect index", r.URL.Path)
 }
 
-func (p Page) Get(w http.ResponseWriter, r *http.Request) {
+func (p page) Get(w http.ResponseWriter, r *http.Request) {
 	e := art.Enabled()
-	p.Url = "http://" + r.Host
-	p.Pager(page(r.URL), conf.Blog.ArticlesPerPage)
+	p.URL = "http://" + r.Host
+	p.Pager(getPage(r.URL), conf.Blog.ArticlesPerPage)
 	p.TagCloud = e.TagCloud()
 	p.Config = conf
 	p.MakeArchive()
@@ -145,23 +145,23 @@ func (p Page) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type TagPage struct{ Page }
+type tagPage struct{ page }
 
-func (p *TagPage) Select(match []string) {
+func (p *tagPage) Select(match []string) {
 	s := match[0]
 	p.Articles = art.Tag(s)
 	p.Title = s
 }
 
-type IndexPage struct{ Page }
+type indexPage struct{ page }
 
-func (p *IndexPage) Select(_ []string) {
+func (p *indexPage) Select(_ []string) {
 	p.Articles = art.Enabled()
 }
 
-type SlugPage struct{ Page }
+type slugPage struct{ page }
 
-func (p *SlugPage) Select(match []string) {
+func (p *slugPage) Select(match []string) {
 	if a, _, ok := art.Enabled().Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
@@ -170,17 +170,17 @@ func (p *SlugPage) Select(match []string) {
 	}
 }
 
-type YearPage struct{ Page }
+type yearPage struct{ page }
 
-func (p *YearPage) Select(match []string) {
+func (p *yearPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Articles = art.Enabled().Year(p.Year)
 	p.Title = fmt.Sprint(p.Year)
 }
 
-type MonthPage struct{ Page }
+type monthPage struct{ page }
 
-func (p *MonthPage) Select(match []string) {
+func (p *monthPage) Select(match []string) {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = art.Enabled().Year(p.Year).Month(p.Month)
