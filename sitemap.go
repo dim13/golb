@@ -22,7 +22,7 @@ func (sm Sitemap) LastMod() string {
 }
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
-	var sm SiteMap
+	var sm []Sitemap
 	articles := art.Enabled()
 	sm = append(sm, Sitemap{
 		Loc:        "http://" + r.Host,
