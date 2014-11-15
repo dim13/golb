@@ -9,7 +9,7 @@ import (
 	"github.com/dim13/gold/storage"
 )
 
-type AdminPage struct {
+type adminPage struct {
 	Articles articles.Articles
 	Article  *articles.Article
 	Title    string
@@ -17,7 +17,7 @@ type AdminPage struct {
 	Error    string
 }
 
-func (p AdminPage) Get(w http.ResponseWriter, r *http.Request) {
+func (p adminPage) Get(w http.ResponseWriter, r *http.Request) {
 	p.Config = conf
 	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 	if err != nil {
@@ -25,11 +25,11 @@ func (p AdminPage) Get(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p *AdminPage) Post(w http.ResponseWriter, r *http.Request) {
+func (p *adminPage) Post(w http.ResponseWriter, r *http.Request) {
 	log.Println("Catch POST redirect admin", r.URL.Path)
 }
 
-type adminIndex struct{ AdminPage }
+type adminIndex struct{ adminPage }
 
 func (p *adminIndex) Select(_ []string) {
 	p.Articles = art
@@ -44,7 +44,7 @@ func (p *adminIndex) Post(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type adminSlug struct{ AdminPage }
+type adminSlug struct{ adminPage }
 
 func (p *adminSlug) Select(match []string) {
 	if a, _, ok := art.Find(match[0]); ok {
