@@ -23,13 +23,9 @@ type ReHandler struct {
 	routes []*route
 }
 
-func (f HandlerFunc) Select(_ []string) {}
-func (f HandlerFunc) Get(w http.ResponseWriter, r *http.Request) {
-	f(w, r)
-}
-func (f HandlerFunc) Post(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, r.URL.Path, http.StatusFound)
-}
+func (f HandlerFunc) Select(_ []string)                           {}
+func (f HandlerFunc) Get(w http.ResponseWriter, r *http.Request)  { f(w, r) }
+func (f HandlerFunc) Post(w http.ResponseWriter, r *http.Request) {}
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	log.Println("SelectHandler", re)
