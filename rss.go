@@ -7,8 +7,8 @@ import (
 	"github.com/dim13/gold/articles"
 )
 
-type Rss struct {
-	Url      string
+type rss struct {
+	URL      string
 	Title    string
 	Subtitle string
 	Articles articles.Articles
@@ -18,8 +18,8 @@ func rssHandler(w http.ResponseWriter, r *http.Request) {
 	app := conf.Blog.ArticlesPerPage
 	a := art.Enabled().Limit(app)
 
-	rss := Rss{
-		Url:      "http://" + r.Host,
+	rss := rss{
+		URL:      "http://" + r.Host,
 		Title:    conf.Blog.Title,
 		Subtitle: conf.Blog.Subtitle,
 		Articles: a,
