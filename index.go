@@ -24,13 +24,13 @@ type page struct {
 	TagCloud  articles.TagCloud
 	Year      int
 	Month     time.Month
-	Archive   []archive
+	Archive   []year
 	FirstYear int
 	LastYear  int
 }
 
-type byYear []archive
-type archive struct {
+type byYear []year
+type year struct {
 	Year  int
 	Count int
 	Month []month
@@ -69,7 +69,7 @@ func (p *page) MakeArchive() {
 		p.Month = p.Articles.Head().Month()
 	}
 	for y, v := range art.Enabled().YearMap() {
-		year := archive{
+		year := year{
 			Year:  y,
 			Count: len(v),
 		}
