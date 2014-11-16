@@ -125,11 +125,7 @@ func (p *page) Pager(pg, pp int) {
 	p.Articles = p.Articles[from:to]
 }
 
-func (p page) Post(w http.ResponseWriter, r *http.Request) {
-	log.Println("Catch POST redirect index", r.URL.Path)
-}
-
-func (p page) Get(w http.ResponseWriter, r *http.Request) {
+func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	e := art.Enabled()
 	p.URL = "http://" + r.Host
 	p.Pager(getPage(r.URL), conf.Blog.ArticlesPerPage)

@@ -17,16 +17,12 @@ type adminPage struct {
 	Error    string
 }
 
-func (p adminPage) Get(w http.ResponseWriter, r *http.Request) {
+func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.Config = conf
 	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 	if err != nil {
 		log.Println(err)
 	}
-}
-
-func (p *adminPage) Post(w http.ResponseWriter, r *http.Request) {
-	log.Println("Catch POST redirect admin", r.URL.Path)
 }
 
 type adminIndex struct{ adminPage }
@@ -36,11 +32,13 @@ func (p *adminIndex) Select(_ []string) {
 	p.Title = "Admin Interface"
 }
 
-func (p *adminIndex) Post(w http.ResponseWriter, r *http.Request) {
+func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.FormValue("submit") {
 	case "add":
 		title := r.FormValue("title")
 		r.URL.Path = "/admin/" + articles.MakeSlug(title)
+	default:
+		p.adminPage.ServeHTTP(w, r)
 	}
 }
 
@@ -59,7 +57,7 @@ func (p *adminSlug) Select(match []string) {
 	}
 }
 
-func (p *adminSlug) Post(w http.ResponseWriter, r *http.Request) {
+func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a := articles.Article{
 		Title:   r.FormValue("title"),
 		Slug:    r.FormValue("slug"),
@@ -87,5 +85,7 @@ func (p *adminSlug) Post(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/admin/"
 	case "cancel":
 		r.URL.Path = "/admin/"
+	default:
+		p.adminPage.ServeHTTP(w, r)
 	}
 }

@@ -10,8 +10,7 @@ type HandlerFunc http.HandlerFunc
 
 type SelectHandler interface {
 	Select([]string)
-	Get(w http.ResponseWriter, r *http.Request)
-	Post(w http.ResponseWriter, r *http.Request)
+	ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
 
 type route struct {
@@ -23,9 +22,8 @@ type ReHandler struct {
 	routes []*route
 }
 
-func (f HandlerFunc) Select(_ []string)                           {}
-func (f HandlerFunc) Get(w http.ResponseWriter, r *http.Request)  { f(w, r) }
-func (f HandlerFunc) Post(w http.ResponseWriter, r *http.Request) {}
+func (f HandlerFunc) Select(_ []string)                                {}
+func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	log.Println("SelectHandler", re)
@@ -52,13 +50,10 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if matches != nil {
 			log.Println("Match", matches, r.URL)
 			route.handler.Select(matches[1:])
-			switch r.Method {
-			case "POST":
-				r.ParseForm()
-				route.handler.Post(w, r)
+			r.ParseForm()
+			route.handler.ServeHTTP(w, r)
+			if r.Method == "POST" {
 				http.Redirect(w, r, r.URL.Path, http.StatusFound)
-			case "GET":
-				route.handler.Get(w, r)
 			}
 			return
 		}
