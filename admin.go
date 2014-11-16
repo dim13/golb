@@ -33,12 +33,14 @@ func (p *adminIndex) Select(_ []string) {
 }
 
 func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		p.adminPage.ServeHTTP(w, r)
+		return
+	}
 	switch r.FormValue("submit") {
 	case "add":
 		title := r.FormValue("title")
 		r.URL.Path = "/admin/" + articles.MakeSlug(title)
-	default:
-		p.adminPage.ServeHTTP(w, r)
 	}
 }
 
@@ -58,6 +60,10 @@ func (p *adminSlug) Select(match []string) {
 }
 
 func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		p.adminPage.ServeHTTP(w, r)
+		return
+	}
 	a := articles.Article{
 		Title:   r.FormValue("title"),
 		Slug:    r.FormValue("slug"),
@@ -85,7 +91,5 @@ func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/admin/"
 	case "cancel":
 		r.URL.Path = "/admin/"
-	default:
-		p.adminPage.ServeHTTP(w, r)
 	}
 }
