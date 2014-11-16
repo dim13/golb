@@ -2,6 +2,7 @@ package articles
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -41,6 +42,7 @@ func MakeTitle(slug string) string {
 }
 
 func SetStorage(file string) {
+	log.Println("Set storage to", file)
 	storageFile = file
 }
 

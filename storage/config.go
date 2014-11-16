@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"log"
+
 	"code.google.com/p/gcfg"
 )
 
@@ -41,5 +43,6 @@ type Config struct {
 }
 
 func ReadConf(fname string) (c Config, err error) {
+	log.Println("Read", fname)
 	return c, gcfg.ReadFileInto(&c, fname)
 }

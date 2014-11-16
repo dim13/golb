@@ -39,13 +39,11 @@ func init() {
 func main() {
 	var err error
 
-	log.Println("Read", config)
 	conf, err = storage.ReadConf(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("Open", conf.Blog.DataBase)
 	articles.SetStorage(conf.Blog.DataBase)
 	err = art.Load()
 	if err != nil {
