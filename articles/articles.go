@@ -68,14 +68,14 @@ func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 
-func (a *Article) ChckSlug() {
+func (a *Article) checkSlug() {
 	if a.Slug == "" {
 		a.Slug = MakeSlug(a.Title)
 	}
 }
 
 func (a *Articles) Add(art Article) {
-	art.ChckSlug()
+	art.checkSlug()
 	if ar, ok := a.Find(art.Slug); ok {
 		/* flound slug, update */
 		art.Date = ar.Date
