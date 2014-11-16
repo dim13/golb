@@ -162,7 +162,7 @@ func (p *indexPage) Select(_ []string) {
 type slugPage struct{ page }
 
 func (p *slugPage) Select(match []string) {
-	if a, _, ok := art.Enabled().Find(match[0]); ok {
+	if a, ok := art.Enabled().Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
 		p.Year = a.Year()

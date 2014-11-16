@@ -47,7 +47,7 @@ func (p *adminIndex) Post(w http.ResponseWriter, r *http.Request) {
 type adminSlug struct{ adminPage }
 
 func (p *adminSlug) Select(match []string) {
-	if a, _, ok := art.Find(match[0]); ok {
+	if a, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Article = a
 	} else {
