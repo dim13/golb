@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
+<head>
 {{template "header.tmpl" .}}
+{{template "google.tmpl" .Config.Google}}
+{{template "ie9hack.tmpl"}}
+</head>
 <body>
 	<header>
 	<p id="blog_title"><a href="/">{{.Config.Blog.Title}}</a></p>
