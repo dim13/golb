@@ -71,14 +71,14 @@ var (
 	output string
 )
 
-func writeGob(fname string, v interface{}) {
+func (a Articles) Write(fname string) {
 	w, err := os.Create(fname)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer w.Close()
 	enc := gob.NewEncoder(w)
-	err = enc.Encode(v)
+	err = enc.Encode(a)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -200,6 +200,5 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
-	writeGob(output, getArticles(db))
+	getArticles(db).Write(output)
 }
