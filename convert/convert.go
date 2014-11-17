@@ -14,6 +14,8 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const timeFormat = "2006-Jan-02"
+
 /*
 BlogSum DB Schema:
 
@@ -99,11 +101,11 @@ func getDate(date string) time.Time {
 }
 
 func (a Article) String() string {
-	return fmt.Sprintf("%s %s %s", a.Date, a.Slug, a.Tags)
+	return fmt.Sprintf("%s %s %s", a.Date.Format(timeFormat), a.Slug, a.Tags)
 }
 
 func (c Comment) String() string {
-	return fmt.Sprintf("%s Comment: %s", c.Date, c.Name)
+	return fmt.Sprintf("%s Commentar from %s", c.Date.Format(timeFormat), c.Name)
 }
 
 func getComments(db *sql.DB, id int) (C Comments) {
@@ -137,10 +139,8 @@ func getComments(db *sql.DB, id int) (C Comments) {
 			Enabled: enabled,
 		}
 
-		if c.Enabled {
-			fmt.Println(c)
-			C = append(C, c)
-		}
+		fmt.Println(c)
+		C = append(C, c)
 	}
 
 	return C
@@ -181,10 +181,8 @@ func getArticles(db *sql.DB) (A Articles) {
 			Comments: getComments(db, id),
 		}
 
-		if a.Enabled {
-			fmt.Println(a)
-			A = append(A, a)
-		}
+		fmt.Println(a)
+		A = append(A, a)
 	}
 
 	return A
