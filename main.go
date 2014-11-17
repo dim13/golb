@@ -20,6 +20,15 @@ var (
 	config string
 )
 
+func notFound(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusNotFound)
+	err := tmpl.ExecuteTemplate(w, "notfound.tmpl", nil)
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func assetHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, r.URL.Path[1:])
 }
@@ -68,6 +77,7 @@ func main() {
 	re.Handle("^/(\\d+)/?$", &yearPage{})
 	re.Handle("^/(.+)$", &slugPage{})
 	re.Handle("^/$", &indexPage{})
+	re.NotFound = notFound
 
 	log.Println("Listen on", listen)
 	if err := http.ListenAndServe(listen, re); err != nil {

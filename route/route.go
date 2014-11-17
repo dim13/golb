@@ -19,11 +19,12 @@ type route struct {
 }
 
 type ReHandler struct {
-	routes []*route
+	routes   []*route
+	NotFound HandlerFunc
 }
 
 func New() (re *ReHandler) {
-	return &ReHandler{}
+	return &ReHandler{NotFound: http.NotFound}
 }
 
 func (f HandlerFunc) Select(_ []string) bool {
@@ -60,7 +61,7 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			log.Println("Match", matches, r.URL)
 			if !route.handler.Select(matches[1:]) {
 				log.Println(route.re, "NotFound")
-				http.NotFound(w, r)
+				h.NotFound(w, r)
 				return
 			}
 			r.ParseForm()
@@ -71,5 +72,5 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	http.NotFound(w, r)
+	h.NotFound(w, r)
 }
