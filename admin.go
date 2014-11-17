@@ -27,9 +27,10 @@ func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type adminIndex struct{ adminPage }
 
-func (p *adminIndex) Select(_ []string) {
+func (p *adminIndex) Select(_ []string) bool {
 	p.Articles = art
 	p.Title = "Admin Interface"
+	return true
 }
 
 func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +47,7 @@ func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type adminSlug struct{ adminPage }
 
-func (p *adminSlug) Select(match []string) {
+func (p *adminSlug) Select(match []string) bool {
 	if a, ok := art.Find(match[0]); ok {
 		p.Title = a.Title
 		p.Article = a
@@ -57,6 +58,7 @@ func (p *adminSlug) Select(match []string) {
 			Date:  time.Now(),
 		}
 	}
+	return true
 }
 
 func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {

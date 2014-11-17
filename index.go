@@ -130,11 +130,6 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.FirstYear = e.Tail().Year()
 	p.LastYear = e.Head().Year()
 
-	if p.Articles == nil {
-		http.NotFound(w, r)
-		return
-	}
-
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Println(err)
@@ -143,42 +138,48 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 type tagPage struct{ page }
 
-func (p *tagPage) Select(match []string) {
+func (p *tagPage) Select(match []string) bool {
 	s := match[0]
 	p.Articles = art.Tag(s)
 	p.Title = s
+	return true
 }
 
 type indexPage struct{ page }
 
-func (p *indexPage) Select(_ []string) {
+func (p *indexPage) Select(_ []string) bool {
 	p.Articles = art.Enabled()
+	return true
 }
 
 type slugPage struct{ page }
 
-func (p *slugPage) Select(match []string) {
+func (p *slugPage) Select(match []string) bool {
 	if a, ok := art.Enabled().Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
 		p.Year = a.Year()
 		p.Month = a.Month()
+		return true
 	}
+	return false
 }
 
 type yearPage struct{ page }
 
-func (p *yearPage) Select(match []string) {
+func (p *yearPage) Select(match []string) bool {
 	p.Year = atoiMust(match[0])
 	p.Articles = art.Enabled().Year(p.Year)
 	p.Title = fmt.Sprint(p.Year)
+	return true
 }
 
 type monthPage struct{ page }
 
-func (p *monthPage) Select(match []string) {
+func (p *monthPage) Select(match []string) bool {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
 	p.Articles = art.Enabled().Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(p.Month, p.Year)
+	return true
 }

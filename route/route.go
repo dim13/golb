@@ -9,7 +9,7 @@ import (
 type HandlerFunc http.HandlerFunc
 
 type SelectHandler interface {
-	Select([]string)
+	Select([]string) bool
 	ServeHTTP(w http.ResponseWriter, r *http.Request)
 }
 
@@ -26,8 +26,13 @@ func New() (re *ReHandler) {
 	return &ReHandler{}
 }
 
-func (f HandlerFunc) Select(_ []string)                                {}
-func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
+func (f HandlerFunc) Select(_ []string) bool {
+	return true
+}
+
+func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	f(w, r)
+}
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	log.Println("SelectHandler", re)
@@ -53,7 +58,11 @@ func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		matches := route.re.FindStringSubmatch(r.URL.Path)
 		if matches != nil {
 			log.Println("Match", matches, r.URL)
-			route.handler.Select(matches[1:])
+			if !route.handler.Select(matches[1:]) {
+				log.Println(route.re, "NotFound")
+				http.NotFound(w, r)
+				return
+			}
 			r.ParseForm()
 			route.handler.ServeHTTP(w, r)
 			if r.Method == "POST" {
