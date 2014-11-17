@@ -34,9 +34,7 @@
 	</ul>
 {{end}}
 
-{{with .Error}}
-	<p>{{.}}</p>
-{{end}}
+{{with .Error}}<p>{{.}}</p>{{end}}
 
 {{with .Article}}
 {{template "edit.tmpl" .}}
