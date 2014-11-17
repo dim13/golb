@@ -92,14 +92,10 @@ func (p *page) MakeArchive() {
 	sort.Sort(sort.Reverse(byYear(p.Archive)))
 }
 
-func getPage(u *url.URL) int {
-	if page, ok := u.Query()["page"]; ok {
-		return atoiMust(page[0])
-	}
-	return 1
-}
+func (p *page) Pager(arg string) {
+	app := conf.Blog.ArticlesPerPage
+	pg := atoiMust(arg)
 
-func (p *page) Pager(pg, pp int) {
 	if pg <= 1 {
 		pg = 1
 	} else {
@@ -107,7 +103,7 @@ func (p *page) Pager(pg, pp int) {
 	}
 
 	n := len(p.Articles)
-	lastpage := n/pp + 1
+	lastpage := n/app + 1
 
 	if pg >= lastpage {
 		pg = lastpage
@@ -115,8 +111,8 @@ func (p *page) Pager(pg, pp int) {
 		p.NextPage = pg + 1
 	}
 
-	from := (pg - 1) * pp
-	to := from + pp - 1
+	from := (pg - 1) * app
+	to := from + app - 1
 
 	if to > n {
 		to = n
@@ -128,7 +124,7 @@ func (p *page) Pager(pg, pp int) {
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	e := art.Enabled()
 	p.URL = "http://" + r.Host
-	p.Pager(getPage(r.URL), conf.Blog.ArticlesPerPage)
+	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = e.TagCloud()
 	p.Config = conf
 	p.MakeArchive()
