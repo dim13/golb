@@ -22,6 +22,10 @@ type ReHandler struct {
 	routes []*route
 }
 
+func New() (re *ReHandler) {
+	return &ReHandler{}
+}
+
 func (f HandlerFunc) Select(_ []string)                                {}
 func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) { f(w, r) }
 

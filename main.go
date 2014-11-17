@@ -54,7 +54,7 @@ func main() {
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
-	re := new(route.ReHandler)
+	re := route.New()
 	re.HandleFunc("^/assets/", assetHandler)
 	re.HandleFunc("^/(favicon\\.ico|images|videos)", tmpHandler)
 	re.HandleFunc("^/robots.txt$", robotsHandler)
