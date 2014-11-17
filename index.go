@@ -130,6 +130,11 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.FirstYear = e.Tail().Year()
 	p.LastYear = e.Head().Year()
 
+	if p.Articles == nil {
+		http.NotFound(w, r)
+		return
+	}
+
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
 		log.Println(err)

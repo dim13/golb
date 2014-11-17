@@ -66,7 +66,7 @@ func main() {
 	re.Handle("^/\\d+/\\d+/(.+)$", &slugPage{})
 	re.Handle("^/(\\d+)/(\\d+)/?$", &monthPage{})
 	re.Handle("^/(\\d+)/?$", &yearPage{})
-	//re.Handle("^/(.+)$", &slugPage{})
+	re.Handle("^/(.+)$", &slugPage{})
 	re.Handle("^/$", &indexPage{})
 
 	log.Println("Listen on", listen)
