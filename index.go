@@ -93,7 +93,10 @@ func (p *page) MakeArchive() {
 
 func (p *page) Pager(arg string) {
 	app := conf.Blog.ArticlesPerPage
-	pg := atoiMust(arg)
+	pg := 1
+	if arg != "" {
+		pg = atoiMust(arg)	
+	}
 
 	if pg <= 1 {
 		pg = 1
