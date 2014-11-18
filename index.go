@@ -17,6 +17,7 @@ type page struct {
 	URL       string
 	Title     string
 	Articles  articles.Articles
+	Comments  articles.Comments
 	Error     error
 	PrevPage  int
 	NextPage  int
@@ -142,7 +143,7 @@ type tagPage struct{ page }
 
 func (p *tagPage) Select(match []string) bool {
 	s := match[0]
-	p.Articles = art.Tag(s)
+	p.Articles = art.Enabled().Tag(s)
 	p.Title = s
 	return true
 }
@@ -160,6 +161,7 @@ func (p *slugPage) Select(match []string) bool {
 	if a, ok := art.Enabled().Find(match[0]); ok {
 		p.Title = a.Title
 		p.Articles = articles.Articles{a}
+		p.Comments = a.Comments.Enabled()
 		p.Year = a.Year()
 		p.Month = a.Month()
 		return true

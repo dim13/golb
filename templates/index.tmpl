@@ -49,9 +49,9 @@
 		</section>
 	</aside>
 
-{{$nar := len .Articles.Enabled}}
+{{$nar := len .Articles}}
 {{$url := .URL}}
-{{range .Articles.Enabled}}
+{{range .Articles}}
 	<article>
 		<header>
 			<h1><a href="{{.FullSlug}}">{{.Title}}</a></h1>
