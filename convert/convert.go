@@ -74,13 +74,13 @@ var (
 func (a Articles) Write(fname string) {
 	w, err := os.Create(fname)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("write ", err)
 	}
 	defer w.Close()
 	enc := gob.NewEncoder(w)
 	err = enc.Encode(a)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("encode ", err)
 	}
 }
 
@@ -95,7 +95,7 @@ func getTags(tags string) Tags {
 func getDate(date string) time.Time {
 	d, err := time.Parse("2006-01-02 15:04:05", date)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("parse time ", err)
 	}
 	return d
 }
@@ -111,7 +111,7 @@ func (c Comment) String() string {
 func getComments(db *sql.DB, id int) (C Comments) {
 	rows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("query comment ", err)
 	}
 	defer rows.Close()
 
@@ -127,7 +127,7 @@ func getComments(db *sql.DB, id int) (C Comments) {
 
 		err := rows.Scan(&date, &name, &email, &url, &comment, &enabled)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("scan comment ", err)
 		}
 
 		c := Comment{
@@ -149,7 +149,7 @@ func getComments(db *sql.DB, id int) (C Comments) {
 func getArticles(db *sql.DB) (A Articles) {
 	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("query article ", err)
 	}
 	defer rows.Close()
 
@@ -167,7 +167,7 @@ func getArticles(db *sql.DB) (A Articles) {
 
 		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled, &author)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("scan article ", err)
 		}
 
 		a := Article{
@@ -197,7 +197,7 @@ func init() {
 func main() {
 	db, err := sql.Open("sqlite3", input)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("open ", err)
 	}
 	defer db.Close()
 	getArticles(db).Write(output)
