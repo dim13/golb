@@ -71,10 +71,10 @@ var (
 	output string
 )
 
-func (a Articles) Write(fname string) {
+func (a Articles) write(fname string) {
 	w, err := os.Create(fname)
 	if err != nil {
-		log.Fatal("write ", err)
+		log.Fatal("create ", err)
 	}
 	defer w.Close()
 	enc := gob.NewEncoder(w)
@@ -117,7 +117,7 @@ func getComments(db *sql.DB, id int) (C Comments) {
 
 	for rows.Next() {
 		var (
-			date    string
+			date    time.Time
 			name    string
 			email   []byte
 			url     []byte
@@ -131,7 +131,7 @@ func getComments(db *sql.DB, id int) (C Comments) {
 		}
 
 		c := Comment{
-			Date:    getDate(date),
+			Date:    date,
 			Name:    name,
 			Email:   string(email),
 			URL:     string(url),
@@ -156,7 +156,7 @@ func getArticles(db *sql.DB) (A Articles) {
 	for rows.Next() {
 		var (
 			id      int
-			date    string
+			date    time.Time
 			title   string
 			uri     string
 			body    string
@@ -171,7 +171,7 @@ func getArticles(db *sql.DB) (A Articles) {
 		}
 
 		a := Article{
-			Date:     getDate(date),
+			Date:     date,
 			Title:    title,
 			Slug:     uri,
 			Body:     body,
@@ -200,5 +200,5 @@ func main() {
 		log.Fatal("open ", err)
 	}
 	defer db.Close()
-	getArticles(db).Write(output)
+	getArticles(db).write(output)
 }
