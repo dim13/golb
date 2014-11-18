@@ -52,6 +52,9 @@ func (y byYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
 func (y byYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
 
 func atoiMust(s string) int {
+	if s == "" {
+		return 0
+	}
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		log.Println(err)
@@ -91,33 +94,29 @@ func (p *page) MakeArchive() {
 	sort.Sort(sort.Reverse(byYear(p.Archive)))
 }
 
-func (p *page) Pager(arg string) {
-	app := conf.Blog.ArticlesPerPage
-	pg := 1
-	if arg != "" {
-		pg = atoiMust(arg)	
-	}
+func (p *page) Pager(pg string) {
+	perpage := conf.Blog.ArticlesPerPage
+	count := len(p.Articles)
+	last := count/perpage + 1
+	curr := atoiMust(pg)
 
-	if pg <= 1 {
-		pg = 1
+	if curr <= 1 {
+		curr = 1
 	} else {
-		p.PrevPage = pg - 1
+		p.PrevPage = curr - 1
 	}
 
-	n := len(p.Articles)
-	lastpage := n/app + 1
-
-	if pg >= lastpage {
-		pg = lastpage
+	if curr >= last {
+		curr = last
 	} else {
-		p.NextPage = pg + 1
+		p.NextPage = curr + 1
 	}
 
-	from := (pg - 1) * app
-	to := from + app - 1
+	from := (curr - 1) * perpage
+	to := from + perpage - 1
 
-	if to > n {
-		to = n
+	if to > count {
+		to = count
 	}
 
 	p.Articles = p.Articles[from:to]
