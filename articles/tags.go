@@ -8,7 +8,7 @@ import (
 
 type Tags []string
 type TagMap map[string]Articles
-type TagCount map[string]int
+type tagCount map[string]int
 
 type TagCloud []tagCloud
 type tagCloud struct {
@@ -31,8 +31,8 @@ func (t byName) Less(i, j int) bool {
 	return t.TagCloud[i].Tag < t.TagCloud[j].Tag
 }
 
-func (a Articles) CountTags() TagCount {
-	tags := make(TagCount)
+func (a Articles) countTags() tagCount {
+	tags := make(tagCount)
 	for _, article := range a {
 		for _, tag := range article.Tags {
 			tags[tag]++
@@ -43,7 +43,7 @@ func (a Articles) CountTags() TagCount {
 
 func (a Articles) TagMap() TagMap {
 	tm := make(TagMap)
-	for tag := range a.CountTags() {
+	for tag := range a.countTags() {
 		for _, article := range a {
 			if article.Tags.Has(tag) {
 				tm[tag] = append(tm[tag], article)
@@ -95,7 +95,7 @@ func ReadTags(s string) Tags {
 }
 
 func (a Articles) TagCloud() (tc TagCloud) {
-	for k, v := range a.CountTags() {
+	for k, v := range a.countTags() {
 		tc = append(tc, tagCloud{Tag: k, Wight: 5 / v})
 	}
 	sort.Sort(byName{tc})
