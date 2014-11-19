@@ -8,7 +8,6 @@ import (
 
 type Tags []string
 type TagMap map[string]Articles
-type tagCount map[string]int
 
 type TagCloud []tagCloud
 type tagCloud struct {
@@ -31,35 +30,18 @@ func (t byName) Less(i, j int) bool {
 	return t.TagCloud[i].Tag < t.TagCloud[j].Tag
 }
 
-func (a Articles) countTags() tagCount {
-	tags := make(tagCount)
-	for _, article := range a {
-		for _, tag := range article.Tags {
-			tags[tag]++
-		}
-	}
-	return tags
-}
-
 func (a Articles) TagMap() TagMap {
 	tm := make(TagMap)
-	for tag := range a.countTags() {
-		for _, article := range a {
-			if article.Tags.Has(tag) {
-				tm[tag] = append(tm[tag], article)
-			}
+	for _, art := range a {
+		for _, tag := range art.Tags {
+			tm[tag] = append(tm[tag], art)
 		}
 	}
 	return tm
 }
 
-func (a Articles) Tag(tag string) (A Articles) {
-	for _, v := range a {
-		if v.Tags.Has(tag) {
-			A = append(A, v)
-		}
-	}
-	return
+func (a Articles) Tag(tag string) Articles {
+	return a.TagMap()[tag]
 }
 
 func (ts Tags) Has(tag string) bool {
@@ -95,8 +77,8 @@ func ReadTags(s string) Tags {
 }
 
 func (a Articles) TagCloud() (tc TagCloud) {
-	for k, v := range a.countTags() {
-		tc = append(tc, tagCloud{Tag: k, Wight: 5 / v})
+	for tag, art := range a.TagMap() {
+		tc = append(tc, tagCloud{Tag: tag, Wight: 5 / len(art)})
 	}
 	sort.Sort(byName{tc})
 	return
