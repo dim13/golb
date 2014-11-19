@@ -40,21 +40,12 @@ func (a Articles) TagMap() TagMap {
 	return tm
 }
 
-func (a Articles) Tag(tag string) Articles {
-	return a.TagMap()[tag]
-}
-
-func (ts Tags) Has(tag string) bool {
-	for _, t := range ts {
-		if t == tag {
-			return true
-		}
+func (a Articles) TagCloud() (tc TagCloud) {
+	for tag, art := range a.TagMap() {
+		tc = append(tc, tagCloud{Tag: tag, Wight: 5 / len(art)})
 	}
-	return false
-}
-
-func (t Tags) String() string {
-	return strings.Join(t, " ")
+	sort.Sort(byName{tc})
+	return
 }
 
 func uniq(in []string) (out []string) {
@@ -76,10 +67,6 @@ func ReadTags(s string) Tags {
 	return uniq(strings.FieldsFunc(s, f))
 }
 
-func (a Articles) TagCloud() (tc TagCloud) {
-	for tag, art := range a.TagMap() {
-		tc = append(tc, tagCloud{Tag: tag, Wight: 5 / len(art)})
-	}
-	sort.Sort(byName{tc})
-	return
+func (t Tags) String() string {
+	return strings.Join(t, " ")
 }

@@ -143,9 +143,10 @@ type tagPage struct{ page }
 
 func (p *tagPage) Select(match []string) bool {
 	s := match[0]
-	p.Articles = art.Enabled().Tag(s)
+	tagged, ok := art.Enabled().TagMap()[s]
+	p.Articles = tagged
 	p.Title = s
-	return true
+	return ok
 }
 
 type indexPage struct{ page }

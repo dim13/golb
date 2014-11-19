@@ -37,12 +37,11 @@ func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 			ChangeFreq: "monthly",
 		})
 	}
-	for _, t := range art.TagCloud() {
-		tagged := articles.Tag(t.Tag)
+	for t, a := range articles.TagMap() {
 		sm = append(sm, sitemap{
-			Loc:        "http://" + r.Host + "/tag/" + t.Tag,
-			Priority:   0.6 - float64(t.Wight)/10,
-			LastMod:    lastMod(tagged[0].Date),
+			Loc:        "http://" + r.Host + "/tag/" + t,
+			Priority:   0.6 - float64(5/len(a))/10,
+			LastMod:    lastMod(a[0].Date),
 			ChangeFreq: "weekly",
 		})
 	}
