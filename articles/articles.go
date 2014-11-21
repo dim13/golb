@@ -175,7 +175,7 @@ func (a Articles) Enabled() (A Articles) {
 
 func (a Articles) Skip(n int) Articles {
 	if n > len(a) {
-		return nil
+		n = len(a)
 	}
 	return a[n:]
 }
