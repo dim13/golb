@@ -77,7 +77,7 @@ func (a *Article) checkSlug() {
 func (a *Articles) Add(art Article) {
 	art.checkSlug()
 	if ar, ok := a.Find(art.Slug); ok {
-		/* flound slug, update */
+		/* found slug, update */
 		art.Date = ar.Date
 		*ar = art
 	} else {
