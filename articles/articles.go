@@ -28,8 +28,7 @@ type Article struct {
 	Comments Comments
 }
 
-type YearMap map[int]Articles
-type MonthMap map[int]Articles
+type TimeMap map[int]Articles
 
 func MakeSlug(title string) string {
 	r := strings.NewReplacer(" ", "-")
@@ -202,8 +201,8 @@ func (a Articles) Tail() Article {
 	return Article{}
 }
 
-func (a Articles) YearMap() YearMap {
-	ym := make(YearMap)
+func (a Articles) YearMap() TimeMap {
+	ym := make(TimeMap)
 	for _, v := range a {
 		y := v.Date.Year()
 		ym[y] = append(ym[y], v)
@@ -211,8 +210,8 @@ func (a Articles) YearMap() YearMap {
 	return ym
 }
 
-func (a Articles) MonthMap() MonthMap {
-	mm := make(MonthMap)
+func (a Articles) MonthMap() TimeMap {
+	mm := make(TimeMap)
 	for _, v := range a {
 		m := int(v.Date.Month())
 		mm[m] = append(mm[m], v)
