@@ -40,16 +40,14 @@ CREATE TABLE comments (
 	enabled boolean);
 */
 
-type Articles []Article
+type Articles map[string]Article
 
 type Article struct {
 	Date     time.Time
 	Title    string
-	Slug     string // Uri
 	Body     string
 	Tags     Tags
 	Enabled  bool
-	Author   string
 	Comments Comments
 }
 
@@ -101,7 +99,7 @@ func getDate(date string) time.Time {
 }
 
 func (a Article) String() string {
-	return fmt.Sprintf("%s %s %s", a.Date.Format(timeFormat), a.Slug, a.Tags)
+	return fmt.Sprintf("%s %s %s", a.Date.Format(timeFormat), a.Title, a.Tags)
 }
 
 func (c Comment) String() string {
@@ -147,11 +145,13 @@ func getComments(db *sql.DB, id int) (C Comments) {
 }
 
 func getArticles(db *sql.DB) (A Articles) {
-	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
+	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled FROM articles")
 	if err != nil {
 		log.Fatal("query article ", err)
 	}
 	defer rows.Close()
+
+	A = make(Articles)
 
 	for rows.Next() {
 		var (
@@ -162,10 +162,9 @@ func getArticles(db *sql.DB) (A Articles) {
 			body    string
 			tags    string
 			enabled bool
-			author  string
 		)
 
-		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled, &author)
+		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled)
 		if err != nil {
 			log.Fatal("scan article ", err)
 		}
@@ -173,16 +172,14 @@ func getArticles(db *sql.DB) (A Articles) {
 		a := Article{
 			Date:     date,
 			Title:    title,
-			Slug:     uri,
 			Body:     body,
 			Tags:     getTags(tags),
 			Enabled:  enabled,
-			Author:   author,
 			Comments: getComments(db, id),
 		}
 
 		fmt.Println(a)
-		A = append(A, a)
+		A[uri] = a
 	}
 
 	return A

@@ -71,7 +71,7 @@ func (p *page) MakeArchive() {
 	if p.Month == 0 {
 		p.Month = p.Articles.Head().Month()
 	}
-	for y, v := range art.Enabled().YearMap() {
+	for y, v := range blog.Articles().Enabled().YearMap() {
 		year := year{
 			Year:  y,
 			Count: len(v),
@@ -124,7 +124,7 @@ func (p *page) Pager(pg string) {
 }
 
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	e := art.Enabled()
+	e := blog.Articles().Enabled()
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = e.TagCloud()
@@ -143,7 +143,7 @@ type tagPage struct{ page }
 
 func (p *tagPage) Select(match []string) bool {
 	s := match[0]
-	tagged, ok := art.Enabled().TagMap()[s]
+	tagged, ok := blog.Articles().Enabled().TagMap()[s]
 	p.Articles = tagged
 	p.Title = s
 	return ok
@@ -152,16 +152,18 @@ func (p *tagPage) Select(match []string) bool {
 type indexPage struct{ page }
 
 func (p *indexPage) Select(_ []string) bool {
-	p.Articles = art.Enabled()
+	p.Articles = blog.Articles().Enabled()
 	return true
 }
 
 type slugPage struct{ page }
 
 func (p *slugPage) Select(match []string) bool {
-	if a, ok := art.Enabled().Find(match[0]); ok {
+	slug := match[0]
+
+	if a, ok := blog.Enabled()[slug]; ok {
 		p.Title = a.Title
-		p.Article = a
+		p.Articles = append(p.Articles, a)
 		p.Year = a.Year()
 		p.Month = a.Month()
 		return true
@@ -173,7 +175,7 @@ type yearPage struct{ page }
 
 func (p *yearPage) Select(match []string) bool {
 	p.Year = atoiMust(match[0])
-	p.Articles = art.Enabled().Year(p.Year)
+	p.Articles = blog.Enabled().Articles().Year(p.Year)
 	p.Title = fmt.Sprint(p.Year)
 	return true
 }
@@ -183,7 +185,7 @@ type monthPage struct{ page }
 func (p *monthPage) Select(match []string) bool {
 	p.Year = atoiMust(match[0])
 	p.Month = time.Month(atoiMust(match[1]))
-	p.Articles = art.Enabled().Year(p.Year).Month(p.Month)
+	p.Articles = blog.Enabled().Articles().Year(p.Year).Month(p.Month)
 	p.Title = fmt.Sprint(p.Month, p.Year)
 	return true
 }

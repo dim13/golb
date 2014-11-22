@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"sort"
 	"text/template"
 
 	"github.com/dim13/gold/articles"
@@ -14,7 +13,7 @@ import (
 
 var (
 	conf   storage.Config
-	art    articles.Articles
+	blog   articles.Blog
 	tmpl   *template.Template
 	listen string
 	config string
@@ -54,11 +53,10 @@ func main() {
 	}
 
 	articles.SetStorage(conf.Blog.DataBase)
-	err = art.Load()
+	blog, err = articles.Load()
 	if err != nil {
 		log.Println(err)
 	}
-	sort.Sort(sort.Reverse(art))
 
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))

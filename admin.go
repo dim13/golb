@@ -11,7 +11,6 @@ import (
 
 type adminPage struct {
 	Articles articles.Articles
-	Article  *articles.Article
 	Title    string
 	Config   storage.Config
 	Error    string
@@ -28,7 +27,7 @@ func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 type adminIndex struct{ adminPage }
 
 func (p *adminIndex) Select(_ []string) bool {
-	p.Articles = art
+	p.Articles = blog.Articles()
 	p.Title = "Admin Interface"
 	return true
 }
@@ -40,23 +39,26 @@ func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.FormValue("submit") {
 	case "add":
-		title := r.FormValue("title")
-		r.URL.Path = "/admin/" + articles.MakeSlug(title)
+		a := articles.Article{
+			Title: r.FormValue("title"),
+		}
+		r.URL.Path = "/admin/" + a.Slug()
 	}
 }
 
 type adminSlug struct{ adminPage }
 
 func (p *adminSlug) Select(match []string) bool {
-	if a, ok := art.Find(match[0]); ok {
+	slug := match[0]
+
+	if a, ok := blog[slug]; ok {
 		p.Title = a.Title
-		p.Article = a
+		p.Articles = append(p.Articles, a)
 	} else {
-		p.Article = &articles.Article{
-			Slug:  match[0],
-			Title: articles.MakeTitle(match[0]),
+		p.Articles = append(p.Articles, articles.Article{
+			Title: articles.MakeTitle(slug),
 			Date:  time.Now(),
-		}
+		})
 	}
 	return true
 }
@@ -68,28 +70,29 @@ func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	a := articles.Article{
 		Title:   r.FormValue("title"),
-		Slug:    r.FormValue("slug"),
 		Tags:    articles.ReadTags(r.FormValue("tags")),
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
-	if p.Article.Slug != a.Slug {
-		art.Delete(*p.Article)
-		r.URL.Path = "/admin/" + a.Slug
-	}
+	/*
+		if p.Articles[0].Slug() != a.Slug() {
+			blog.Delete(p.Articles[0])
+			r.URL.Path = "/admin/" + a.Slug()
+		}
+	*/
 	switch r.FormValue("submit") {
 	case "reload":
 		log.Println("reloading")
-		art.Load()
+		blog, _ = articles.Load()
 	case "preview":
-		art.Add(a)
+		blog.Add(a)
 	case "save":
-		art.Add(a)
-		art.Store()
+		blog.Add(a)
+		blog.Store()
 		r.URL.Path = "/admin/"
 	case "delete":
-		art.Delete(a)
-		art.Store()
+		blog.Delete(a)
+		blog.Store()
 		r.URL.Path = "/admin/"
 	case "cancel":
 		r.URL.Path = "/admin/"

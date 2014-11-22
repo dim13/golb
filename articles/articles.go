@@ -2,11 +2,8 @@ package articles
 
 import (
 	"fmt"
-	"log"
 	"strings"
 	"time"
-
-	"github.com/dim13/gold/storage"
 )
 
 const (
@@ -14,44 +11,27 @@ const (
 	readMore   = "<!--readmore-->"
 )
 
-var storageFile string
+type Articles []Article
 
-type Articles []*Article
 type Article struct {
 	Date     time.Time
 	Title    string
-	Slug     string
 	Body     string
 	Tags     Tags
 	Enabled  bool
-	Author   string
 	Comments Comments
 }
 
 type TimeMap map[int]Articles
 
-func MakeSlug(title string) string {
+func (a Article) Slug() string {
 	r := strings.NewReplacer(" ", "-")
-	return r.Replace(strings.TrimSpace(title))
+	return r.Replace(strings.TrimSpace(a.Title))
 }
 
 func MakeTitle(slug string) string {
 	r := strings.NewReplacer("-", " ")
 	return r.Replace(strings.TrimSpace(slug))
-}
-
-func SetStorage(file string) {
-	log.Println("Set storage to", file)
-	storageFile = file
-}
-
-func (a *Articles) Load() error {
-	*a = nil
-	return storage.Load(storageFile, a)
-}
-
-func (a *Articles) Store() error {
-	return storage.Store(storageFile, a)
 }
 
 func (a *Article) Publish() {
@@ -65,51 +45,7 @@ func (a *Article) Suppress() {
 
 func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
-
-func (a *Article) checkSlug() {
-	if a.Slug == "" {
-		a.Slug = MakeSlug(a.Title)
-	}
-}
-
-func (a *Articles) Add(art Article) {
-	art.checkSlug()
-	if ar, ok := a.Find(art.Slug); ok {
-		/* found slug, update */
-		art.Date = ar.Date
-		*ar = art
-	} else {
-		/* no slug, add new */
-		if art.Date.IsZero() {
-			art.Date = time.Now()
-		}
-		*a = append(Articles{&art}, *a...)
-	}
-}
-
-func (a *Articles) Delete(art Article) {
-	if i, ok := a.locate(art.Slug); ok {
-		(*a)[i] = nil
-		*a = append((*a)[:i], (*a)[i+1:]...)
-	}
-}
-
-func (a Articles) locate(slug string) (int, bool) {
-	for i, ar := range a {
-		if ar.Slug == slug {
-			return i, true
-		}
-	}
-	return 0, false
-}
-
-func (a Articles) Find(slug string) (*Article, bool) {
-	if i, ok := a.locate(slug); ok {
-		return a[i], true
-	}
-	return nil, false
-}
+func (a Articles) Less(i, j int) bool { return a[i].Date.After(a[j].Date) }
 
 // Format Date with TimeFormat
 func (a Article) PostDate() string {
@@ -190,14 +126,14 @@ func (a Articles) Limit(n int) Articles {
 
 func (a Articles) Head() Article {
 	if len(a) > 0 {
-		return *a[0]
+		return a[0]
 	}
 	return Article{}
 }
 
 func (a Articles) Tail() Article {
 	if len(a) > 0 {
-		return *a[len(a)-1]
+		return a[len(a)-1]
 	}
 	return Article{}
 }
@@ -222,5 +158,5 @@ func (a Articles) MonthMap() TimeMap {
 
 func (a Article) FullSlug() string {
 	return fmt.Sprintf("/%.4d/%.2d/%s",
-		a.Date.Year(), a.Date.Month(), a.Slug)
+		a.Date.Year(), a.Date.Month(), a.Slug())
 }

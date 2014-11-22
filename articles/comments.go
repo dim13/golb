@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type Comments []*Comment
+type Comments []Comment
 
 type Comment struct {
 	Date    time.Time
@@ -27,12 +27,12 @@ func (c Comments) Len() int           { return len(c) }
 func (c Comments) Swap(i, j int)      { c[i], c[j] = c[j], c[i] }
 func (c Comments) Less(i, j int) bool { return c[i].Date.Before(c[j].Date) }
 
-func (c *Comments) Add(comment *Comment) {
+func (c *Comments) Add(comment Comment) {
 	comment.Date = time.Now()
 	*c = append(*c, comment)
 }
 
-func (c *Comment) PostDate() string {
+func (c Comment) PostDate() string {
 	return c.Date.Local().Format(TimeFormat) // defined in articles.go
 }
 

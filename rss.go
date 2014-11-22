@@ -16,7 +16,7 @@ type rss struct {
 
 func rssHandler(w http.ResponseWriter, r *http.Request) {
 	app := conf.Blog.ArticlesPerPage
-	a := art.Enabled().Limit(app)
+	a := blog.Enabled().Articles().Limit(app)
 
 	rss := rss{
 		URL:      "http://" + r.Host,

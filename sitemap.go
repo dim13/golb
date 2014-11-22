@@ -22,27 +22,22 @@ func lastMod(date time.Time) string {
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm []sitemap
-	articles := art.Enabled()
+	log.Println(blog)
+	articles := blog.Enabled().Articles()
 	sm = append(sm, sitemap{
-		Loc:        "http://" + r.Host,
-		Priority:   1.0,
-		LastMod:    lastMod(articles[0].Date),
-		ChangeFreq: "daily",
+		Loc:      "http://" + r.Host,
+		Priority: 1.0,
 	})
 	for _, a := range articles {
 		sm = append(sm, sitemap{
-			Loc:        "http://" + r.Host + "/" + a.Slug,
-			Priority:   0.8,
-			LastMod:    lastMod(a.Date),
-			ChangeFreq: "monthly",
+			Loc:      "http://" + r.Host + "/" + a.Slug(),
+			Priority: 0.8,
 		})
 	}
 	for t, a := range articles.TagMap() {
 		sm = append(sm, sitemap{
-			Loc:        "http://" + r.Host + "/tag/" + t,
-			Priority:   0.6 - float64(5/len(a))/10,
-			LastMod:    lastMod(a[0].Date),
-			ChangeFreq: "weekly",
+			Loc:      "http://" + r.Host + "/tag/" + t,
+			Priority: 0.6 - float64(5/len(a))/10,
 		})
 	}
 	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
