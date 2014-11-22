@@ -30,9 +30,9 @@ func (t byName) Less(i, j int) bool {
 	return t.TagCloud[i].Tag < t.TagCloud[j].Tag
 }
 
-func (a Articles) TagMap() TagMap {
+func (b Blog) TagMap() TagMap {
 	tm := make(TagMap)
-	for _, art := range a {
+	for _, art := range b {
 		for _, tag := range art.Tags {
 			tm[tag] = append(tm[tag], art)
 		}
@@ -40,8 +40,8 @@ func (a Articles) TagMap() TagMap {
 	return tm
 }
 
-func (a Articles) TagCloud() (tc TagCloud) {
-	for tag, art := range a.TagMap() {
+func (b Blog) TagCloud() (tc TagCloud) {
+	for tag, art := range b.TagMap() {
 		tc = append(tc, tagCloud{Tag: tag, Wight: 5 / len(art)})
 	}
 	sort.Sort(byName{tc})

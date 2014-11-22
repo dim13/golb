@@ -123,14 +123,15 @@ func (p *page) Pager(pg string) {
 }
 
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	e := blog.Enabled().Articles()
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
-	p.TagCloud = e.TagCloud()
+	p.TagCloud = blog.Enabled().TagCloud()
 	p.Config = conf
 	p.MakeArchive()
-	p.FirstYear = e.Tail().Year()
-	p.LastYear = e.Head().Year()
+
+	a := blog.Enabled().Articles()
+	p.FirstYear = a.Tail().Year()
+	p.LastYear = a.Head().Year()
 
 	err := tmpl.ExecuteTemplate(w, "index.tmpl", p)
 	if err != nil {
@@ -142,7 +143,7 @@ type tagPage struct{ page }
 
 func (p *tagPage) Select(match []string) bool {
 	s := match[0]
-	tagged, ok := blog.Enabled().Articles().TagMap()[s]
+	tagged, ok := blog.Enabled().TagMap()[s]
 	p.Articles = tagged
 	p.Title = s
 	return ok
