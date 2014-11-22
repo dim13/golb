@@ -23,18 +23,18 @@ func lastMod(date time.Time) string {
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm []sitemap
 	log.Println(blog)
-	articles := blog.Enabled()
+	be := blog.Enabled()
 	sm = append(sm, sitemap{
 		Loc:      "http://" + r.Host,
 		Priority: 1.0,
 	})
-	for _, a := range articles.Articles() {
+	for _, a := range be.Articles() {
 		sm = append(sm, sitemap{
 			Loc:      "http://" + r.Host + "/" + a.Slug(),
 			Priority: 0.8,
 		})
 	}
-	for t, a := range articles.TagMap() {
+	for t, a := range be.TagMap() {
 		sm = append(sm, sitemap{
 			Loc:      "http://" + r.Host + "/tag/" + t,
 			Priority: 0.6 - float64(5/len(a))/10,
