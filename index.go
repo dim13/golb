@@ -17,7 +17,6 @@ type page struct {
 	URL       string
 	Title     string
 	Articles  articles.Articles
-	Article   *articles.Article
 	Error     error
 	PrevPage  int
 	NextPage  int
