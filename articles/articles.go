@@ -2,6 +2,7 @@ package articles
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 )
@@ -101,16 +102,10 @@ func (a Articles) Month(month time.Month) (A Articles) {
 	return
 }
 
-/*
-func (a Articles) Enabled() (A Articles) {
-	for _, v := range a {
-		if v.Enabled {
-			A = append(A, v)
-		}
-	}
-	return
+func (a Articles) Sort() Articles {
+	sort.Sort(a)
+	return a
 }
-*/
 
 func (a Articles) Skip(n int) Articles {
 	if n > len(a) {

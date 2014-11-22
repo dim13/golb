@@ -1,8 +1,6 @@
 package articles
 
 import (
-	"sort"
-
 	"github.com/dim13/gold/storage"
 )
 
@@ -52,8 +50,7 @@ func (b Blog) Articles() (a Articles) {
 	for _, v := range b {
 		a = append(a, v)
 	}
-	sort.Sort(a)
-	return a
+	return a.Sort()
 }
 
 func (b Blog) Enabled() Blog {
