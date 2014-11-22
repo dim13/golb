@@ -163,7 +163,7 @@ func (p *slugPage) Select(match []string) bool {
 
 	if a, ok := blog.Enabled()[slug]; ok {
 		p.Title = a.Title
-		p.Articles = append(p.Articles, a)
+		p.Articles = articles.Articles{a}
 		p.Year = a.Year()
 		p.Month = a.Month()
 		return true
