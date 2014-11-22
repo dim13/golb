@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	TimeFormat = "January 2, 2006"
+	timeFormat = "January 2, 2006"
 	readMore   = "<!--readmore-->"
 )
 
@@ -50,7 +50,7 @@ func (a Articles) Less(i, j int) bool { return a[i].Date.After(a[j].Date) }
 
 // Format Date with TimeFormat
 func (a Article) PostDate() string {
-	return a.Date.Local().Format(TimeFormat)
+	return a.Date.Local().Format(timeFormat)
 }
 
 // Format Date for RSS

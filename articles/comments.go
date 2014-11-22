@@ -39,7 +39,7 @@ func (c Comments) Sort() Comments {
 }
 
 func (c Comment) PostDate() string {
-	return c.Date.Local().Format(TimeFormat) // defined in articles.go
+	return c.Date.Local().Format(timeFormat)
 }
 
 func (c Comments) Enabled() (comments Comments) {
