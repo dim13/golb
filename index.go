@@ -71,7 +71,7 @@ func (p *page) MakeArchive() {
 	if p.Month == 0 {
 		p.Month = p.Articles.Head().Month()
 	}
-	for y, v := range blog.Articles().Enabled().YearMap() {
+	for y, v := range blog.Enabled().Articles().YearMap() {
 		year := year{
 			Year:  y,
 			Count: len(v),
@@ -124,7 +124,7 @@ func (p *page) Pager(pg string) {
 }
 
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	e := blog.Articles().Enabled()
+	e := blog.Enabled().Articles()
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = e.TagCloud()
@@ -143,7 +143,7 @@ type tagPage struct{ page }
 
 func (p *tagPage) Select(match []string) bool {
 	s := match[0]
-	tagged, ok := blog.Articles().Enabled().TagMap()[s]
+	tagged, ok := blog.Enabled().Articles().TagMap()[s]
 	p.Articles = tagged
 	p.Title = s
 	return ok
@@ -152,7 +152,7 @@ func (p *tagPage) Select(match []string) bool {
 type indexPage struct{ page }
 
 func (p *indexPage) Select(_ []string) bool {
-	p.Articles = blog.Articles().Enabled()
+	p.Articles = blog.Enabled().Articles()
 	return true
 }
 
