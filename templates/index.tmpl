@@ -67,17 +67,6 @@
 	</footer>
 {{end}}
 
-{{range .Articles}}
-	<article>
-		{{template "header" .}}
-		{{.Spoiler}}
-		{{if .HasMore}}
-		<p><a href="{{.FullSlug}}">Read the rest of this story &hellip;</a></p>
-		{{end}}
-		{{template "footer" .}}
-	</article>
-{{end}}
-
 {{define "comments"}}
 	{{with .Enabled}}
 	<section>
@@ -94,11 +83,18 @@
 	{{end}}
 {{end}}
 
-{{with .Article}}
+{{$count := len .Articles}}
+{{range .Articles}}
 	<article>
 		{{template "header" .}}
+		{{if eq $count 1}}
 		{{.Body}}
 		{{template "comments" .Comments}}
+		{{else}}
+		{{.Spoiler}}
+		{{if .HasMore}}<p><a href="{{.FullSlug}}">Read the rest of this story &hellip;</a></p>{{end}}
+		{{template "footer" .}}
+		{{end}}
 	</article>
 {{end}}
 
