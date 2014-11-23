@@ -179,8 +179,9 @@ func yearHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func monthHandler(w http.ResponseWriter, r *http.Request) {
-	year := atoiMust(r.URL.Query().Get("year"))
-	month := time.Month(atoiMust(r.URL.Query().Get("month")))
+	q := r.URL.Query()
+	year := atoiMust(q.Get(":year"))
+	month := time.Month(atoiMust(q.Get(":month")))
 	pg := page{
 		Year:     year,
 		Month:    month,
