@@ -23,7 +23,7 @@ type ReHandler struct {
 	notFound HandlerFunc
 }
 
-func New() (re *ReHandler) {
+func New() *ReHandler {
 	return &ReHandler{notFound: http.NotFound}
 }
 
