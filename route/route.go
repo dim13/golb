@@ -19,7 +19,7 @@ type route struct {
 }
 
 type ReHandler struct {
-	routes   []*route
+	routes   []route
 	notFound HandlerFunc
 }
 
@@ -37,7 +37,7 @@ func (f HandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *ReHandler) Handle(re string, handler SelectHandler) {
 	log.Println("SelectHandler", re)
-	r := &route{
+	r := route{
 		re:      regexp.MustCompile(re),
 		handler: handler,
 	}
@@ -46,7 +46,7 @@ func (h *ReHandler) Handle(re string, handler SelectHandler) {
 
 func (h *ReHandler) HandleFunc(re string, handler HandlerFunc) {
 	log.Println("HandlerFunc", re)
-	r := &route{
+	r := route{
 		re:      regexp.MustCompile(re),
 		handler: handler,
 	}
