@@ -75,7 +75,7 @@ func main() {
 	re.Handle("^/(\\d+)/?$", &yearPage{})
 	re.Handle("^/(.+)$", &slugPage{})
 	re.Handle("^/$", &indexPage{})
-	re.NotFound = notFound
+	re.NotFound(notFound)
 
 	log.Println("Listen on", listen)
 	if err := http.ListenAndServe(listen, re); err != nil {
