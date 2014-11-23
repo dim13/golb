@@ -139,54 +139,53 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type tagPage struct{ page }
-
-func (p *tagPage) Select(match []string) bool {
-	s := match[0]
-	tagged, ok := blog.Enabled().TagMap()[s]
-	p.Articles = tagged
-	p.Title = s
-	return ok
-}
-
-type indexPage struct{ page }
-
-func (p *indexPage) Select(_ []string) bool {
-	p.Articles = blog.Enabled().Articles()
-	return true
-}
-
-type slugPage struct{ page }
-
-func (p *slugPage) Select(match []string) bool {
-	slug := match[0]
-
-	if a, ok := blog.Enabled()[slug]; ok {
-		p.Title = a.Title
-		p.Articles = articles.Articles{a}
-		//p.Articles = append(p.Articles, a)
-		p.Year = a.Year()
-		p.Month = a.Month()
-		return true
+func tagHandler(w http.ResponseWriter, r *http.Request) {
+	tag := r.URL.Query().Get(":tag")
+	tagged, _ := blog.Enabled().TagMap()[tag]
+	pg := page{
+		Articles: tagged,
+		Title:    tag,
 	}
-	return false
+	pg.ServeHTTP(w, r)
 }
 
-type yearPage struct{ page }
-
-func (p *yearPage) Select(match []string) bool {
-	p.Year = atoiMust(match[0])
-	p.Articles = blog.Enabled().Articles().Year(p.Year)
-	p.Title = fmt.Sprint(p.Year)
-	return true
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	pg := page{
+		Articles: blog.Enabled().Articles(),
+	}
+	pg.ServeHTTP(w, r)
 }
 
-type monthPage struct{ page }
+func slugHandler(w http.ResponseWriter, r *http.Request) {
+	slug := r.URL.Query().Get(":slug")
+	a, _ := blog.Enabled()[slug]
+	pg := page{
+		Title:    a.Title,
+		Articles: articles.Articles{a},
+		Year:     a.Year(),
+		Month:    a.Month(),
+	}
+	pg.ServeHTTP(w, r)
+}
 
-func (p *monthPage) Select(match []string) bool {
-	p.Year = atoiMust(match[0])
-	p.Month = time.Month(atoiMust(match[1]))
-	p.Articles = blog.Enabled().Articles().Year(p.Year).Month(p.Month)
-	p.Title = fmt.Sprint(p.Month, p.Year)
-	return true
+func yearHandler(w http.ResponseWriter, r *http.Request) {
+	year := atoiMust(r.URL.Query().Get(":year"))
+	pg := page{
+		Year:     year,
+		Articles: blog.Enabled().Articles().Year(year),
+		Title:    fmt.Sprint(year),
+	}
+	pg.ServeHTTP(w, r)
+}
+
+func monthHandler(w http.ResponseWriter, r *http.Request) {
+	year := atoiMust(r.URL.Query().Get("year"))
+	month := time.Month(atoiMust(r.URL.Query().Get("month")))
+	pg := page{
+		Year:     year,
+		Month:    month,
+		Articles: blog.Enabled().Articles().Year(year).Month(month),
+		Title:    fmt.Sprint(month, year),
+	}
+	pg.ServeHTTP(w, r)
 }

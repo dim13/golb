@@ -7,8 +7,9 @@ import (
 	"text/template"
 
 	"github.com/dim13/gold/articles"
-	"github.com/dim13/gold/route"
 	"github.com/dim13/gold/storage"
+
+	"github.com/bmizerany/pat"
 )
 
 var (
@@ -61,24 +62,25 @@ func main() {
 	log.Println("Prepare templates")
 	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
 
-	re := route.New()
-	re.HandleFunc("^/assets/", assetHandler)
-	re.HandleFunc("^/(favicon\\.ico|images|videos)", tmpHandler)
-	re.HandleFunc("^/robots\\.txt$", robotsHandler)
-	re.HandleFunc("^/rss\\.xml$", rssHandler)
-	re.HandleFunc("^/sitemap\\.xml$", sitemapHandler)
-	re.Handle("^/admin/(.+)$", &adminSlug{})
-	re.Handle("^/admin/?$", &adminIndex{})
-	re.Handle("^/tags?/(.+)$", &tagPage{})
-	re.Handle("^/\\d+/\\d+/(.+)$", &slugPage{})
-	re.Handle("^/(\\d+)/(\\d+)/?$", &monthPage{})
-	re.Handle("^/(\\d+)/?$", &yearPage{})
-	re.Handle("^/(.+)$", &slugPage{})
-	re.Handle("^/$", &indexPage{})
-	re.NotFound(notFound)
+	mux := pat.New()
+
+	mux.Get("/assets/", http.HandlerFunc(assetHandler))
+	mux.Get("/images/", http.HandlerFunc(tmpHandler))
+	mux.Get("/videos/", http.HandlerFunc(tmpHandler))
+
+	mux.Get("/robots.txt", http.HandlerFunc(robotsHandler))
+	mux.Get("/sitemap.xml", http.HandlerFunc(sitemapHandler))
+	mux.Get("/rss.xml", http.HandlerFunc(rssHandler))
+
+	mux.Get("/admin/:slug", http.HandlerFunc(adminSlugHandler))
+	mux.Get("/admin/", http.HandlerFunc(adminIndexHandler))
+
+	mux.Get("/tag/:tag", http.HandlerFunc(tagHandler))
+	mux.Get("/:year/:month/:slug", http.HandlerFunc(slugHandler))
+	mux.Get("/:year/:month/", http.HandlerFunc(monthHandler))
+	mux.Get("/:year/", http.HandlerFunc(yearHandler))
+	mux.Get("/", http.HandlerFunc(indexHandler))
 
 	log.Println("Listen on", listen)
-	if err := http.ListenAndServe(listen, re); err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(http.ListenAndServe(listen, mux))
 }

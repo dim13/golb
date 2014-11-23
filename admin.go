@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
-	"time"
+	//"time"
 
 	"github.com/dim13/gold/articles"
 	"github.com/dim13/gold/storage"
@@ -24,14 +24,15 @@ func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-type adminIndex struct{ adminPage }
-
-func (p *adminIndex) Select(_ []string) bool {
-	p.Articles = blog.Articles()
-	p.Title = "Admin Interface"
-	return true
+func adminIndexHandler(w http.ResponseWriter, r *http.Request) {
+	pg := page{
+		Articles: blog.Articles(),
+		Title:    "Admin Interface",
+	}
+	pg.ServeHTTP(w, r)
 }
 
+/*
 func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		p.adminPage.ServeHTTP(w, r)
@@ -45,9 +46,12 @@ func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/admin/" + a.Slug()
 	}
 }
+*/
 
-type adminSlug struct{ adminPage }
+func adminSlugHandler(w http.ResponseWriter, r *http.Request) {
+}
 
+/*
 func (p *adminSlug) Select(match []string) bool {
 	slug := match[0]
 
@@ -74,12 +78,6 @@ func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Body:    r.FormValue("body"),
 		Enabled: r.FormValue("enabled") == "on",
 	}
-	/*
-		if p.Articles[0].Slug() != a.Slug() {
-			blog.Delete(p.Articles[0])
-			r.URL.Path = "/admin/" + a.Slug()
-		}
-	*/
 	switch r.FormValue("submit") {
 	case "reload":
 		log.Println("reloading")
@@ -98,3 +96,4 @@ func (p *adminSlug) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = "/admin/"
 	}
 }
+*/
