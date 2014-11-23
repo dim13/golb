@@ -53,8 +53,8 @@ func (h *ReHandler) HandleFunc(re string, handler HandlerFunc) {
 	h.routes = append(h.routes, r)
 }
 
-func (h *ReHandler) NotFound(hander HandlerFunc) {
-	h.notFound = hander
+func (h *ReHandler) NotFound(handler HandlerFunc) {
+	h.notFound = handler
 }
 
 func (h *ReHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
