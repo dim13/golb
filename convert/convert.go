@@ -45,9 +45,11 @@ type Articles map[string]Article
 type Article struct {
 	Date     time.Time
 	Title    string
+	Slug     string
 	Body     string
 	Tags     Tags
 	Enabled  bool
+	Author   string
 	Comments Comments
 }
 
@@ -145,7 +147,7 @@ func getComments(db *sql.DB, id int) (C Comments) {
 }
 
 func getArticles(db *sql.DB) (A Articles) {
-	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled FROM articles")
+	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
 		log.Fatal("query article ", err)
 	}
@@ -162,9 +164,10 @@ func getArticles(db *sql.DB) (A Articles) {
 			body    string
 			tags    string
 			enabled bool
+			author  string
 		)
 
-		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled)
+		err := rows.Scan(&id, &date, &title, &uri, &body, &tags, &enabled, &author)
 		if err != nil {
 			log.Fatal("scan article ", err)
 		}
@@ -172,9 +175,11 @@ func getArticles(db *sql.DB) (A Articles) {
 		a := Article{
 			Date:     date,
 			Title:    title,
+			Slug:     uri,
 			Body:     body,
 			Tags:     getTags(tags),
 			Enabled:  enabled,
+			Author:   author,
 			Comments: getComments(db, id),
 		}
 
