@@ -7,9 +7,11 @@ import (
 )
 
 type Tags []string
+
 type TagMap map[string]Articles
 
 type TagCloud []tagCloud
+
 type tagCloud struct {
 	Tag   string
 	Wight int
