@@ -40,6 +40,11 @@ CREATE TABLE comments (
 	enabled boolean);
 */
 
+type Blog struct {
+	Articles Articles
+	Drafts   Articles
+}
+
 type Articles map[string]Article
 
 type Article struct {
@@ -48,9 +53,9 @@ type Article struct {
 	Slug     string
 	Body     string
 	Tags     Tags
-	Enabled  bool
 	Author   string
 	Comments Comments
+	Moderate Comments
 }
 
 type Tags []string
@@ -63,7 +68,6 @@ type Comment struct {
 	Email   string
 	URL     string
 	Comment string
-	Enabled bool
 }
 
 var (
@@ -71,14 +75,14 @@ var (
 	output string
 )
 
-func (a Articles) write(fname string) {
+func write(fname string, v interface{}) {
 	w, err := os.Create(fname)
 	if err != nil {
 		log.Fatal("create ", err)
 	}
 	defer w.Close()
 	enc := gob.NewEncoder(w)
-	err = enc.Encode(a)
+	err = enc.Encode(v)
 	if err != nil {
 		log.Fatal("encode ", err)
 	}
@@ -108,7 +112,7 @@ func (c Comment) String() string {
 	return fmt.Sprintf("%s Commentar from %s", c.Date.Format(timeFormat), c.Name)
 }
 
-func getComments(db *sql.DB, id int) (C Comments) {
+func getComments(db *sql.DB, id int) (C Comments, M Comments) {
 	rows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
 	if err != nil {
 		log.Fatal("query comment ", err)
@@ -140,13 +144,17 @@ func getComments(db *sql.DB, id int) (C Comments) {
 		}
 
 		fmt.Println(c)
-		C = append(C, c)
+		if enabled {
+			C = append(C, c)
+		} else {
+			M = append(M, c)
+		}
 	}
 
-	return C
+	return C, M
 }
 
-func getArticles(db *sql.DB) (A Articles) {
+func getArticles(db *sql.DB) (A Articles, D Articles) {
 	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
 		log.Fatal("query article ", err)
@@ -154,6 +162,7 @@ func getArticles(db *sql.DB) (A Articles) {
 	defer rows.Close()
 
 	A = make(Articles)
+	D = make(Articles)
 
 	for rows.Next() {
 		var (
@@ -172,22 +181,28 @@ func getArticles(db *sql.DB) (A Articles) {
 			log.Fatal("scan article ", err)
 		}
 
+		c, m := getComments(db, id)
+
 		a := Article{
 			Date:     date,
 			Title:    title,
 			Slug:     uri,
 			Body:     body,
 			Tags:     getTags(tags),
-			Enabled:  enabled,
 			Author:   author,
-			Comments: getComments(db, id),
+			Comments: c,
+			Moderate: m,
 		}
 
 		fmt.Println(a)
-		A[uri] = a
+		if enabled {
+			A[uri] = a
+		} else {
+			D[uri] = a
+		}
 	}
 
-	return A
+	return A, D
 }
 
 func init() {
@@ -202,5 +217,9 @@ func main() {
 		log.Fatal("open ", err)
 	}
 	defer db.Close()
-	getArticles(db).write(output)
+	a, d := getArticles(db)
+	write(output, Blog{
+		Articles: a,
+		Drafts:   d,
+	})
 }
