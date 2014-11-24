@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/blog"
 	"github.com/dim13/gold/storage"
 )
 
@@ -16,11 +16,11 @@ type page struct {
 	Config    storage.Config
 	URL       string
 	Title     string
-	Articles  articles.Articles
+	Articles  blog.Articles
 	Error     error
 	PrevPage  int
 	NextPage  int
-	TagCloud  articles.TagCloud
+	TagCloud  blog.TagCloud
 	Year      int
 	Month     time.Month
 	Archive   []year
@@ -40,7 +40,7 @@ type month struct {
 	Month    time.Month
 	Year     int
 	Count    int
-	Articles articles.Articles
+	Articles blog.Articles
 }
 
 func (m byMonth) Len() int           { return len(m) }
@@ -70,7 +70,7 @@ func (p *page) MakeArchive() {
 	if p.Month == 0 {
 		p.Month = p.Articles.Head().Month()
 	}
-	for y, v := range blog.Enabled().Articles().YearMap() {
+	for y, v := range Blog.Enabled().Articles().YearMap() {
 		year := year{
 			Year:  y,
 			Count: len(v),
@@ -95,7 +95,7 @@ func (p *page) MakeArchive() {
 }
 
 func (p *page) Pager(pg string) {
-	perpage := conf.Blog.ArticlesPerPage
+	perpage := Conf.Blog.ArticlesPerPage
 	count := len(p.Articles)
 	last := count/perpage + 1
 	curr := atoiMust(pg)
@@ -125,11 +125,11 @@ func (p *page) Pager(pg string) {
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
-	p.TagCloud = blog.Enabled().TagCloud()
-	p.Config = conf
+	p.TagCloud = Blog.Enabled().TagCloud()
+	p.Config = Conf
 	p.MakeArchive()
 
-	a := blog.Enabled().Articles()
+	a := Blog.Enabled().Articles()
 	p.FirstYear = a.Tail().Year()
 	p.LastYear = a.Head().Year()
 
@@ -141,7 +141,7 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func tagHandler(w http.ResponseWriter, r *http.Request) {
 	tag := r.URL.Query().Get(":tag")
-	tagged, _ := blog.Enabled().TagMap()[tag]
+	tagged, _ := Blog.Enabled().TagMap()[tag]
 	pg := page{
 		Articles: tagged,
 		Title:    tag,
@@ -151,17 +151,17 @@ func tagHandler(w http.ResponseWriter, r *http.Request) {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	pg := page{
-		Articles: blog.Enabled().Articles(),
+		Articles: Blog.Enabled().Articles(),
 	}
 	pg.ServeHTTP(w, r)
 }
 
 func slugHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.URL.Query().Get(":slug")
-	a, _ := blog.Enabled()[slug]
+	a, _ := Blog.Enabled()[slug]
 	pg := page{
 		Title:    a.Title,
-		Articles: articles.Articles{a},
+		Articles: blog.Articles{a},
 		Year:     a.Year(),
 		Month:    a.Month(),
 	}
@@ -172,7 +172,7 @@ func yearHandler(w http.ResponseWriter, r *http.Request) {
 	year := atoiMust(r.URL.Query().Get(":year"))
 	pg := page{
 		Year:     year,
-		Articles: blog.Enabled().Articles().Year(year),
+		Articles: Blog.Enabled().Articles().Year(year),
 		Title:    fmt.Sprint(year),
 	}
 	pg.ServeHTTP(w, r)
@@ -185,7 +185,7 @@ func monthHandler(w http.ResponseWriter, r *http.Request) {
 	pg := page{
 		Year:     year,
 		Month:    month,
-		Articles: blog.Enabled().Articles().Year(year).Month(month),
+		Articles: Blog.Enabled().Articles().Year(year).Month(month),
 		Title:    fmt.Sprint(month, year),
 	}
 	pg.ServeHTTP(w, r)

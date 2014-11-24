@@ -1,4 +1,4 @@
-package articles
+package blog
 
 import (
 	"sort"

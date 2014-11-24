@@ -22,7 +22,7 @@ func lastMod(date time.Time) string {
 
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm []sitemap
-	be := blog.Enabled()
+	be := Blog.Enabled()
 
 	sm = append(sm, sitemap{
 		Loc:      "http://" + r.Host,

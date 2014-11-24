@@ -6,16 +6,17 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/blog"
 	"github.com/dim13/gold/storage"
 
 	"github.com/bmizerany/pat"
 )
 
 var (
-	conf   storage.Config
-	blog   articles.Blog
-	tmpl   *template.Template
+	Conf storage.Config
+	Blog blog.Blog
+	tmpl *template.Template
+
 	listen string
 	config string
 )
@@ -48,13 +49,13 @@ func init() {
 func main() {
 	var err error
 
-	conf, err = storage.ReadConf(config)
+	Conf, err = storage.ReadConf(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	articles.SetStorage(conf.Blog.DataBase)
-	blog, err = articles.Load()
+	blog.SetStorage(Conf.Blog.DataBase)
+	Blog, err = blog.Load()
 	if err != nil {
 		log.Println(err)
 	}

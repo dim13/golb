@@ -1,4 +1,4 @@
-package articles
+package blog
 
 import (
 	"github.com/dim13/gold/storage"

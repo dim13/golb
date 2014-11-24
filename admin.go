@@ -5,19 +5,19 @@ import (
 	"net/http"
 	//"time"
 
-	"github.com/dim13/gold/articles"
+	"github.com/dim13/gold/blog"
 	"github.com/dim13/gold/storage"
 )
 
 type adminPage struct {
-	Articles articles.Articles
+	Articles blog.Articles
 	Title    string
 	Config   storage.Config
 	Error    string
 }
 
 func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Config = conf
+	p.Config = Conf
 	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 	if err != nil {
 		log.Println(err)
@@ -26,7 +26,7 @@ func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func adminIndexHandler(w http.ResponseWriter, r *http.Request) {
 	pg := page{
-		Articles: blog.Articles(),
+		Articles: Blog.Articles(),
 		Title:    "Admin Interface",
 	}
 	pg.ServeHTTP(w, r)

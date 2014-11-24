@@ -23,7 +23,8 @@ func Load(fname string, v interface{}) error {
 }
 
 func Store(fname string, v interface{}) error {
-	data, err := ioutil.TempFile(os.TempDir, fname)
+	dir := os.TempDir()
+	data, err := ioutil.TempFile(dir, fname)
 	if err != nil {
 		return err
 	}
