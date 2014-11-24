@@ -2,36 +2,38 @@ package storage
 
 import (
 	"encoding/gob"
+	"io/ioutil"
 	"os"
 )
 
 func Load(fname string, v interface{}) error {
-	r, err := os.Open(fname)
+	data, err := os.Open(fname)
 	if err != nil {
 		return err
 	}
-	defer r.Close()
-	dec := gob.NewDecoder(r)
+	defer data.Close()
+
+	dec := gob.NewDecoder(data)
 	err = dec.Decode(v)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 func Store(fname string, v interface{}) error {
-	tmpfile := fname + ".tmp"
-	w, err := os.Create(tmpfile)
+	data, err := ioutil.TempFile(os.TempDir, fname)
 	if err != nil {
 		return err
 	}
-	defer w.Close()
-	enc := gob.NewEncoder(w)
+	defer data.Close()
+
+	enc := gob.NewEncoder(data)
 	err = enc.Encode(v)
 	if err != nil {
-		os.Remove(tmpfile)
 		return err
 	}
-	os.Rename(tmpfile, fname)
-	return nil
+
+	return os.Rename(data.Name(), fname)
 }
