@@ -11,64 +11,12 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dim13/gold/blog"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 const timeFormat = "2006-Jan-02"
-
-/*
-BlogSum DB Schema:
-
-CREATE TABLE articles (
-	id integer primary key,
-	date date,
-	title text,
-	uri text,
-	body text,
-	tags text,
-	enabled boolean,
-	author text);
-
-CREATE TABLE comments (
-	id integer primary key,
-	article_id integer,
-	date date,
-	name text,
-	email text,
-	url text,
-	comment text,
-	enabled boolean);
-*/
-
-type Blog struct {
-	Articles Articles
-	Drafts   Articles
-}
-
-type Articles map[string]Article
-
-type Article struct {
-	Date     time.Time
-	Title    string
-	Slug     string
-	Body     string
-	Tags     Tags
-	Author   string
-	Comments Comments
-	Moderate Comments
-}
-
-type Tags []string
-
-type Comments []Comment
-
-type Comment struct {
-	Date    time.Time
-	Name    string
-	Email   string
-	URL     string
-	Comment string
-}
 
 var (
 	input  string
@@ -88,7 +36,7 @@ func write(fname string, v interface{}) {
 	}
 }
 
-func getTags(tags string) Tags {
+func getTags(tags string) blog.Tags {
 	t := strings.Split(tags, ",")
 	for i := range t {
 		t[i] = strings.TrimSpace(t[i])
@@ -104,15 +52,7 @@ func getDate(date string) time.Time {
 	return d
 }
 
-func (a Article) String() string {
-	return fmt.Sprintf("%s %s %s", a.Date.Format(timeFormat), a.Title, a.Tags)
-}
-
-func (c Comment) String() string {
-	return fmt.Sprintf("%s Commentar from %s", c.Date.Format(timeFormat), c.Name)
-}
-
-func getComments(db *sql.DB, id int) (C Comments, M Comments) {
+func getComments(db *sql.DB, id int) (C blog.Comments, M blog.Comments) {
 	rows, err := db.Query("SELECT date,name,email,url,comment,enabled FROM comments WHERE article_id=?", id)
 	if err != nil {
 		log.Fatal("query comment ", err)
@@ -134,16 +74,17 @@ func getComments(db *sql.DB, id int) (C Comments, M Comments) {
 			log.Fatal("scan comment ", err)
 		}
 
-		c := Comment{
+		c := blog.Comment{
 			Date:    date,
 			Name:    name,
 			Email:   string(email),
 			URL:     string(url),
 			Comment: comment,
-			Enabled: enabled,
 		}
 
-		fmt.Println(c)
+		fmt.Printf("%s Commentar from %s\n",
+			c.Date.Format(timeFormat), c.Name)
+
 		if enabled {
 			C = append(C, c)
 		} else {
@@ -154,15 +95,15 @@ func getComments(db *sql.DB, id int) (C Comments, M Comments) {
 	return C, M
 }
 
-func getArticles(db *sql.DB) (A Articles, D Articles) {
+func getArticles(db *sql.DB) (A blog.Items, D blog.Items) {
 	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
 		log.Fatal("query article ", err)
 	}
 	defer rows.Close()
 
-	A = make(Articles)
-	D = make(Articles)
+	A = make(blog.Items)
+	D = make(blog.Items)
 
 	for rows.Next() {
 		var (
@@ -183,7 +124,7 @@ func getArticles(db *sql.DB) (A Articles, D Articles) {
 
 		c, m := getComments(db, id)
 
-		a := Article{
+		a := blog.Article{
 			Date:     date,
 			Title:    title,
 			Slug:     uri,
@@ -194,7 +135,9 @@ func getArticles(db *sql.DB) (A Articles, D Articles) {
 			Moderate: m,
 		}
 
-		fmt.Println(a)
+		fmt.Printf("%s %s %s\n",
+			a.Date.Format(timeFormat), a.Title, a.Tags)
+
 		if enabled {
 			A[uri] = a
 		} else {
@@ -218,8 +161,8 @@ func main() {
 	}
 	defer db.Close()
 	a, d := getArticles(db)
-	write(output, Blog{
-		Articles: a,
-		Drafts:   d,
+	write(output, blog.Blog{
+		Public: a,
+		Draft:  d,
 	})
 }
