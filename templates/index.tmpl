@@ -61,7 +61,7 @@
 		</header>
 		{{if eq $count 1}}
 			{{.Body}}
-			{{with .Comments.Enabled}}
+			{{with .Comments}}
 			<section>
 				<h4>Comments</h4>
 				{{range .}}
@@ -79,7 +79,7 @@
 			{{if .HasMore}}<p><a href="{{.FullSlug}}">Read the rest of this story &hellip;</a></p>{{end}}
 			<footer>
 				<ul>
-				<li class="left">Comments: <a href="{{.FullSlug}}#comments">{{len .Comments.Enabled}}</a></li>
+				<li class="left">Comments: <a href="{{.FullSlug}}#comments">{{len .Comments}}</a></li>
 				</ul>
 			</footer>
 		{{end}}
