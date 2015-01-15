@@ -8,7 +8,7 @@ import (
 
 type blog struct {
 	Title           string
-	Subtitle        string
+	Description     string
 	Owner           string
 	ArticlesPerPage int
 	DataBase        string

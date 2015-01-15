@@ -1,6 +1,6 @@
 [blog]
 title = example.com
-subtitle = My new Blog
+description = My new Blog
 owner = A.N. Other
 articlesperpage = 8
 database = data/site.gob

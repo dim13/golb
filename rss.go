@@ -8,10 +8,10 @@ import (
 )
 
 type rss struct {
-	URL      string
-	Title    string
-	Subtitle string
-	Articles blog.Articles
+	URL         string
+	Title       string
+	Description string
+	Articles    blog.Articles
 }
 
 func rssHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,10 +19,10 @@ func rssHandler(w http.ResponseWriter, r *http.Request) {
 	a := Blog.Articles().Limit(app)
 
 	rss := rss{
-		URL:      "http://" + r.Host,
-		Title:    Conf.Blog.Title,
-		Subtitle: Conf.Blog.Subtitle,
-		Articles: a,
+		URL:         "http://" + r.Host,
+		Title:       Conf.Blog.Title,
+		Description: Conf.Blog.Description,
+		Articles:    a,
 	}
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", rss)
 	if err != nil {
