@@ -6,14 +6,21 @@ import (
 
 var storageFile string
 
-type Blog map[string]Article
+type articles map[string]Article
+
+type Blog struct {
+	Public articles
+	Draft  articles
+}
+
+//type Blog map[string]Article
 
 func SetStorage(file string) {
 	storageFile = file
 }
 
 func Load() (Blog, error) {
-	b := make(Blog)
+	var b Blog
 	err := storage.Load(storageFile, &b)
 	return b, err
 }
@@ -23,42 +30,36 @@ func (b Blog) Store() error {
 }
 
 func (b Blog) Add(a Article) {
-	slug := a.Slug()
-
-	if ar, ok := b[slug]; ok {
+	if ar, ok := b.Draft[a.Slug]; ok {
 		/* found, preserve date */
 		a.Date = ar.Date
 	}
-
-	b[slug] = a
+	b.Draft[a.Slug] = a
 }
 
 func (b Blog) Delete(a Article) {
-	slug := a.Slug()
-
-	if _, ok := b[slug]; ok {
-		delete(b, slug)
-	}
+	delete(b.Draft, a.Slug)
 }
 
 func (b Blog) Find(slug string) (Article, bool) {
-	a, ok := b[slug]
+	a, ok := b.Public[slug]
 	return a, ok
 }
 
 func (b Blog) Articles() (a Articles) {
-	for _, v := range b {
+	for _, v := range b.Public {
 		a = append(a, v)
 	}
 	return a.Sort()
 }
 
-func (b Blog) Enabled() Blog {
-	e := make(Blog)
-	for k, v := range b {
-		if v.Enabled {
-			e[k] = v
-		}
-	}
-	return e
+func (b Blog) Publish(slug string) {
+	b.Public[slug] = b.Draft[slug]
+	//b.Public[slug].Date = time.Now()
+	delete(b.Draft, slug)
+}
+
+func (b Blog) Concial(slug string) {
+	b.Draft[slug] = b.Public[slug]
+	delete(b.Public, slug)
 }

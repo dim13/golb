@@ -13,15 +13,6 @@ type Comment struct {
 	Email   string
 	URL     string
 	Comment string
-	Enabled bool
-}
-
-func (c *Comment) Publish() {
-	c.Enabled = true
-}
-
-func (c *Comment) Suppress() {
-	c.Enabled = false
 }
 
 func (c Comments) Len() int           { return len(c) }
@@ -40,13 +31,4 @@ func (c Comments) Sort() Comments {
 
 func (c Comment) PostDate() string {
 	return c.Date.Local().Format(timeFormat)
-}
-
-func (c Comments) Enabled() (comments Comments) {
-	for _, v := range c {
-		if v.Enabled {
-			comments = append(comments, v)
-		}
-	}
-	return comments
 }

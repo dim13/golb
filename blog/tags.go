@@ -34,7 +34,7 @@ func (t byName) Less(i, j int) bool {
 
 func (b Blog) TagMap() TagMap {
 	tm := make(TagMap)
-	for _, art := range b {
+	for _, art := range b.Public {
 		for _, tag := range art.Tags {
 			tm[tag] = append(tm[tag], art)
 		}

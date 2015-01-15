@@ -70,7 +70,7 @@ func (p *page) MakeArchive() {
 	if p.Month == 0 {
 		p.Month = p.Articles.Head().Month()
 	}
-	for y, v := range Blog.Enabled().Articles().YearMap() {
+	for y, v := range Blog.Articles().YearMap() {
 		year := year{
 			Year:  y,
 			Count: len(v),
@@ -125,11 +125,11 @@ func (p *page) Pager(pg string) {
 func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
-	p.TagCloud = Blog.Enabled().TagCloud()
+	p.TagCloud = Blog.TagCloud()
 	p.Config = Conf
 	p.MakeArchive()
 
-	a := Blog.Enabled().Articles()
+	a := Blog.Articles()
 	p.FirstYear = a.Tail().Year()
 	p.LastYear = a.Head().Year()
 
@@ -141,7 +141,7 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func tagHandler(w http.ResponseWriter, r *http.Request) {
 	tag := r.URL.Query().Get(":tag")
-	tagged, _ := Blog.Enabled().TagMap()[tag]
+	tagged, _ := Blog.TagMap()[tag]
 	pg := page{
 		Articles: tagged,
 		Title:    tag,
@@ -151,14 +151,14 @@ func tagHandler(w http.ResponseWriter, r *http.Request) {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	pg := page{
-		Articles: Blog.Enabled().Articles(),
+		Articles: Blog.Articles(),
 	}
 	pg.ServeHTTP(w, r)
 }
 
 func slugHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.URL.Query().Get(":slug")
-	a, _ := Blog.Enabled()[slug]
+	a, _ := Blog.Public[slug]
 	pg := page{
 		Title:    a.Title,
 		Articles: blog.Articles{a},
@@ -172,7 +172,7 @@ func yearHandler(w http.ResponseWriter, r *http.Request) {
 	year := atoiMust(r.URL.Query().Get(":year"))
 	pg := page{
 		Year:     year,
-		Articles: Blog.Enabled().Articles().Year(year),
+		Articles: Blog.Articles().Year(year),
 		Title:    fmt.Sprint(year),
 	}
 	pg.ServeHTTP(w, r)
@@ -185,7 +185,7 @@ func monthHandler(w http.ResponseWriter, r *http.Request) {
 	pg := page{
 		Year:     year,
 		Month:    month,
-		Articles: Blog.Enabled().Articles().Year(year).Month(month),
+		Articles: Blog.Articles().Year(year).Month(month),
 		Title:    fmt.Sprint(month, year),
 	}
 	pg.ServeHTTP(w, r)

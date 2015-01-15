@@ -12,36 +12,30 @@ const (
 	readMore   = "<!--readmore-->"
 )
 
+//type Articles map[string]Article
 type Articles []Article
 
 type Article struct {
 	Date     time.Time
 	Title    string
+	Slug     string
 	Body     string
 	Tags     Tags
-	Enabled  bool
+	Author   string
 	Comments Comments
+	Moderate Comments
 }
 
 type TimeMap map[int]Articles
 
-func (a Article) Slug() string {
+func MakeSlug(title string) string {
 	r := strings.NewReplacer(" ", "-")
-	return r.Replace(strings.TrimSpace(a.Title))
+	return r.Replace(strings.TrimSpace(title))
 }
 
 func MakeTitle(slug string) string {
 	r := strings.NewReplacer("-", " ")
 	return r.Replace(strings.TrimSpace(slug))
-}
-
-func (a *Article) Publish() {
-	a.Date = time.Now()
-	a.Enabled = true
-}
-
-func (a *Article) Suppress() {
-	a.Enabled = false
 }
 
 func (a Articles) Len() int           { return len(a) }
@@ -155,5 +149,5 @@ func (a Articles) MonthMap() TimeMap {
 
 func (a Article) FullSlug() string {
 	return fmt.Sprintf("/%.4d/%.2d/%s",
-		a.Date.Year(), a.Date.Month(), a.Slug())
+		a.Date.Year(), a.Date.Month(), a.Slug)
 }
