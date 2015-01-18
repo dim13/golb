@@ -13,13 +13,6 @@ type sitemap struct {
 	Priority   float64
 }
 
-func lastMod(date time.Time) string {
-	if date.IsZero() {
-		return ""
-	}
-	return date.Local().Format("2006-02-01")
-}
-
 func sitemapHandler(w http.ResponseWriter, r *http.Request) {
 	var sm []sitemap
 
