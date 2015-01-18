@@ -6,11 +6,9 @@ import (
 
 var storageFile string
 
-type Items map[string]Article
-
 type Blog struct {
-	Public Items
-	Draft  Items
+	Public map[string]Article
+	Draft  map[string]Article
 }
 
 //type Blog map[string]Article

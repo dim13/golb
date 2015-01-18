@@ -95,15 +95,15 @@ func getComments(db *sql.DB, id int) (C blog.Comments, M blog.Comments) {
 	return C, M
 }
 
-func getArticles(db *sql.DB) (A blog.Items, D blog.Items) {
+func getArticles(db *sql.DB) (B blog.Blog) {
 	rows, err := db.Query("SELECT id,date,title,uri,body,tags,enabled,author FROM articles")
 	if err != nil {
 		log.Fatal("query article ", err)
 	}
 	defer rows.Close()
 
-	A = make(blog.Items)
-	D = make(blog.Items)
+	B.Public = make(map[string]blog.Article)
+	B.Draft = make(map[string]blog.Article)
 
 	for rows.Next() {
 		var (
@@ -139,13 +139,13 @@ func getArticles(db *sql.DB) (A blog.Items, D blog.Items) {
 			a.Date.Format(timeFormat), a.Title, a.Tags)
 
 		if enabled {
-			A[uri] = a
+			B.Public[uri] = a
 		} else {
-			D[uri] = a
+			B.Draft[uri] = a
 		}
 	}
 
-	return A, D
+	return B
 }
 
 func init() {
@@ -160,9 +160,5 @@ func main() {
 		log.Fatal("open ", err)
 	}
 	defer db.Close()
-	a, d := getArticles(db)
-	write(output, blog.Blog{
-		Public: a,
-		Draft:  d,
-	})
+	write(output, getArticles(db))
 }
