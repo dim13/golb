@@ -31,12 +31,6 @@ func (y byYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
 func (y byYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
 
 func (p *page) MakeArchive() {
-	if p.Year == 0 {
-		p.Year = p.Articles.Head().Year()
-	}
-	if p.Month == 0 {
-		p.Month = p.Articles.Head().Month()
-	}
 	for y, v := range Blog.Articles().YearMap() {
 		year := year{
 			Year:  y,

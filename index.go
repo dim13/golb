@@ -72,6 +72,12 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = Blog.TagCloud()
 	p.Config = Conf
+	if p.Year == 0 {
+		p.Year = p.Articles.Head().Year()
+	}
+	if p.Month == 0 {
+		p.Month = p.Articles.Head().Month()
+	}
 	p.MakeArchive()
 
 	a := Blog.Articles()
