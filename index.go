@@ -78,7 +78,7 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if p.Month == 0 {
 		p.Month = p.Articles.Head().Month()
 	}
-	p.MakeArchive()
+	p.Archive = makeArchive(p.Year, p.Month)
 
 	a := Blog.Articles()
 	p.FirstYear = a.Tail().Year()

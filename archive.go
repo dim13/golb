@@ -30,27 +30,30 @@ func (y byYear) Len() int           { return len(y) }
 func (y byYear) Swap(i, j int)      { y[i], y[j] = y[j], y[i] }
 func (y byYear) Less(i, j int) bool { return y[i].Year < y[j].Year }
 
-func (p *page) MakeArchive() {
-	for y, v := range Blog.Articles().YearMap() {
+func makeArchive(yr int, mth time.Month) (A []year) {
+	ym := Blog.Articles().YearMap()
+	for k, v := range ym {
 		year := year{
-			Year:  y,
+			Year:  k,
 			Count: len(v),
 		}
-		if p.Year == y {
-			for m, v := range v.MonthMap() {
+		if k == yr {
+			mm := v.MonthMap()
+			for k, v := range mm {
 				month := month{
-					Year:  y,
-					Month: time.Month(m),
+					Year:  yr,
+					Month: time.Month(k),
 					Count: len(v),
 				}
-				if p.Month == time.Month(m) {
+				if time.Month(k) == mth {
 					month.Articles = v
 				}
 				year.Month = append(year.Month, month)
 			}
-			sort.Sort(byMonth(year.Month))
+			sort.Sort(sort.Reverse(byMonth(year.Month)))
 		}
-		p.Archive = append(p.Archive, year)
+		A = append(A, year)
 	}
-	sort.Sort(sort.Reverse(byYear(p.Archive)))
+	sort.Sort(sort.Reverse(byYear(A)))
+	return A
 }
