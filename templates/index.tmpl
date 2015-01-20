@@ -49,41 +49,12 @@
 		</section>
 	</aside>
 
-{{$count := len .Articles}}
+{{with .Article}}
+{{template "view.tmpl" .}}
+{{end}}
+
 {{range .Articles}}
-	<article>
-		<header>
-			<h1><a href="{{.FullSlug}}">{{.Title}}</a></h1>
-			<ul>
-			<li class="left">Published: <time>{{.PostDate}}</time></li>
-			<li class="right">Tagged: {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</li>
-			</ul>
-		</header>
-		{{if eq $count 1}}
-			{{.Body}}
-			{{with .Comments}}
-			<section>
-				<h4>Comments</h4>
-				{{range .}}
-				<section class="comment">
-				<header>
-					<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
-				</header>
-				<blockquote>{{.Comment}}</blockquote>
-				</section>
-				{{end}}
-			</section>
-			{{end}}
-		{{else}}
-			{{.Spoiler}}
-			{{if .HasMore}}<p><a href="{{.FullSlug}}">Read the rest of this story &hellip;</a></p>{{end}}
-			<footer>
-				<ul>
-				<li class="left">Comments: <a href="{{.FullSlug}}#comments">{{len .Comments}}</a></li>
-				</ul>
-			</footer>
-		{{end}}
-	</article>
+{{template "preview.tmpl" .}}
 {{end}}
 
 {{with .Error}}<p>{{.}}</p>{{end}}

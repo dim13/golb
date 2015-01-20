@@ -5,7 +5,8 @@
 <form id="edit" action="/admin/{{.Slug}}" method="POST">
 	<p><input size="80" name="title" value="{{.Title}}"> title</p>
 	<p><input size="80" name="slug" value="{{.Slug}}"> slug</p>
-	<p><input size="80" name="tags" value="{{.Tags}}"> tags (e.g. <em>foo bar baz</em>)</p>
+	<p><input size="80" name="tags" value="{{.Tags}}"> tags
+	   (e.g. <em>foo bar baz</em>)</p>
 	<p>{{.PostDate}}</p>
 	<p><textarea rows="25" cols="80" name="body">{{.Body}}</textarea></p>
 	<p>

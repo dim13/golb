@@ -1,0 +1,25 @@
+<article>
+<header>
+	<h1><a href="{{.FullSlug}}">{{.Title}}</a></h1>
+	<ul>
+	<li class="left">Published:
+	   <time>{{.PostDate}}</time></li>
+	<li class="right">Tagged:
+	   {{range .Tags}}<a href="/tag/{{.}}">{{.}}</a> {{end}}</li>
+	</ul>
+</header>
+	{{.Body}}
+	{{with .Comments}}
+	<section>
+		<h4>Comments</h4>
+		{{range .}}
+		<section class="comment">
+		<header>
+			<p>On <time>{{.PostDate}}</time> {{.Name}} wrote in to say &hellip;</p>
+		</header>
+		<blockquote>{{.Comment}}</blockquote>
+		</section>
+		{{end}}
+	</section>
+	{{end}}
+</article>

@@ -16,6 +16,7 @@ type page struct {
 	URL       string
 	Title     string
 	Articles  blog.Articles
+	Article   *blog.Article
 	Error     error
 	PrevPage  int
 	NextPage  int
@@ -111,10 +112,10 @@ func slugHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.URL.Query().Get(":slug")
 	a, _ := Blog.Public[slug]
 	pg := page{
-		Title:    a.Title,
-		Articles: blog.Articles{a},
-		Year:     a.Year(),
-		Month:    a.Month(),
+		Title:   a.Title,
+		Article: &a,
+		Year:    a.Year(),
+		Month:   a.Month(),
 	}
 	pg.ServeHTTP(w, r)
 }
