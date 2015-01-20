@@ -73,6 +73,7 @@ func main() {
 	mux.Get("/sitemap.xml", http.HandlerFunc(sitemapHandler))
 	mux.Get("/rss.xml", http.HandlerFunc(rssHandler))
 
+	mux.Get("/admin/drafts/", http.HandlerFunc(adminDraftHandler))
 	mux.Get("/admin/:slug", http.HandlerFunc(adminSlugHandler))
 	mux.Get("/admin/", http.HandlerFunc(adminIndexHandler))
 

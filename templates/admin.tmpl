@@ -15,17 +15,13 @@
 	<ul>
 	{{range .}}
 		<li>
-			{{if not .Enabled}}<s>{{end}}
 			{{.PostDate}} <a href="/admin/{{.Slug}}">{{.Title}}</a>
 			{{with .Tags}}Tagged: {{range .}}<a href="/tag/{{.}}">{{.}}</a> {{end}}{{end}}
-			{{if not .Enabled}}</s>{{end}}
 			<ul>
 			{{range .Comments}}
 				<li>
-				{{if not .Enabled}}<s>{{end}}
 				{{.PostDate}} {{.Name}}
 				<blockquote>{{.Comment}}</blockquote>
-				{{if not .Enabled}}</s>{{end}}
 				</li>
 			{{end}}
 			</ul>

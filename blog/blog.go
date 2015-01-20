@@ -44,6 +44,13 @@ func (b Blog) Find(slug string) (Article, bool) {
 	return a, ok
 }
 
+func (b Blog) Drafts() (a Articles) {
+	for _, v := range b.Draft {
+		a = append(a, v)
+	}
+	return a.Sort()
+}
+
 func (b Blog) Articles() (a Articles) {
 	for _, v := range b.Public {
 		a = append(a, v)

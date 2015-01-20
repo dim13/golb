@@ -11,6 +11,7 @@ import (
 
 type adminPage struct {
 	Articles blog.Articles
+	Article  *blog.Article
 	Title    string
 	Config   storage.Config
 	Error    string
@@ -25,9 +26,17 @@ func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminIndexHandler(w http.ResponseWriter, r *http.Request) {
-	pg := page{
+	pg := adminPage{
 		Articles: Blog.Articles(),
-		Title:    "Admin Interface",
+		Title:    "Published Articles",
+	}
+	pg.ServeHTTP(w, r)
+}
+
+func adminDraftHandler(w http.ResponseWriter, r *http.Request) {
+	pg := adminPage{
+		Articles: Blog.Drafts(),
+		Title:    "Unpublished Articles",
 	}
 	pg.ServeHTTP(w, r)
 }
@@ -49,6 +58,16 @@ func (p *adminIndex) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 */
 
 func adminSlugHandler(w http.ResponseWriter, r *http.Request) {
+	slug := r.URL.Query().Get(":slug")
+	a, ok := Blog.Public[slug]
+	if !ok {
+		a, _ = Blog.Draft[slug]
+	}
+	pg := adminPage{
+		Title:   a.Title,
+		Article: &a,
+	}
+	pg.ServeHTTP(w, r)
 }
 
 /*
