@@ -40,7 +40,7 @@ func MakeTitle(slug string) string {
 
 func (a Articles) Len() int           { return len(a) }
 func (a Articles) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a Articles) Less(i, j int) bool { return a[i].Date.After(a[j].Date) }
+func (a Articles) Less(i, j int) bool { return a[i].Date.Before(a[j].Date) }
 
 // Format Date with TimeFormat
 func (a Article) PostDate() string {
@@ -97,7 +97,7 @@ func (a Articles) Month(month time.Month) (A Articles) {
 }
 
 func (a Articles) Sort() Articles {
-	sort.Sort(a)
+	sort.Sort(sort.Reverse(a))
 	return a
 }
 
