@@ -53,8 +53,7 @@ func (a Article) RssDate() string {
 }
 
 func (a Article) Spoiler() string {
-	if a.HasMore() {
-		i := strings.Index(a.Body, readMore)
+	if i := strings.Index(a.Body, readMore); i >= 0 {
 		return a.Body[:i]
 	}
 	return a.Body
