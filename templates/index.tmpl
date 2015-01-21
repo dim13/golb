@@ -11,43 +11,7 @@
 	<p id="description">{{.Config.Blog.Description}}</p>
 	</header>
 
-	<aside>
-		<section id="archive">
-		<h3>Archive</h3>
-		<ul>
-		{{range .Archive}}
-		<li><a href="/{{.Year}}/">{{.Year}}</a><span class="count">{{.Count}}</span></li>
-			<ul>
-			{{range .Month}}
-			<li><a href="/{{.Year}}/{{printf "%.2d" .Month}}/">{{.Month}}</a><span class="count">{{.Count}}</span></li>
-				<ul>
-				{{range .Articles}}
-				<li><a href="{{.FullSlug}}">{{.Title}}</a></li>
-				{{end}}
-				</ul>
-			{{end}}
-			</ul>
-
-		{{end}}
-		</ul>
-		</section>
-
-		<section id="tagcloud">
-		<h3>Tag Cloud</h3>
-		<ul>
-		{{range .TagCloud}}
-		<li class="tagcloud_{{.Wight}}"><a href="/tag/{{.Tag}}">{{.Tag}}</a></li>
-		{{end}}
-		</ul>
-		</section>
-
-		<section id="feeds">
-		<h3>Feeds</h3>
-		<ul>
-		<li><a href="/rss.xml">RSS Feed</a></li>
-		</ul>
-		</section>
-	</aside>
+{{template "aside.tmpl" .}}
 
 {{with .Article}}
 {{template "view.tmpl" .}}
