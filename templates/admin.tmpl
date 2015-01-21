@@ -6,6 +6,10 @@
 <body>
 <h1>{{.Title}}</h1>
 
+{{with .Article}}
+{{template "edit.tmpl" .}}
+{{end}}
+
 {{with .Articles}}
 	<form id="new" action="/admin/" method="POST">
 	New title: <input size="80" name="title">
@@ -32,7 +36,4 @@
 
 {{with .Error}}<p>{{.}}</p>{{end}}
 
-{{with .Article}}
-{{template "edit.tmpl" .}}
-{{end}}
 </html>
