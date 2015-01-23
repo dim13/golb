@@ -2,13 +2,13 @@
 <html>
 <head>
 {{template "header.tmpl" .}}
-{{template "google.tmpl" .Config.Google}}
+{{template "google.tmpl" .Google}}
 {{template "ie9hack.tmpl"}}
 </head>
 <body>
 	<header>
-	<p id="title"><a href="/">{{.Config.Blog.Title}}</a></p>
-	<p id="description">{{.Config.Blog.Description}}</p>
+	<p id="title"><a href="/">{{.Blog.Title}}</a></p>
+	<p id="description">{{.Blog.Description}}</p>
 	</header>
 
 {{template "aside.tmpl" .}}
@@ -27,7 +27,7 @@
 	<ul>
 	{{with .PrevPage}}<li class="left"><a href="?page={{.}}">&larr; Newer Articles</a></li>{{end}}
 	{{with .NextPage}}<li class="right"><a href="?page={{.}}">Older Articles &rarr;</a></li>{{end}}
-	<li class="center">Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Config.Blog.Owner}}</li>
+	<li class="center">Copyright &copy; {{.FirstYear}}&mdash;{{.LastYear}} {{html .Blog.Owner}}</li>
 	</ul>
 </footer>
 </html>

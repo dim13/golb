@@ -13,12 +13,12 @@ type adminPage struct {
 	Articles blog.Articles
 	Article  *blog.Article
 	Title    string
-	Config   storage.Config
+	Blog     storage.Blog
 	Error    string
 }
 
 func (p adminPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	p.Config = Conf
+	p.Blog = Conf.Blog
 	err := tmpl.ExecuteTemplate(w, "admin.tmpl", p)
 	if err != nil {
 		log.Println(err)

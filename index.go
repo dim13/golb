@@ -12,7 +12,8 @@ import (
 )
 
 type page struct {
-	Config    storage.Config
+	Blog      storage.Blog
+	Google    storage.Google
 	URL       string
 	Title     string
 	Articles  blog.Articles
@@ -72,7 +73,8 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = Blog.TagCloud()
-	p.Config = Conf
+	p.Blog = Conf.Blog
+	p.Google = Conf.Google
 	if p.Year == 0 {
 		p.Year = p.Articles.Head().Year()
 	}

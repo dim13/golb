@@ -6,7 +6,7 @@ import (
 	"code.google.com/p/gcfg"
 )
 
-type blog struct {
+type Blog struct {
 	Title           string
 	Description     string
 	Owner           string
@@ -14,32 +14,32 @@ type blog struct {
 	DataBase        string
 }
 
-type captcha struct {
+type Captcha struct {
 	Public  string
 	Private string
 }
 
-type comments struct {
+type Comments struct {
 	Maxlen  int
 	Enabled bool
 }
 
-type smtp struct {
+type SMTP struct {
 	Server string
 	Sender string
 }
 
-type google struct {
+type Google struct {
 	AnalyticsID string
 	WebmasterID string
 }
 
 type Config struct {
-	Blog     blog
-	Captcha  captcha
-	Comments comments
-	Smtp     smtp
-	Google   google
+	Blog     Blog
+	Captcha  Captcha
+	Comments Comments
+	Smtp     SMTP
+	Google   Google
 }
 
 func ReadConf(fname string) (c Config, err error) {
