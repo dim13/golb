@@ -11,7 +11,7 @@ import (
 	"github.com/dim13/gold/storage"
 )
 
-type page struct {
+type indexPage struct {
 	Blog      storage.Blog
 	Google    storage.Google
 	URL       string
@@ -41,7 +41,7 @@ func atoiMust(s string) int {
 	return i
 }
 
-func (p *page) Pager(pg string) {
+func (p *indexPage) Pager(pg string) {
 	perpage := Conf.Blog.ArticlesPerPage
 	count := len(p.Articles)
 	last := count/perpage + 1
@@ -69,7 +69,7 @@ func (p *page) Pager(pg string) {
 	p.Articles = p.Articles[from:to]
 }
 
-func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p indexPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.URL = "http://" + r.Host
 	p.Pager(r.URL.Query().Get("page"))
 	p.TagCloud = Blog.TagCloud()
@@ -96,7 +96,7 @@ func (p page) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func tagHandler(w http.ResponseWriter, r *http.Request) {
 	tag := r.URL.Query().Get(":tag")
 	tagged, _ := Blog.TagMap()[tag]
-	pg := page{
+	pg := indexPage{
 		Articles: tagged,
 		Title:    tag,
 	}
@@ -104,7 +104,7 @@ func tagHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	pg := page{
+	pg := indexPage{
 		Articles: Blog.Articles(),
 	}
 	pg.ServeHTTP(w, r)
@@ -113,7 +113,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func slugHandler(w http.ResponseWriter, r *http.Request) {
 	slug := r.URL.Query().Get(":slug")
 	a, _ := Blog.Public[slug]
-	pg := page{
+	pg := indexPage{
 		Title:   a.Title,
 		Article: &a,
 		Year:    a.Year(),
@@ -124,7 +124,7 @@ func slugHandler(w http.ResponseWriter, r *http.Request) {
 
 func yearHandler(w http.ResponseWriter, r *http.Request) {
 	year := atoiMust(r.URL.Query().Get(":year"))
-	pg := page{
+	pg := indexPage{
 		Year:     year,
 		Articles: Blog.Articles().Year(year),
 		Title:    fmt.Sprint(year),
@@ -136,7 +136,7 @@ func monthHandler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	year := atoiMust(q.Get(":year"))
 	month := time.Month(atoiMust(q.Get(":month")))
-	pg := page{
+	pg := indexPage{
 		Year:     year,
 		Month:    month,
 		Articles: Blog.Articles().Year(year).Month(month),
