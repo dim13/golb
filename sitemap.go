@@ -12,29 +12,31 @@ type sitemap struct {
 	Priority   float64
 }
 
-func sitemapHandler(w http.ResponseWriter, r *http.Request) {
-	var sm []sitemap
+type sitemapPage struct {
+	Sitemap []sitemap
+}
 
-	sm = append(sm, sitemap{
+func (p sitemapPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p.Sitemap = append(p.Sitemap, sitemap{
 		Loc:      "http://" + r.Host,
 		Priority: 1.0,
 	})
 
 	for _, a := range Blog.Articles() {
-		sm = append(sm, sitemap{
+		p.Sitemap = append(p.Sitemap, sitemap{
 			Loc:      "http://" + r.Host + "/" + a.Slug,
 			Priority: 0.8,
 		})
 	}
 
 	for t, a := range Blog.TagMap() {
-		sm = append(sm, sitemap{
+		p.Sitemap = append(p.Sitemap, sitemap{
 			Loc:      "http://" + r.Host + "/tag/" + t,
 			Priority: 0.6 - float64(5/len(a))/10,
 		})
 	}
 
-	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", sm)
+	err := tmpl.ExecuteTemplate(w, "sitemap.tmpl", p)
 	if err != nil {
 		log.Println(err)
 	}

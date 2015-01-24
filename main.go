@@ -69,9 +69,9 @@ func main() {
 	mux.Get("/images/", http.HandlerFunc(tmpHandler))
 	mux.Get("/videos/", http.HandlerFunc(tmpHandler))
 
-	mux.Get("/robots.txt", http.HandlerFunc(robotsHandler))
-	mux.Get("/sitemap.xml", http.HandlerFunc(sitemapHandler))
-	mux.Get("/rss.xml", http.HandlerFunc(rssHandler))
+	mux.Get("/robots.txt", robotsPage{})
+	mux.Get("/sitemap.xml", sitemapPage{})
+	mux.Get("/rss.xml", rssPage{})
 
 	mux.Get("/admin/drafts/", http.HandlerFunc(adminDraftHandler))
 	mux.Get("/admin/:slug", http.HandlerFunc(adminSlugHandler))

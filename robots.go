@@ -5,15 +5,13 @@ import (
 	"net/http"
 )
 
-type robots struct {
+type robotsPage struct {
 	URL string
 }
 
-func robotsHandler(w http.ResponseWriter, r *http.Request) {
-	rob := robots{
-		URL: "http://" + r.Host,
-	}
-	err := tmpl.ExecuteTemplate(w, "robots.tmpl", rob)
+func (p robotsPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	p.URL = "http://" + r.Host
+	err := tmpl.ExecuteTemplate(w, "robots.tmpl", p)
 	if err != nil {
 		log.Println(err)
 	}
