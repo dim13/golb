@@ -2,9 +2,9 @@
 <rss version="2.0">
 {{$url := .URL}}
 <channel>
-	<title>{{.Title}}</title>
+	<title>{{.Blog.Title}}</title>
 	<link>{{$url}}</link>
-	<description>{{.Description}}</description>
+	<description>{{.Blog.Description}}</description>
 	{{range .Articles}}
 	<item>
 		<title>{{.Title}}</title>

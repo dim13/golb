@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	"github.com/dim13/gold/blog"
+	"github.com/dim13/gold/storage"
 )
 
 type rssPage struct {
-	URL         string
-	Title       string
-	Description string
-	Articles    blog.Articles
+	URL      string
+	Blog     storage.Blog
+	Articles blog.Articles
 }
 
 func (p rssPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -19,10 +19,9 @@ func (p rssPage) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a := Blog.Articles().Limit(app)
 
 	p = rssPage{
-		URL:         "http://" + r.Host,
-		Title:       Conf.Blog.Title,
-		Description: Conf.Blog.Description,
-		Articles:    a,
+		URL:      "http://" + r.Host,
+		Blog:     Conf.Blog,
+		Articles: a,
 	}
 	err := tmpl.ExecuteTemplate(w, "rss.tmpl", p)
 	if err != nil {
