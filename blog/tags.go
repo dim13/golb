@@ -70,5 +70,5 @@ func ReadTags(s string) Tags {
 }
 
 func (t Tags) String() string {
-	return strings.Join(t, " ")
+	return strings.Join(t, ", ")
 }

@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/dim13/gold/blog"
@@ -16,7 +17,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const timeFormat = "2006-Jan-02"
+const timeFormat = "02 Jan 2006"
 
 var (
 	input  string
@@ -82,8 +83,7 @@ func getComments(db *sql.DB, id int) (C blog.Comments, M blog.Comments) {
 			Comment: comment,
 		}
 
-		fmt.Printf("%s Commentar from %s\n",
-			c.Date.Format(timeFormat), c.Name)
+		fmt.Println(c.Date.Format(timeFormat), "Commentar from", c.Name)
 
 		if enabled {
 			C = append(C, c)
@@ -135,8 +135,11 @@ func getArticles(db *sql.DB) (B blog.Blog) {
 			Moderate: m,
 		}
 
-		fmt.Printf("%s %s %s\n",
-			a.Date.Format(timeFormat), a.Title, a.Tags)
+		if a.Author == "demon" {
+			a.Author = "Dimitri Sokolyuk"
+		}
+
+		fmt.Println(a.Date.Format(timeFormat), a.Title, a.Slug, a.Tags)
 
 		if enabled {
 			B.Public[uri] = a
@@ -146,6 +149,26 @@ func getArticles(db *sql.DB) (B blog.Blog) {
 	}
 
 	return B
+}
+
+const tmpl = `{{.Title}}
+{{.Date.Format "15:04 02 Jan 2006"}}
+Tags: {{.Tags}}
+
+{{.Author}}
+
+* Introduction
+
+{{.Body}}
+`
+
+func dump(B blog.Blog) {
+	t := template.Must(template.New("article").Parse(tmpl))
+	for k, v := range B.Public {
+		f, _ := os.Create(k + ".article")
+		t.Execute(f, v)
+		f.Close()
+	}
 }
 
 func init() {
@@ -160,5 +183,7 @@ func main() {
 		log.Fatal("open ", err)
 	}
 	defer db.Close()
-	write(output, getArticles(db))
+	B := getArticles(db)
+	dump(B)
+	write(output, B)
 }
